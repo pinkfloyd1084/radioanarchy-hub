@@ -32,7 +32,7 @@
         .main-logo {
             width: 100%;
             max-width: 500px;
-            /* REMOVED the mix-blend-mode so the logo is 100% solid */
+            /* Solid logo setting */
             margin-bottom: 10px;
         }
         .neon-text {
@@ -109,6 +109,18 @@
         }
         .footer a:hover {
             text-decoration: underline;
+        }
+        /* Style for the Visit Counter */
+        .visit-counter {
+            margin-top: 25px;
+            padding: 10px;
+            border: 1px solid #333;
+            display: inline-block;
+            background: rgba(0,0,0,0.5);
+        }
+        .visit-counter img {
+            vertical-align: middle;
+            filter: hue-rotate(130deg) brightness(1.5); /* Adjusts badge to match cyan theme */
         }
     </style>
 </head>
@@ -199,12 +211,16 @@
             <strong>Lead Dev:</strong> <a href="mailto:silent@radioanarchy.gg">silent@radioanarchy.gg</a><br>
             <strong>Admin:</strong> <a href="mailto:bmiller@radioanarchy.gg">bmiller@radioanarchy.gg</a>
         </p>
+
+        <div class="visit-counter">
+            <span style="font-size: 0.8rem; color: #00ffcc; display: block; margin-bottom: 5px; letter-spacing: 2px;">TRANSMISSIONS RECEIVED:</span>
+            <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fradioanarchy.gg&count_bg=%23000000&title_bg=%23000000&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false" alt="Visitor Counter">
+        </div>
     </div>
 
     <script>
         window.addEventListener('scroll', function() {
             const scrollPosition = window.pageYOffset;
-            // Moves the background up at 30% the speed of the normal scroll
             document.body.style.backgroundPositionY = -(scrollPosition * 0.3) + 'px';
         });
     </script>
