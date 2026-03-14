@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radio Anarchy | Coming Soon</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: url('RadioAnarchyBackground.jpg') no-repeat center center fixed;
+            background-size: cover;
+            background-color: #050505;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+        /* Dark overlay so the neon pops */
+        .overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: 1;
+        }
+        .content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 20px;
+        }
+        .main-logo {
+            width: 100%;
+            max-width: 600px;
+            /* This CSS trick removes the black background from your JPG! */
+            mix-blend-mode: screen; 
+            margin-bottom: 10px;
+        }
+        h1 {
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #00ffcc;
+            text-shadow: 0 0 15px #00ffcc;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-bottom: 40px;
+        }
+        .games-row {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+        .games-row img {
+            height: 60px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+        }
+        .socials {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+        .socials img {
+            width: 55px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .socials img:hover {
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.5));
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+    <div class="content">
+        <img src="logoC.jpg" alt="Radio Anarchy Logo" class="main-logo">
+        
+        <h1>Infrastructure Deploying...</h1>
+        <p>The ultimate gaming hub is under construction. Stand by.</p>
+        
+        <div class="games-row">
+            <img src="dayz.png" alt="DayZ">
+            <img src="beamlogo.png" alt="BeamNG">
+            <img src="veinlogo.png" alt="Vein">
+        </div>
+        
+        <div class="socials">
+            <img src="Discordlogo.png" alt="Discord">
+            <img src="RAreddit.png" alt="Reddit">
+        </div>
+    </div>
+</body>
+</html>
