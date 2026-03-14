@@ -8,7 +8,7 @@
         body {
             margin: 0;
             padding: 0;
-            /* Background locked in place, zoomed to fit */
+            /* Background locked to JS control for the 3D Parallax effect */
             background: #050505 url('RadioAnarchyBackground.png') no-repeat center top fixed;
             background-size: cover;
             color: #fff;
@@ -190,7 +190,7 @@
 
     </div>
 
-    <img src="DiscordinviteBG.png" class="bottom-image" alt="Discord Artwork">
+    <img src="DiscordInviteBG.png" class="bottom-image" alt="Discord Artwork">
 
     <div class="footer">
         <h3 class="neon-text" style="margin-top: 0;">SECURE CHANNELS</h3>
@@ -200,6 +200,14 @@
             <strong>Admin:</strong> <a href="mailto:bmiller@radioanarchy.gg">bmiller@radioanarchy.gg</a>
         </p>
     </div>
+
+    <script>
+        window.addEventListener('scroll', function() {
+            const scrollPosition = window.pageYOffset;
+            // Moves the background up at 30% the speed of the normal scroll
+            document.body.style.backgroundPositionY = -(scrollPosition * 0.3) + 'px';
+        });
+    </script>
 
 </body>
 </html>
