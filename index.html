@@ -8,7 +8,8 @@
         body {
             margin: 0;
             padding: 0;
-            background: url('RadioAnarchyBackground.jpg') no-repeat center center fixed;
+            /* FIXED: Changed to .png */
+            background: url('RadioAnarchyBackground.png') no-repeat center center fixed;
             background-size: cover;
             background-color: #050505;
             color: #fff;
@@ -20,7 +21,6 @@
             min-height: 100vh;
             text-align: center;
         }
-        /* Dark overlay so the neon pops */
         .overlay {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -36,7 +36,6 @@
         .main-logo {
             width: 100%;
             max-width: 600px;
-            /* This CSS trick removes the black background from your JPG! */
             mix-blend-mode: screen; 
             margin-bottom: 10px;
         }
@@ -84,7 +83,7 @@
 <body>
     <div class="overlay"></div>
     <div class="content">
-        <img src="logoC.jpg" alt="Radio Anarchy Logo" class="main-logo">
+        <img src="logoC.png" alt="Radio Anarchy Logo" class="main-logo">
         
         <h1>Infrastructure Deploying...</h1>
         <p>The ultimate gaming hub is under construction. Stand by.</p>
