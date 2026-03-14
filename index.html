@@ -3,101 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radio Anarchy | Coming Soon</title>
+    <title>Radio Anarchy | Gaming Hub</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            /* FIXED: Changed to .png */
-            background: url('RadioAnarchyBackground.png') no-repeat center center fixed;
+            /* Background locked in place, zoomed to fit */
+            background: #050505 url('RadioAnarchyBackground.png') no-repeat center top fixed;
             background-size: cover;
-            background-color: #050505;
             color: #fff;
             font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
             text-align: center;
         }
-        .overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.65);
-            z-index: 1;
+        .top-banner {
+            width: 100%;
+            display: block;
+            border-bottom: 2px solid #ff0055;
         }
-        .content {
-            position: relative;
-            z-index: 2;
-            max-width: 800px;
-            padding: 20px;
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        /* Heavy text shadows so it reads perfectly over the background without a solid box */
+        h1, h2, h3, p {
+            text-shadow: 2px 2px 5px #000, -2px -2px 5px #000, 0 0 10px rgba(0,0,0,0.8);
         }
         .main-logo {
             width: 100%;
-            max-width: 600px;
+            max-width: 500px;
             mix-blend-mode: screen; 
             margin-bottom: 10px;
         }
-        h1 {
-            font-size: 2rem;
-            text-transform: uppercase;
-            letter-spacing: 4px;
+        .neon-text {
             color: #00ffcc;
-            text-shadow: 0 0 15px #00ffcc;
-            margin-bottom: 10px;
+            text-shadow: 0 0 15px #00ffcc, 2px 2px 5px #000;
+            letter-spacing: 3px;
         }
-        p {
-            font-size: 1.2rem;
-            color: #ccc;
-            margin-bottom: 40px;
+        .section {
+            margin-top: 80px;
+            margin-bottom: 80px;
         }
-        .games-row {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin-bottom: 50px;
-            flex-wrap: wrap;
+        .feature-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.7);
         }
-        .games-row img {
-            height: 60px;
-            object-fit: contain;
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+        /* Game Grid Layout */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            text-align: left;
+            margin-top: 30px;
         }
-        .socials {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
+        .game-card {
+            background: rgba(10, 10, 15, 0.85);
+            padding: 20px;
+            border-left: 4px solid #ff0055;
+            border-radius: 4px;
         }
-        .socials img {
-            width: 55px;
+        .game-card h3 {
+            margin-top: 0;
+            color: #ff0055;
+            text-shadow: none;
+        }
+        .game-card p {
+            text-shadow: none;
+            color: #ddd;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .game-logos img {
+            height: 55px;
+            margin: 15px;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+        }
+        /* Discord Button */
+        .discord-btn img {
+            width: 70px;
             transition: transform 0.3s ease;
-            cursor: pointer;
+            margin-top: 15px;
         }
-        .socials img:hover {
-            transform: scale(1.2);
-            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.5));
+        .discord-btn img:hover {
+            transform: scale(1.15);
+            filter: drop-shadow(0 0 20px #7289DA);
+        }
+        .bottom-image {
+            width: 100%;
+            display: block;
+            margin-top: 60px;
+            border-top: 2px solid #00ffcc;
+        }
+        .footer {
+            background: #020202;
+            padding: 40px 20px;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+        .footer a {
+            color: #00ffcc;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="overlay"></div>
-    <div class="content">
+
+    <img src="RadioAnarchyBanner.png" class="top-banner" alt="Radio Anarchy Banner">
+
+    <div class="container">
         <img src="logoC.png" alt="Radio Anarchy Logo" class="main-logo">
         
-        <h1>Infrastructure Deploying...</h1>
-        <p>The ultimate gaming hub is under construction. Stand by.</p>
-        
-        <div class="games-row">
-            <img src="dayz.png" alt="DayZ">
-            <img src="beamlogo.png" alt="BeamNG">
-            <img src="veinlogo.png" alt="Vein">
+        <h1 class="neon-text">INFRASTRUCTURE DEPLOYING...</h1>
+        <p style="font-size: 1.2rem; color: #ccc;">The ultimate gaming hub is under construction. Stand by.</p>
+
+        <div class="section">
+            <img src="News.png" alt="News" class="feature-img" style="max-width: 350px;">
+            <h2>NETWORK INTELLIGENCE</h2>
+            <p style="max-width: 800px; margin: 0 auto; font-size: 1.1rem; line-height: 1.6;">
+                Get the latest updates on current games being played across the server, plus critical hardware and computer tech news. Stay informed on market shifts like the rapidly rising price of RAM and how the CPU market is currently crashing.
+            </p>
         </div>
-        
-        <div class="socials">
-            <img src="Discordlogo.png" alt="Discord">
-            <img src="RAreddit.png" alt="Reddit">
+
+        <div class="section">
+            <img src="RadioanarchyDiscordbanner.png" alt="Discord Banner" class="feature-img" style="max-width: 600px;">
+            <h2>JOIN THE ANARCHY</h2>
+            <p style="max-width: 800px; margin: 0 auto; font-size: 1.1rem; line-height: 1.6;">
+                The central hub for all communications, server IP drops, and grouping up. Hit the icon below to link up with the official Radio Anarchy Discord and get immediate access to the community.
+            </p>
+            <br>
+            <a href="https://discord.gg/FAuCZTBJDM" target="_blank" class="discord-btn">
+                <img src="Discordlogo.png" alt="Join Discord">
+            </a>
         </div>
+
+        <div class="section">
+            <h2 class="neon-text" style="font-size: 2rem;">SUPPORTED GAMES</h2>
+            
+            <div class="game-logos">
+                <img src="dayz.png" alt="DayZ">
+                <img src="beamlogo.png" alt="BeamNG">
+                <img src="veinlogo.png" alt="Vein">
+            </div>
+
+            <div class="games-grid">
+                <div class="game-card">
+                    <h3>DayZ</h3>
+                    <p>Survive the apocalypse. Scavenge for resources, build your base, and outlast both the infected and other players.</p>
+                </div>
+                <div class="game-card">
+                    <h3>Vein</h3>
+                    <p>A multiplayer survival game focusing on deep simulation mechanics, world interaction, and hardcore survival.</p>
+                </div>
+                <div class="game-card">
+                    <h3>Valheim</h3>
+                    <p>A brutal exploration and survival game for 1-10 players set in a procedurally-generated purgatory inspired by viking culture.</p>
+                </div>
+                <div class="game-card">
+                    <h3>BeamNG.drive</h3>
+                    <p>Incredibly realistic soft-body physics. Crash, race, and explore limitless driving potential.</p>
+                </div>
+                <div class="game-card">
+                    <h3>Magic: The Gathering</h3>
+                    <p>Draft, build your decks, and duel in our dedicated digital tabletop channels.</p>
+                </div>
+                <div class="game-card">
+                    <h3>DND</h3>
+                    <p>Roll the dice. Join epic campaigns and ruthless one-shots hosted by our community Dungeon Masters.</p>
+                </div>
+                <div class="game-card">
+                    <h3>RetroArch</h3>
+                    <p>Preserving the classics. Emulate and play retro gaming masterpieces together.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" style="border: 2px dashed #ff0055; padding: 40px; background: rgba(0,0,0,0.5); border-radius: 10px;">
+            <h2 style="color: #ff0055; font-size: 2.2rem; margin: 0; text-shadow: 0 0 10px #ff0055;">COMING SOON</h2>
+            <p style="font-size: 1.8rem; font-weight: bold; letter-spacing: 2px; color: #fff;">GTA: V / FIVE-M</p>
+        </div>
+
     </div>
+
+    <img src="DiscordinviteBG.png" class="bottom-image" alt="Discord Artwork">
+
+    <div class="footer">
+        <h3 class="neon-text" style="margin-top: 0;">SECURE CHANNELS</h3>
+        <p style="margin: 0;">
+            <strong>Owner:</strong> <a href="mailto:pinkfloyd@radioanarchy.gg">pinkfloyd@radioanarchy.gg</a><br>
+            <strong>Lead Dev:</strong> <a href="mailto:silent@radioanarchy.gg">silent@radioanarchy.gg</a><br>
+            <strong>Admin:</strong> <a href="mailto:bmiller@radioanarchy.gg">bmiller@radioanarchy.gg</a>
+        </p>
+    </div>
+
 </body>
 </html>
