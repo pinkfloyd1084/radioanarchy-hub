@@ -44,7 +44,7 @@
             border: 1px solid #ff0055;
             border-radius: 8px;
             padding: 15px 30px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             box-shadow: 0 5px 20px rgba(255, 0, 85, 0.2), inset 0 0 15px rgba(255, 0, 85, 0.1);
         }
 
@@ -74,6 +74,42 @@
             font-weight: bold;
             letter-spacing: 1px;
             text-transform: uppercase;
+        }
+
+        /* --- SCROLLING NEWS TICKER --- */
+        .news-ticker-container {
+            width: 100%;
+            max-width: 1050px;
+            margin: 0 auto 30px auto;
+            background: rgba(0, 20, 40, 0.7); 
+            border-top: 1px dashed #00ffcc;
+            border-bottom: 1px dashed #00ffcc;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+            overflow: hidden;
+            padding: 12px 0;
+            position: relative;
+        }
+
+        .news-ticker-text {
+            white-space: nowrap;
+            display: inline-block;
+            color: #00ffcc;
+            font-size: 1.1rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px #00ffcc;
+            /* Slowed down to 180 seconds because the text is massive! */
+            animation: tickerScroll 180s linear infinite; 
+            padding-left: 100%; /* Starts off-screen right */
+        }
+
+        .news-ticker-container:hover .news-ticker-text {
+            animation-play-state: paused;
+        }
+
+        @keyframes tickerScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
         }
 
         .main-logo {
@@ -150,7 +186,7 @@
             transition: all 0.1s;
         }
 
-        /* --- THE INFORMATION STATION (4 Buttons, Straight Line) --- */
+        /* --- THE INFORMATION STATION --- */
         .info-station-wrapper {
             margin: 0 auto 80px auto;
             max-width: 1050px;
@@ -186,7 +222,7 @@
             user-select: none;
         }
 
-        /* --- SLIDE OUT INFO BOX (Z-Index Fixed) --- */
+        /* --- SLIDE OUT INFO BOX --- */
         .nav-wrapper, .auth-wrapper {
             position: relative;
             display: flex;
@@ -233,7 +269,7 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 30px;
-            margin-bottom: 80px;
+            margin-bottom: 60px;
         }
 
         .grid-column {
@@ -259,12 +295,65 @@
             width: 100%;
         }
 
+        /* --- NEW ADVERTISEMENT SPACE (CSS DRAWN BOXES) --- */
+        .ad-section {
+            background: rgba(15, 5, 10, 0.7);
+            border: 1px dashed #ff0055;
+            padding: 30px 20px;
+            margin: 0 auto 60px auto;
+            max-width: 1050px;
+            border-radius: 8px;
+        }
+
+        .ad-section h2 {
+            color: #ff0055;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 1.4rem;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
+        }
+
+        .ad-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        /* The drawn ad-space placeholders */
+        .ad-placeholder {
+            width: 300px;
+            height: 250px;
+            background: rgba(5, 5, 5, 0.9);
+            border: 2px dashed #333;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #555;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: inset 0 0 20px rgba(0,0,0,1);
+        }
+
+        .ad-placeholder:hover {
+            border-color: #00ffcc;
+            color: #00ffcc;
+            text-shadow: 0 0 10px #00ffcc;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.2), inset 0 0 20px rgba(0, 255, 204, 0.1);
+            transform: scale(1.02);
+        }
+
         /* Footer Elements */
         .bottom-image {
             width: 100%;
             display: block;
             border-top: 2px solid #00ffcc;
-            margin-top: 40px;
         }
 
         .footer {
@@ -303,7 +392,7 @@
                 gap: 20px;
             }
             .nav-separator {
-                display: none; /* Hides dashes on mobile so buttons wrap cleanly */
+                display: none; 
             }
         }
     </style>
@@ -331,6 +420,12 @@
                         <div class="info-panel">Register securely using Discord, Google, or Email.</div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="news-ticker-container">
+            <div class="news-ticker-text">
+                [DAYZ NEWS] Survivors, gear up! Bohemia has confirmed that DayZ Update 1.30 is officially focusing on a "Total Medical Overhaul"—rumors suggest broken limbs will now require actual splinting time and infection rates are being cranked to "Brutal" mode... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [5M] Massive milestone! FiveM has officially shattered its concurrent player record, surpassing 300,000 users as Rockstar Games integrates the new Cfx Marketplace, allowing modders to officially monetize high-quality scripts for the first time... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [AD] 📢 Escape the chaos and find your squad at the Radio Anarchy Gaming Hub! Whether you're a builder or a bandit, our Discord is the heartbeat of the community—Join us now! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [TECH] Silicon wars heat up! AMD has just announced the Ryzen 7 9750X, boasting a massive 5.6 GHz boost clock to counter Intel’s Core Ultra 200S Plus—hope you have a beefy cooler for that 120W TDP! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [AD] Looking for high-octane survival? Check out Southern Cross Gaming and The Pumpkin Dynasty—join their Discords today for unique events and a non-toxic grind! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [VALHEIM] The Deep North teaser is finally here! Iron Gate has revealed the "Frost-Bound Gate," a massive endgame structure that requires a "Star-Core" to activate—Vikings, start hoarding your silver! ❄️ &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [BEAMNG] Update 0.35.4 is live! Featuring a full remaster of the Gavril T-Series braking physics and a new "Sport Mode" for CVT transmissions... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [AD] Hardcore fans, listen up: DayZLost and Collapsed Society are currently recruiting—hit their Discords to experience DayZ the way it was meant to be played! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [VEIN] Patch 0.023 has landed! You can now finally hitch vehicles together for massive loot hauls... 🤿 &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; 🃏 THE MID-TICKER MARKET WATCH: WAVE 2 🃏 MTG: Black Lotus (Alpha PSA 10) $3,000,000 | YGO: Radiant Typhoon Yummy (Starlight) $412.50 (+45.10) | MTG: Mox Diamond (FtV: Relics) $1,041.57 (+59.71) | YGO: Thunderclap Monk (Super) $6.50 (+5.80) | MTG: Jeweled Lotus (Textured Foil) $451.85 (+90.62) | YGO: Forbidden Droplet (Common) $2.10 (-1.50) | MTG: Mana Crypt (Special Guest) $215.00 (+12.40) | YGO: Fallen of the White Dragon $72.15 (+8.30) &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [WHAT THE F... MOMENT] A DayZ player on a high-pop server reportedly "tamed" a pack of wolves by playing Pink Floyd through VOIP for six hours straight; the wolves now allegedly follow him and only attack players wearing red... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [TECH] NVIDIA is reportedly prepping a $5,000 RTX 5090 specifically for the "Pro-sumer" AI market, leaving gamers wondering if they'll need to sell a kidney for the 600W power draw... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [EVENT] 🎸 THE LEGENDARY ADVENTURE: Mark your calendars for 4/3/2026! The Radio Anarchy crew are hitting Deerisle from 7PM to 7AM. Catch the 12-hour marathon on Twitch, Discord, and YouTube! 🎸 &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; 🏁 THE MEGA-TICKER 2.0: THE ULTIMATE SURVIVAL & TECH UPDATE 🏁 [BREAKING] DayZ Experimental 1.29 is officially back! After a period of silence, Bohemia has pushed the update to PC Experimental... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [TECH] Intel just unveiled the Core Ultra 200S Plus series (270K/250K), claiming up to 2x creator performance and reduced latency for gamers—available March 26, 2026! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; 🃏 THE MID-TICKER MARKET WATCH: WAVE 3 (RARE HITS) 🃏 MTG: Alpha Black Lotus (PSA 10) $3,000,000 | YGO: Radiant Typhoon Yummy (Starlight) $412.50 (+45.10) | YGO: Berserkion the Electromagna Warrior $28.40 (+25.00) | MTG: Biorhythm (Onslaught) $38.75 (+31.12) &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [WHAT THE F... MOMENT] A player in a high-stakes FiveM RP server reportedly spent 48 hours straight digging a "secret tunnel" under the city bank using only a spoon emoji script, only to realize they were digging toward the police station's breakroom... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [VEIN] In a weird twist, drinking cold water now grants a higher stress reduction bonus than warm soda—because realism matters when you're fighting for your life! 🥤 &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; 📺 SATURDAY STREAM ALERT! See me live on Twitch & YouTube! We’re going deep into the Radio Anarchy backend, site updates, and some brutal modding sessions. Bring your questions! 📺
             </div>
         </div>
 
@@ -408,6 +503,16 @@
             </div>
 
         </div>
+
+        <div class="ad-section">
+            <h2>NETWORK AFFILIATES</h2>
+            <div class="ad-grid">
+                <div class="ad-placeholder">AD SPACE FOR SALE</div>
+                <div class="ad-placeholder">AD SPACE FOR SALE</div>
+                <div class="ad-placeholder">AD SPACE FOR SALE</div>
+            </div>
+        </div>
+
     </div>
 
     <img src="DiscordInviteBG.png" class="bottom-image" alt="Discord Artwork">
