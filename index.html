@@ -76,42 +76,6 @@
             text-transform: uppercase;
         }
 
-        /* --- SCROLLING NEWS TICKER --- */
-        .news-ticker-container {
-            width: 100%;
-            max-width: 1050px;
-            margin: 0 auto 30px auto;
-            background: rgba(0, 20, 40, 0.7); 
-            border-top: 1px dashed #00ffcc;
-            border-bottom: 1px dashed #00ffcc;
-            box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
-            overflow: hidden;
-            padding: 12px 0;
-            position: relative;
-        }
-
-        .news-ticker-text {
-            white-space: nowrap;
-            display: inline-block;
-            color: #00ffcc;
-            font-size: 1.1rem;
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-shadow: 0 0 8px #00ffcc;
-            /* Slowed down to 180 seconds because the text is massive! */
-            animation: tickerScroll 180s linear infinite; 
-            padding-left: 100%; /* Starts off-screen right */
-        }
-
-        .news-ticker-container:hover .news-ticker-text {
-            animation-play-state: paused;
-        }
-
-        @keyframes tickerScroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
-        }
-
         .main-logo {
             width: 100%;
             max-width: 700px;
@@ -164,7 +128,7 @@
             transition: transform 0.2s, filter 0.2s;
             cursor: pointer;
             position: relative;
-            z-index: 2;
+            z-index: 2; /* Ensures button is above the peek-a-boo logos */
         }
 
         .auth-btn-graphic {
@@ -188,7 +152,7 @@
 
         /* --- THE INFORMATION STATION --- */
         .info-station-wrapper {
-            margin: 0 auto 80px auto;
+            margin: 0 auto 50px auto;
             max-width: 1050px;
             background: rgba(10, 10, 15, 0.7);
             border-radius: 12px;
@@ -222,7 +186,65 @@
             user-select: none;
         }
 
-        /* --- SLIDE OUT INFO BOX --- */
+        /* --- FULL WIDTH SCROLLING NEWS TICKER --- */
+        .news-ticker-container {
+            width: 100vw; /* Forces edge-to-edge stretching */
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+            background: rgba(0, 20, 40, 0.85); 
+            border-top: 2px dashed #00ffcc;
+            border-bottom: 2px dashed #00ffcc;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
+            overflow: hidden;
+            padding: 15px 0;
+            margin-bottom: 60px;
+        }
+
+        .news-ticker-text {
+            white-space: nowrap;
+            display: inline-block;
+            color: #00ffcc;
+            font-size: 1.1rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-shadow: 0 0 8px #00ffcc;
+            /* Slowed down significantly to 300s */
+            animation: tickerScroll 300s linear infinite; 
+            padding-left: 100%; 
+        }
+
+        .news-ticker-container:hover .news-ticker-text {
+            animation-play-state: paused;
+        }
+
+        @keyframes tickerScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* --- COMMUNITY MEMBERS AREA HEADER --- */
+        .community-header {
+            background: rgba(15, 5, 10, 0.85);
+            border: 1px solid #ff0055;
+            padding: 20px;
+            margin: 0 auto 40px auto;
+            max-width: 1050px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(255, 0, 85, 0.2);
+        }
+
+        .community-header h2 {
+            color: #ff0055;
+            margin: 0;
+            font-size: 1.8rem;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px rgba(255, 0, 85, 0.6);
+        }
+
+        /* --- SLIDE OUT INFO BOX & PEEK-A-BOO LOGOS --- */
         .nav-wrapper, .auth-wrapper {
             position: relative;
             display: flex;
@@ -264,6 +286,29 @@
             top: 110%; 
         }
 
+        /* Peek-a-boo Background Logos */
+        .with-logo {
+            margin-top: 35px; /* Creates spacing so logos don't overlap buttons above them */
+        }
+
+        .behind-logo {
+            position: absolute;
+            top: -30px; /* Adjusts how far it sticks out */
+            left: 50%;
+            transform: translateX(-50%);
+            height: 50px; 
+            z-index: 1; /* Sits behind the button (z-index 2) */
+            opacity: 0.6;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 0 5px rgba(0, 255, 204, 0.3));
+        }
+
+        .nav-wrapper.with-logo:hover .behind-logo {
+            opacity: 1;
+            top: -42px; /* Slides up slightly on hover */
+            filter: drop-shadow(0 0 15px #00ffcc);
+        }
+
         /* 3-Column Content Grid */
         .content-grid {
             display: grid;
@@ -288,14 +333,14 @@
             color: #00ffcc;
             text-shadow: 0 0 10px #00ffcc;
             margin-top: 0;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             letter-spacing: 2px;
             border-bottom: 1px dashed #555;
             padding-bottom: 15px;
             width: 100%;
         }
 
-        /* --- NEW ADVERTISEMENT SPACE (CSS DRAWN BOXES) --- */
+        /* --- NEW ADVERTISEMENT SPACE --- */
         .ad-section {
             background: rgba(15, 5, 10, 0.7);
             border: 1px dashed #ff0055;
@@ -321,7 +366,6 @@
             gap: 20px;
         }
 
-        /* The drawn ad-space placeholders */
         .ad-placeholder {
             width: 300px;
             height: 250px;
@@ -423,12 +467,6 @@
             </div>
         </div>
 
-        <div class="news-ticker-container">
-            <div class="news-ticker-text">
-                [DAYZ NEWS] Survivors, gear up! Bohemia has confirmed that DayZ Update 1.30 is officially focusing on a "Total Medical Overhaul"—rumors suggest broken limbs will now require actual splinting time and infection rates are being cranked to "Brutal" mode... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [5M] Massive milestone! FiveM has officially shattered its concurrent player record, surpassing 300,000 users as Rockstar Games integrates the new Cfx Marketplace, allowing modders to officially monetize high-quality scripts for the first time... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [AD] 📢 Escape the chaos and find your squad at the Radio Anarchy Gaming Hub! Whether you're a builder or a bandit, our Discord is the heartbeat of the community—Join us now! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [TECH] Silicon wars heat up! AMD has just announced the Ryzen 7 9750X, boasting a massive 5.6 GHz boost clock to counter Intel’s Core Ultra 200S Plus—hope you have a beefy cooler for that 120W TDP! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [AD] Looking for high-octane survival? Check out Southern Cross Gaming and The Pumpkin Dynasty—join their Discords today for unique events and a non-toxic grind! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [VALHEIM] The Deep North teaser is finally here! Iron Gate has revealed the "Frost-Bound Gate," a massive endgame structure that requires a "Star-Core" to activate—Vikings, start hoarding your silver! ❄️ &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [BEAMNG] Update 0.35.4 is live! Featuring a full remaster of the Gavril T-Series braking physics and a new "Sport Mode" for CVT transmissions... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [AD] Hardcore fans, listen up: DayZLost and Collapsed Society are currently recruiting—hit their Discords to experience DayZ the way it was meant to be played! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [VEIN] Patch 0.023 has landed! You can now finally hitch vehicles together for massive loot hauls... 🤿 &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; 🃏 THE MID-TICKER MARKET WATCH: WAVE 2 🃏 MTG: Black Lotus (Alpha PSA 10) $3,000,000 | YGO: Radiant Typhoon Yummy (Starlight) $412.50 (+45.10) | MTG: Mox Diamond (FtV: Relics) $1,041.57 (+59.71) | YGO: Thunderclap Monk (Super) $6.50 (+5.80) | MTG: Jeweled Lotus (Textured Foil) $451.85 (+90.62) | YGO: Forbidden Droplet (Common) $2.10 (-1.50) | MTG: Mana Crypt (Special Guest) $215.00 (+12.40) | YGO: Fallen of the White Dragon $72.15 (+8.30) &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [WHAT THE F... MOMENT] A DayZ player on a high-pop server reportedly "tamed" a pack of wolves by playing Pink Floyd through VOIP for six hours straight; the wolves now allegedly follow him and only attack players wearing red... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [TECH] NVIDIA is reportedly prepping a $5,000 RTX 5090 specifically for the "Pro-sumer" AI market, leaving gamers wondering if they'll need to sell a kidney for the 600W power draw... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [EVENT] 🎸 THE LEGENDARY ADVENTURE: Mark your calendars for 4/3/2026! The Radio Anarchy crew are hitting Deerisle from 7PM to 7AM. Catch the 12-hour marathon on Twitch, Discord, and YouTube! 🎸 &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; 🏁 THE MEGA-TICKER 2.0: THE ULTIMATE SURVIVAL & TECH UPDATE 🏁 [BREAKING] DayZ Experimental 1.29 is officially back! After a period of silence, Bohemia has pushed the update to PC Experimental... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [TECH] Intel just unveiled the Core Ultra 200S Plus series (270K/250K), claiming up to 2x creator performance and reduced latency for gamers—available March 26, 2026! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; 🃏 THE MID-TICKER MARKET WATCH: WAVE 3 (RARE HITS) 🃏 MTG: Alpha Black Lotus (PSA 10) $3,000,000 | YGO: Radiant Typhoon Yummy (Starlight) $412.50 (+45.10) | YGO: Berserkion the Electromagna Warrior $28.40 (+25.00) | MTG: Biorhythm (Onslaught) $38.75 (+31.12) &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [WHAT THE F... MOMENT] A player in a high-stakes FiveM RP server reportedly spent 48 hours straight digging a "secret tunnel" under the city bank using only a spoon emoji script, only to realize they were digging toward the police station's breakroom... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [VEIN] In a weird twist, drinking cold water now grants a higher stress reduction bonus than warm soda—because realism matters when you're fighting for your life! 🥤 &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; 📺 SATURDAY STREAM ALERT! See me live on Twitch & YouTube! We’re going deep into the Radio Anarchy backend, site updates, and some brutal modding sessions. Bring your questions! 📺
-            </div>
-        </div>
-
         <img src="radioanarchylogo.png" alt="Radio Anarchy Logo" class="main-logo">
 
         <div class="construction-warning">
@@ -477,29 +515,87 @@
             </div>
         </div>
 
+        <div class="news-ticker-container">
+            <div class="news-ticker-text">
+                [DAYZ NEWS] Survivors, gear up! Bohemia has confirmed that DayZ Update 1.30 is officially focusing on a "Total Medical Overhaul"—rumors suggest broken limbs will now require actual splinting time and infection rates are being cranked to "Brutal" mode... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [5M] Massive milestone! FiveM has officially shattered its concurrent player record, surpassing 300,000 users as Rockstar Games integrates the new Cfx Marketplace, allowing modders to officially monetize high-quality scripts for the first time... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [AD] 📢 Escape the chaos and find your squad at the Radio Anarchy Gaming Hub! Whether you're a builder or a bandit, our Discord is the heartbeat of the community—Join us now! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [TECH] Silicon wars heat up! AMD has just announced the Ryzen 7 9750X, boasting a massive 5.6 GHz boost clock to counter Intel’s Core Ultra 200S Plus—hope you have a beefy cooler for that 120W TDP! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [AD] Looking for high-octane survival? Check out Southern Cross Gaming and The Pumpkin Dynasty—join their Discords today for unique events and a non-toxic grind! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [VALHEIM] The Deep North teaser is finally here! Iron Gate has revealed the "Frost-Bound Gate," a massive endgame structure that requires a "Star-Core" to activate—Vikings, start hoarding your silver! ❄️ &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [BEAMNG] Update 0.35.4 is live! Featuring a full remaster of the Gavril T-Series braking physics and a new "Sport Mode" for CVT transmissions... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [AD] Hardcore fans, listen up: DayZLost and Collapsed Society are currently recruiting—hit their Discords to experience DayZ the way it was meant to be played! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [VEIN] Patch 0.023 has landed! You can now finally hitch vehicles together for massive loot hauls... 🤿 &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; 🃏 THE MID-TICKER MARKET WATCH: WAVE 2 🃏 MTG: Black Lotus (Alpha PSA 10) $3,000,000 | YGO: Radiant Typhoon Yummy (Starlight) $412.50 (+45.10) | MTG: Mox Diamond (FtV: Relics) $1,041.57 (+59.71) | YGO: Thunderclap Monk (Super) $6.50 (+5.80) | MTG: Jeweled Lotus (Textured Foil) $451.85 (+90.62) | YGO: Forbidden Droplet (Common) $2.10 (-1.50) | MTG: Mana Crypt (Special Guest) $215.00 (+12.40) | YGO: Fallen of the White Dragon $72.15 (+8.30) &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [WHAT THE F... MOMENT] A DayZ player on a high-pop server reportedly "tamed" a pack of wolves by playing Pink Floyd through VOIP for six hours straight; the wolves now allegedly follow him and only attack players wearing red... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [TECH] NVIDIA is reportedly prepping a $5,000 RTX 5090 specifically for the "Pro-sumer" AI market, leaving gamers wondering if they'll need to sell a kidney for the 600W power draw... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [EVENT] 🎸 THE LEGENDARY ADVENTURE: Mark your calendars for 4/3/2026! The Radio Anarchy crew are hitting Deerisle from 7PM to 7AM. Catch the 12-hour marathon on Twitch, Discord, and YouTube! 🎸 &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; 🏁 THE MEGA-TICKER 2.0: THE ULTIMATE SURVIVAL & TECH UPDATE 🏁 [BREAKING] DayZ Experimental 1.29 is officially back! After a period of silence, Bohemia has pushed the update to PC Experimental... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [TECH] Intel just unveiled the Core Ultra 200S Plus series (270K/250K), claiming up to 2x creator performance and reduced latency for gamers—available March 26, 2026! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; 🃏 THE MID-TICKER MARKET WATCH: WAVE 3 (RARE HITS) 🃏 MTG: Alpha Black Lotus (PSA 10) $3,000,000 | YGO: Radiant Typhoon Yummy (Starlight) $412.50 (+45.10) | YGO: Berserkion the Electromagna Warrior $28.40 (+25.00) | MTG: Biorhythm (Onslaught) $38.75 (+31.12) &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [WHAT THE F... MOMENT] A player in a high-stakes FiveM RP server reportedly spent 48 hours straight digging a "secret tunnel" under the city bank using only a spoon emoji script, only to realize they were digging toward the police station's breakroom... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [VEIN] In a weird twist, drinking cold water now grants a higher stress reduction bonus than warm soda—because realism matters when you're fighting for your life! 🥤 &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; 📺 SATURDAY STREAM ALERT! See me live on Twitch & YouTube! We’re going deep into the Radio Anarchy backend, site updates, and some brutal modding sessions. Bring your questions! 📺
+            </div>
+        </div>
+
+        <div class="community-header">
+            <h2>COMMUNITY MEMBERS AREA</h2>
+        </div>
+
         <div class="content-grid">
             
             <div class="grid-column">
-                <h2>LEARNING</h2>
-                <img src="theknowledgebase.png" alt="The Knowledge Base" class="btn-graphic">
-                <img src="modhub.png" alt="Mod Hub" class="btn-graphic">
-                <img src="videotutorials.png" alt="Video Tutorials" class="btn-graphic">
-                <img src="retrovault.png" alt="Retro Vault" class="btn-graphic">
+                <h2>RADIO ANARCHY COMMUNITY COLLEGE</h2>
+                
+                <div class="nav-wrapper">
+                    <img src="theknowledgebase.png" alt="The Knowledge Base" class="btn-graphic">
+                    <div class="info-panel">Courses and planned Guides on a plethora of subjects. Think of this as the Radio Anarchy server building library. Subjects include but are not limited to: How to start a server, Port forwarding 101, Admin training guide, DayZ Tools intro, Blender for Dummies.</div>
+                </div>
+
+                <div class="nav-wrapper with-logo">
+                    <img src="githublogo.png" alt="GitHub" class="behind-logo">
+                    <img src="modhub.png" alt="Mod Hub" class="btn-graphic">
+                    <div class="info-panel">A list of do-it-yourself mod repositories.</div>
+                </div>
+
+                <div class="nav-wrapper with-logo">
+                    <img src="youtubelogo.png" alt="YouTube" class="behind-logo">
+                    <img src="videotutorials.png" alt="Video Tutorials" class="btn-graphic">
+                    <div class="info-panel">A video bank of Pink and others walking you through many of the subjects in the knowledge base and the mod hub.</div>
+                </div>
+
+                <div class="nav-wrapper with-logo">
+                    <img src="retroarchlogo.png" alt="RetroArch" class="behind-logo">
+                    <img src="retrovault.png" alt="Retro Vault" class="btn-graphic">
+                    <div class="info-panel">A list of online retro repositories for all your RetroArch needs. There is something for all the classic gamers here. Feel free to look up what you need. Don't be shy, there's plenty to go around.</div>
+                </div>
+
             </div>
 
             <div class="grid-column">
                 <h2>NETWORKING</h2>
-                <img src="communitynetwork.png" alt="Community Network" class="btn-graphic">
-                <img src="communitybillboard.png" alt="Community Billboard" class="btn-graphic">
-                <img src="streamschedule.png" alt="Stream Schedule" class="btn-graphic">
+                
+                <div class="nav-wrapper">
+                    <img src="communitynetwork.png" alt="Community Network" class="btn-graphic">
+                    <div class="info-panel">Discover allied servers and affiliated gaming networks.</div>
+                </div>
+
+                <div class="nav-wrapper">
+                    <img src="communitybillboard.png" alt="Community Billboard" class="btn-graphic">
+                    <div class="info-panel">Check out member advertisements, looking-for-group posts, and community events.</div>
+                </div>
+
+                <div class="nav-wrapper">
+                    <img src="streamschedule.png" alt="Stream Schedule" class="btn-graphic">
+                    <div class="info-panel">The Creator TV Guide. See who is live across the network right now.</div>
+                </div>
             </div>
 
             <div class="grid-column">
                 <h2>THE LOUNGES</h2>
-                <img src="playerslounge.png" alt="Player Lounge" class="btn-graphic">
-                <img src="serverownerslounge.png" alt="Server Owner Lounge" class="btn-graphic">
-                <img src="creatorslounge.png" alt="Creator Lounge" class="btn-graphic">
-                <img src="modderlounge.png" alt="Modder Lounge" class="btn-graphic">
+                
+                <div class="nav-wrapper">
+                    <img src="playerslounge.png" alt="Player Lounge" class="btn-graphic">
+                    <div class="info-panel">The main hangout for all registered survivors and gamers.</div>
+                </div>
+
+                <div class="nav-wrapper">
+                    <img src="serverownerslounge.png" alt="Server Owner Lounge" class="btn-graphic">
+                    <div class="info-panel">A secured sector to discuss hosting, moderation, and community management.</div>
+                </div>
+
+                <div class="nav-wrapper">
+                    <img src="creatorslounge.png" alt="Creator Lounge" class="btn-graphic">
+                    <div class="info-panel">Network with streamers, YouTubers, and digital artists.</div>
+                </div>
+
+                <div class="nav-wrapper">
+                    <img src="modderlounge.png" alt="Modder Lounge" class="btn-graphic">
+                    <div class="info-panel">The garage. Share scripts, troubleshoot code, and collaborate on mods.</div>
+                </div>
             </div>
 
         </div>
