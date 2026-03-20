@@ -27,7 +27,7 @@
             border-bottom: 2px solid #ff0055;
         }
 
-        /* --- NEW HEADER HERO ROW (Edge-to-Edge HUD) --- */
+        /* --- HEADER HERO ROW (Edge-to-Edge HUD) --- */
         .header-hero-row {
             display: flex;
             justify-content: space-between;
@@ -41,11 +41,11 @@
         .welcome-box {
             background: rgba(15, 5, 10, 0.85);
             border: 2px solid #ff0055;
-            border-left: none; /* Opens the left side */
+            border-left: none; 
             border-radius: 0 12px 12px 0;
             padding: 25px 40px 25px 20px;
             box-shadow: 5px 5px 20px rgba(255, 0, 85, 0.2), inset -5px 0 15px rgba(255, 0, 85, 0.1);
-            transform: translateX(-15px); /* Slides off-screen */
+            transform: translateX(-15px); 
             z-index: 5;
         }
 
@@ -61,20 +61,20 @@
         .auth-box {
             display: flex;
             flex-direction: column;
-            gap: 30px; /* Space between the two stacked buttons */
+            gap: 30px; 
             background: rgba(15, 5, 10, 0.85);
             border: 2px solid #ff0055;
-            border-right: none; /* Opens the right side */
+            border-right: none; 
             border-radius: 12px 0 0 12px;
             padding: 30px 20px 30px 40px;
             box-shadow: -5px 5px 20px rgba(255, 0, 85, 0.2), inset 5px 0 15px rgba(255, 0, 85, 0.1);
-            transform: translateX(15px); /* Slides off-screen */
+            transform: translateX(15px); 
             z-index: 5;
         }
 
         .auth-group {
             display: flex;
-            flex-direction: column; /* Stacks text above button */
+            flex-direction: column; 
             align-items: center;
             gap: 12px;
         }
@@ -92,7 +92,7 @@
             width: 100%;
             max-width: 650px;
             padding: 0 30px;
-            flex-shrink: 1; /* Shrinks logo if screen gets too narrow */
+            flex-shrink: 1; 
             filter: drop-shadow(0 0 20px rgba(255, 0, 85, 0.4));
             z-index: 10;
         }
@@ -154,7 +154,7 @@
         }
 
         .auth-btn-graphic {
-            width: 260px; /* Doubled size for main auth buttons */
+            width: 260px; 
             transition: transform 0.2s, filter 0.2s;
             cursor: pointer;
             position: relative;
@@ -302,7 +302,7 @@
         }
 
         .auth-wrapper .info-panel {
-            width: 260px; /* Widened to match new larger buttons */
+            width: 260px; 
             font-size: 0.85rem;
         }
 
@@ -334,23 +334,13 @@
 
         /* --- SPECIFIC LOGO SIZING & POSITIONING --- */
         
-        .info-station-wrapper .behind-logo { 
-            height: 100px; 
-            top: -75px; 
-        }
-        .info-station-wrapper .nav-wrapper.with-logo:hover .behind-logo { 
-            top: -90px; 
-        }
+        .info-station-wrapper .behind-logo { height: 100px; top: -75px; }
+        .info-station-wrapper .nav-wrapper.with-logo:hover .behind-logo { top: -90px; }
         
         .info-station-wrapper .behind-logo.col-games, 
-        .info-station-wrapper .behind-logo.col-discord { 
-            height: 130px; 
-            top: -85px; 
-        }
+        .info-station-wrapper .behind-logo.col-discord { height: 130px; top: -85px; }
         .info-station-wrapper .nav-wrapper.with-logo:hover .behind-logo.col-games,
-        .info-station-wrapper .nav-wrapper.with-logo:hover .behind-logo.col-discord { 
-            top: -100px; 
-        }
+        .info-station-wrapper .nav-wrapper.with-logo:hover .behind-logo.col-discord { top: -100px; }
 
         .behind-logo.wide-logo { width: 120px; height: auto; top: -20px; }
         .nav-wrapper.with-logo:hover .behind-logo.wide-logo { top: -30px; }
@@ -358,14 +348,8 @@
         .behind-logo.xl-logo { width: 140px; height: auto; top: -20px; }
         .nav-wrapper.with-logo:hover .behind-logo.xl-logo { top: -30px; }
 
-        .behind-logo.main-mini { 
-            width: 140px; 
-            height: auto; 
-            top: -75px; 
-        }
-        .nav-wrapper.with-logo:hover .behind-logo.main-mini { 
-            top: -90px; 
-        }
+        .behind-logo.main-mini { width: 140px; height: auto; top: -75px; }
+        .nav-wrapper.with-logo:hover .behind-logo.main-mini { top: -90px; }
 
         .behind-logo.col-book { height: 90px; top: -55px; }
         .behind-logo.col-git { height: 75px; top: -45px; }
@@ -376,21 +360,15 @@
         .nav-wrapper.with-logo:hover .behind-logo.col-bill,
         .nav-wrapper.with-logo:hover .behind-logo.col-stream { top: -75px; }
 
-        /* The Lounge Logos */
         .behind-logo.col-player-l { height: 90px; top: -55px; }
         .nav-wrapper.with-logo:hover .behind-logo.col-player-l { top: -65px; }
         
         .behind-logo.col-server-l, 
         .behind-logo.col-creator-l, 
-        .behind-logo.col-modder-l { 
-            height: 100px; 
-            top: -60px; 
-        }
+        .behind-logo.col-modder-l { height: 100px; top: -60px; }
         .nav-wrapper.with-logo:hover .behind-logo.col-server-l,
         .nav-wrapper.with-logo:hover .behind-logo.col-creator-l,
-        .nav-wrapper.with-logo:hover .behind-logo.col-modder-l { 
-            top: -70px; 
-        }
+        .nav-wrapper.with-logo:hover .behind-logo.col-modder-l { top: -70px; }
 
         /* 3-Column Content Grid */
         .content-grid {
@@ -412,9 +390,7 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
         }
 
-        .grid-column .with-logo {
-            margin-top: 80px; 
-        }
+        .grid-column .with-logo { margin-top: 80px; }
 
         .grid-column h2 {
             color: #00ffcc;
@@ -513,34 +489,16 @@
             border-radius: 5px;
         }
 
-        /* Mobile Adjustments for the new Header Hero Row */
         @media (max-width: 1000px) {
-            .header-hero-row {
-                flex-direction: column;
-                gap: 40px;
-            }
-            .welcome-box {
-                border-left: 2px solid #ff0055;
-                border-radius: 12px;
-                transform: none;
-                padding: 20px;
-                width: 90%;
-            }
-            .auth-box {
-                border-right: 2px solid #ff0055;
-                border-radius: 12px;
-                transform: none;
-                padding: 20px;
-                width: 90%;
-            }
-            .main-logo-top {
-                padding: 0 15px;
-            }
+            .header-hero-row { flex-direction: column; gap: 40px; }
+            .welcome-box { border-left: 2px solid #ff0055; border-radius: 12px; transform: none; padding: 20px; width: 90%; }
+            .auth-box { border-right: 2px solid #ff0055; border-radius: 12px; transform: none; padding: 20px; width: 90%; }
+            .main-logo-top { padding: 0 15px; }
         }
         @media (max-width: 900px) {
             .nav-separator { display: none; }
             .news-ticker-container { border-width: 1px; padding: 10px 0; }
-            .auth-btn-graphic { width: 220px; } /* Scales down slightly for smaller screens */
+            .auth-btn-graphic { width: 220px; } 
             .auth-wrapper .info-panel { width: 220px; }
         }
     </style>
@@ -560,14 +518,18 @@
             <div class="auth-group">
                 <span class="auth-label">Members:</span>
                 <div class="auth-wrapper">
-                    <img src="signin.png" alt="Sign In" class="auth-btn-graphic">
+                    <a href="signin.html">
+                        <img src="signin.png" alt="Sign In" class="auth-btn-graphic">
+                    </a>
                     <div class="info-panel">Access your account, Lounges, and settings.</div>
                 </div>
             </div>
             <div class="auth-group">
                 <span class="auth-label">New to The Hub?</span>
                 <div class="auth-wrapper">
-                    <img src="signup.png" alt="Sign Up" class="auth-btn-graphic">
+                    <a href="signup.html">
+                        <img src="signup.png" alt="Sign Up" class="auth-btn-graphic">
+                    </a>
                     <div class="info-panel">Register securely using Discord, Google, or Email.</div>
                 </div>
             </div>
