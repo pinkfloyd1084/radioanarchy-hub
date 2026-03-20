@@ -80,7 +80,6 @@
             width: 100%;
             max-width: 700px;
             filter: drop-shadow(0 0 20px rgba(255, 0, 85, 0.4));
-            /* FIX: Drastically increased gap as requested in the first drawing */
             margin-bottom: 80px; 
         }
 
@@ -179,9 +178,9 @@
             gap: 20px;
         }
 
-        /* FIX: Increased wrapper margin for much larger Information Station logos (2x) as requested in drawing 2 */
+        /* Pushing Information Station buttons down */
         .info-station-wrapper .with-logo {
-            margin-top: 60px; /* Standardize larger gap */
+            margin-top: 90px; 
         }
 
         .nav-separator {
@@ -190,7 +189,7 @@
             font-weight: bold;
             text-shadow: 0 0 8px #ff0055;
             user-select: none;
-            margin-top: 60px; /* Aligns with larger logo wrappers */
+            margin-top: 90px; /* Aligns with larger logo wrappers */
         }
 
         /* --- FULL WIDTH SCROLLING NEWS TICKER --- */
@@ -292,19 +291,13 @@
             top: 110%; 
         }
 
-        /* * Peek-a-boo Background Logos Setup
-         * Specific size requests from drawings 1 and 2
-         */
-        .with-logo {
-            margin-top: 30px; /* Default for grid column logos */
-        }
-
+        /* Peek-a-boo Background Logos Setup */
         .behind-logo {
             position: absolute;
-            top: -30px; /* Default peek distance */
+            top: -30px; 
             left: 50%;
             transform: translateX(-50%);
-            height: 50px; /* Default size */
+            height: 50px; 
             width: auto;
             z-index: 1; 
             opacity: 0.6;
@@ -314,72 +307,71 @@
 
         .nav-wrapper.with-logo:hover .behind-logo {
             opacity: 1;
-            /* Default hover peek distance */
             top: -42px; 
             filter: drop-shadow(0 0 15px #00ffcc);
         }
 
-        /* FIX: Custom classes for enlarged logos requested in drawing 1 */
-        .behind-logo.wide-logo {
-            height: auto;
-            width: 120px; /* youtube */
-            top: -20px;
-        }
-        .nav-wrapper.with-logo:hover .behind-logo.wide-logo {
-            top: -30px;
-        }
+        /* SPECIFIC LOGO SIZING & POSITIONING */
+        
+        /* Information Station specific */
+        .info-station-wrapper .behind-logo { height: 100px; top: -60px; }
+        .nav-wrapper.with-logo:hover .info-station-wrapper .behind-logo { top: -75px; }
+        
+        /* Extra Large Games & Discord Logos */
+        .behind-logo.col-games, .behind-logo.col-discord { height: 130px; top: -75px; }
+        .nav-wrapper.with-logo:hover .behind-logo.col-games,
+        .nav-wrapper.with-logo:hover .behind-logo.col-discord { top: -90px; }
 
-        .behind-logo.xl-logo {
-            height: auto;
-            width: 140px; /* retroarch */
-            top: -20px;
-        }
-        .nav-wrapper.with-logo:hover .behind-logo.xl-logo {
-            top: -30px;
-        }
+        /* General Custom Resizing */
+        .behind-logo.wide-logo { width: 120px; height: auto; top: -20px; }
+        .nav-wrapper.with-logo:hover .behind-logo.wide-logo { top: -30px; }
 
-        .behind-logo.main-mini {
-            height: auto;
-            width: 100px; /* mini RA logo networking */
-            top: -30px;
-        }
-        .nav-wrapper.with-logo:hover .behind-logo.main-mini {
-            top: -42px;
-        }
+        .behind-logo.xl-logo { width: 140px; height: auto; top: -20px; }
+        .nav-wrapper.with-logo:hover .behind-logo.xl-logo { top: -30px; }
 
-        /* Specific enlarged dimensions for drawing 1 requests */
+        /* Raised & Widened Mini Main Logo */
+        .behind-logo.main-mini { width: 140px; height: auto; top: -50px; }
+        .nav-wrapper.with-logo:hover .behind-logo.main-mini { top: -60px; }
+
+        /* Grid specific scaled logos */
         .behind-logo.col-book, 
-        .behind-logo.col-git, 
+        .behind-logo.col-git {
+            height: 90px; 
+            top: -55px; 
+        }
+        
         .behind-logo.col-bill, 
-        .behind-logo.col-stream {
-            height: 90px; /* Default peek-behind height increased from 50px */
-            top: -55px; /* Adjust peek distance for larger logo */
+        .behind-logo.col-stream { 
+            height: 110px; 
+            top: -65px; 
         }
-        .behind-logo.col-git { height: 80px; top: -50px; } /* github peeking */
-        .behind-logo.col-bill { height: 85px; top: -50px; } /* billboard peeking */
-        .behind-logo.col-stream { height: 90px; top: -55px; } /* stream peeking */
+        
+        .nav-wrapper.with-logo:hover .behind-logo.col-book,
+        .nav-wrapper.with-logo:hover .behind-logo.col-git { top: -65px; }
+        
+        .nav-wrapper.with-logo:hover .behind-logo.col-bill,
+        .nav-wrapper.with-logo:hover .behind-logo.col-stream { top: -75px; }
 
-        /* HOVER effects for drawing 1 requests */
-        .nav-wrapper.with-logo:hover .behind-logo.col-book { top: -65px; }
-        .nav-wrapper.with-logo:hover .behind-logo.col-git { top: -60px; }
-        .nav-wrapper.with-logo:hover .behind-logo.col-bill { top: -60px; }
-        .nav-wrapper.with-logo:hover .behind-logo.col-stream { top: -65px; }
-
-        /* FIX: 2x Larger Logos for Information Station requests from drawing 2 */
-        .info-station-wrapper .behind-logo {
-            height: 100px; /* Double the default size */
-            top: -60px;
+        /* The Lounge Logos (2x sizing and larger player logo) */
+        .behind-logo.col-player-l { height: 90px; top: -55px; }
+        .nav-wrapper.with-logo:hover .behind-logo.col-player-l { top: -65px; }
+        
+        .behind-logo.col-server-l, 
+        .behind-logo.col-creator-l, 
+        .behind-logo.col-modder-l { 
+            height: 100px; 
+            top: -60px; 
         }
-        .nav-wrapper.with-logo:hover .behind-logo {
-            /* hover effect for 2x size logos */
-            top: -75px; 
+        .nav-wrapper.with-logo:hover .behind-logo.col-server-l,
+        .nav-wrapper.with-logo:hover .behind-logo.col-creator-l,
+        .nav-wrapper.with-logo:hover .behind-logo.col-modder-l { 
+            top: -70px; 
         }
 
         /* 3-Column Content Grid */
         .content-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            /* FIX: Increased gap prevents larger logos from hitting buttons above */
             gap: 60px 40px; 
             margin-bottom: 60px;
         }
@@ -396,12 +388,9 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
         }
 
-        /* FIX: Wrapper margins for grid columns to accommodate enlarged drawing 1 logos */
+        /* Pushing ALL grid column buttons down to make room for massive logos */
         .grid-column .with-logo {
-            margin-top: 50px; 
-        }
-        .grid-column .with-logo:first-of-type {
-            margin-top: 30px; /* first one needs less gap below h2 */
+            margin-top: 80px; 
         }
 
         .grid-column h2 {
@@ -441,7 +430,6 @@
             gap: 20px;
         }
 
-        /* FIX: Updated Ad placeholder CSS to support active email links */
         .ad-placeholder {
             width: 300px;
             height: 250px;
@@ -459,7 +447,6 @@
             transition: all 0.3s ease;
             cursor: pointer;
             box-shadow: inset 0 0 20px rgba(0,0,0,1);
-            /* Ensure link styling doesn't break text formatting */
             text-decoration: none; 
         }
 
@@ -566,7 +553,7 @@
                 <span class="nav-separator">//</span>
 
                 <div class="nav-wrapper with-logo">
-                    <img src="gameslogo.png" alt="Games Logo" class="behind-logo">
+                    <img src="gameslogo.png" alt="Games Logo" class="behind-logo col-games">
                     <img src="games.png" alt="Games" class="btn-graphic">
                     <div class="info-panel">All your favorite games under one roof. Active server IPs, game descriptions, and wipe schedules. Good luck, survivor.</div>
                 </div>
@@ -582,7 +569,7 @@
                 <span class="nav-separator">//</span>
 
                 <div class="nav-wrapper with-logo">
-                    <img src="discordlogo.png" alt="Discord Logo" class="behind-logo">
+                    <img src="discordlogo.png" alt="Discord Logo" class="behind-logo col-discord">
                     <img src="discordroles.png" alt="Discord Roles" class="btn-graphic">
                     <div class="info-panel">Already in the Discord? Stay updated on specific server events by securing your game roles here. Yes, you can grab more than one.</div>
                 </div>
@@ -612,7 +599,7 @@
                 </div>
 
                 <div class="nav-wrapper with-logo">
-                    <img src="gethublogo.png" alt="GitHub" class="behind-logo col-git">
+                    <img src="githublogo.png" alt="GitHub" class="behind-logo col-git">
                     <img src="modhub.png" alt="Mod Hub" class="btn-graphic">
                     <div class="info-panel">A list of do-it-yourself mod repositories.</div>
                 </div>
@@ -641,7 +628,7 @@
                 </div>
 
                 <div class="nav-wrapper with-logo">
-                    <img src="communitybilboardlogo.png" alt="Billboard Logo" class="behind-logo col-bill">
+                    <img src="communitybillboardlogo.png" alt="Billboard Logo" class="behind-logo col-bill">
                     <img src="communitybillboard.png" alt="Community Billboard" class="btn-graphic">
                     <div class="info-panel">Check out member advertisements, looking-for-group posts, and community events.</div>
                 </div>
@@ -675,7 +662,7 @@
                 </div>
 
                 <div class="nav-wrapper with-logo">
-                    <img src="modderloungelogo.png" alt="Modder Lounge Logo" class="behind-logo col-modder-l">
+                    <img src="moddersloungelogo.png" alt="Modders Lounge Logo" class="behind-logo col-modder-l">
                     <img src="modderlounge.png" alt="Modder Lounge" class="btn-graphic">
                     <div class="info-panel">The garage. Share scripts, troubleshoot code, and collaborate on mods.</div>
                 </div>
@@ -721,4 +708,3 @@
 
 </body>
 </html>
-
