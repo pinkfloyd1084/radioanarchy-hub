@@ -68,12 +68,14 @@
             gap: 15px;
         }
 
+        /* UPDATED: Glowing Cyan, Bolder, Larger Text */
         .auth-label {
-            color: #ccc;
-            font-size: 0.95rem;
+            color: #00ffcc;
+            font-size: 1.25rem;
             font-weight: bold;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             text-transform: uppercase;
+            text-shadow: 0 0 10px #00ffcc;
         }
 
         .main-logo {
@@ -131,8 +133,9 @@
             z-index: 2; 
         }
 
+        /* UPDATED: Doubled size of sign in / sign up buttons */
         .auth-btn-graphic {
-            width: 130px;
+            width: 260px;
             transition: transform 0.2s, filter 0.2s;
             cursor: pointer;
             position: relative;
@@ -280,7 +283,7 @@
         }
 
         .auth-wrapper .info-panel {
-            width: 180px;
+            width: 260px; /* Widened to match new larger buttons */
             font-size: 0.85rem;
         }
 
@@ -312,16 +315,14 @@
 
         /* --- SPECIFIC LOGO SIZING & POSITIONING --- */
         
-        /* FIX: Information Station specific (News & Store) */
         .info-station-wrapper .behind-logo { 
             height: 100px; 
-            top: -75px; /* Brought up from -60px */
+            top: -75px; 
         }
         .info-station-wrapper .nav-wrapper.with-logo:hover .behind-logo { 
-            top: -90px; /* Fixed the selector bug, now slides up properly */
+            top: -90px; 
         }
         
-        /* FIX: Extra Large Games & Discord Logos */
         .info-station-wrapper .behind-logo.col-games, 
         .info-station-wrapper .behind-logo.col-discord { 
             height: 130px; 
@@ -332,32 +333,28 @@
             top: -100px; 
         }
 
-        /* General Custom Resizing */
         .behind-logo.wide-logo { width: 120px; height: auto; top: -20px; }
         .nav-wrapper.with-logo:hover .behind-logo.wide-logo { top: -30px; }
 
         .behind-logo.xl-logo { width: 140px; height: auto; top: -20px; }
         .nav-wrapper.with-logo:hover .behind-logo.xl-logo { top: -30px; }
 
-        /* FIX: Raised & Widened Mini Main Logo */
         .behind-logo.main-mini { 
             width: 140px; 
             height: auto; 
-            top: -75px; /* Pushed much higher so it clears the button */
+            top: -75px; 
         }
         .nav-wrapper.with-logo:hover .behind-logo.main-mini { 
             top: -90px; 
         }
 
-        /* Grid specific scaled logos */
         .behind-logo.col-book {
             height: 90px; 
             top: -55px; 
         }
         
-        /* FIX: Shrunk the GitHub logo */
         .behind-logo.col-git {
-            height: 75px; /* Reduced from 90px */
+            height: 75px; 
             top: -45px; 
         }
         
@@ -368,7 +365,7 @@
         }
         
         .nav-wrapper.with-logo:hover .behind-logo.col-book { top: -65px; }
-        .nav-wrapper.with-logo:hover .behind-logo.col-git { top: -55px; } /* Updated hover for smaller size */
+        .nav-wrapper.with-logo:hover .behind-logo.col-git { top: -55px; } 
         
         .nav-wrapper.with-logo:hover .behind-logo.col-bill,
         .nav-wrapper.with-logo:hover .behind-logo.col-stream { top: -75px; }
@@ -409,7 +406,6 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
         }
 
-        /* Pushing ALL grid column buttons down to make room for massive logos */
         .grid-column .with-logo {
             margin-top: 80px; 
         }
@@ -517,6 +513,7 @@
             .auth-actions { flex-direction: column; gap: 20px; }
             .nav-separator { display: none; }
             .news-ticker-container { border-width: 1px; padding: 10px 0; }
+            .auth-btn-graphic { width: 200px; } /* Scales down slightly for mobile screens */
         }
     </style>
 </head>
@@ -620,7 +617,7 @@
                 </div>
 
                 <div class="nav-wrapper with-logo">
-                    <img src="gethublogo.png" alt="GitHub" class="behind-logo col-git">
+                    <img src="githublogo.png" alt="GitHub" class="behind-logo col-git">
                     <img src="modhub.png" alt="Mod Hub" class="btn-graphic">
                     <div class="info-panel">A list of do-it-yourself mod repositories.</div>
                 </div>
