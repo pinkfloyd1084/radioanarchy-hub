@@ -18,11 +18,11 @@
             overflow-x: hidden;
         }
 
-        /* --- NEW HEADER SECTION --- */
+        /* --- HEADER SECTION --- */
         .top-banner {
             width: 100%;
             display: block;
-            background: #000; /* Keeps parallax from showing behind it */
+            background: #000; 
             position: relative;
             z-index: 10;
         }
@@ -35,7 +35,7 @@
             align-items: center;
             padding: 15px 40px;
             position: relative;
-            z-index: 10;
+            z-index: 15; /* Keeps bar above parallax */
             box-shadow: 0 5px 15px rgba(255, 0, 85, 0.3);
         }
 
@@ -53,17 +53,21 @@
             align-items: center;
         }
 
+        /* Fixed: Text beside buttons */
         .auth-group {
             display: flex;
-            flex-direction: column;
+            flex-direction: row; 
             align-items: center;
-            gap: 5px;
+            gap: 15px;
+            position: relative; /* For the dropdown */
         }
 
         .auth-label {
-            color: #fff;
-            font-size: 0.9rem;
+            color: #00ffcc;
+            font-size: 1.1rem;
+            font-weight: bold;
             letter-spacing: 1px;
+            text-shadow: 0 0 8px #00ffcc;
         }
 
         /* Container for the rest of the page */
@@ -117,6 +121,7 @@
             color: #00ffcc;
             font-weight: bold;
             font-size: 1.2rem;
+            text-shadow: 0 0 8px #00ffcc;
         }
 
         /* --- BUTTON STYLES & ANIMATIONS --- */
@@ -128,23 +133,31 @@
             z-index: 2;
         }
 
-        .btn-graphic:hover {
+        .auth-btn-graphic {
+            width: 130px;
+            transition: transform 0.2s, filter 0.2s;
+            cursor: pointer;
+            position: relative;
+            z-index: 2;
+        }
+
+        .btn-graphic:hover, .auth-btn-graphic:hover {
             transform: scale(1.05);
             filter: drop-shadow(0 0 12px #00ffcc);
         }
 
-        /* The Click Flash Effect */
-        .btn-graphic:active {
+        .btn-graphic:active, .auth-btn-graphic:active {
             transform: scale(0.95);
             filter: brightness(2) hue-rotate(90deg) drop-shadow(0 0 20px #fff);
             transition: all 0.1s;
         }
 
-        /* Main Navigation Row (2x3 Grid) */
+        /* Main Navigation Row (Flexbox for 5 buttons) */
         .main-nav {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px 40px;
             margin: 0 auto 80px auto;
             max-width: 800px;
             padding: 30px;
@@ -154,16 +167,21 @@
             border-bottom: 2px solid #ff0055;
         }
 
-        /* --- SLIDE OUT INFO BOX --- */
-        .nav-wrapper {
+        /* --- SLIDE OUT INFO BOX (Z-Index Fixed) --- */
+        .nav-wrapper, .auth-wrapper {
             position: relative;
             display: flex;
             justify-content: center;
         }
 
+        /* The Fix: Brings the hovered item to the very front */
+        .nav-wrapper:hover, .auth-wrapper:hover {
+            z-index: 50; 
+        }
+
         .info-panel {
             position: absolute;
-            top: 80%; /* Starts hidden behind the button */
+            top: 80%; 
             left: 50%;
             transform: translateX(-50%);
             opacity: 0;
@@ -176,16 +194,21 @@
             width: 200px;
             font-size: 0.9rem;
             line-height: 1.4;
-            transition: all 0.4s ease-out; /* Medium pace slide */
-            z-index: 1;
+            transition: all 0.4s ease-out; 
             pointer-events: none;
             box-shadow: 0 10px 20px rgba(0,0,0,0.8);
         }
 
-        .nav-wrapper:hover .info-panel {
+        /* Specific panel width for the Auth Bar so it doesn't break formatting */
+        .auth-wrapper .info-panel {
+            width: 160px;
+            font-size: 0.85rem;
+        }
+
+        .nav-wrapper:hover .info-panel, .auth-wrapper:hover .info-panel {
             opacity: 1;
             visibility: visible;
-            top: 110%; /* Slides down below the button */
+            top: 110%; 
         }
 
         /* 3-Column Content Grid */
@@ -264,11 +287,17 @@
         <div class="auth-bar-right">
             <div class="auth-group">
                 <span class="auth-label">Members:</span>
-                <img src="signin.png" alt="Sign In" class="btn-graphic" style="width: 120px;">
+                <div class="auth-wrapper">
+                    <img src="signin.png" alt="Sign In" class="auth-btn-graphic">
+                    <div class="info-panel">Access your account, Lounges, and settings.</div>
+                </div>
             </div>
             <div class="auth-group">
                 <span class="auth-label">New to The Hub?</span>
-                <img src="signup.png" alt="Sign Up" class="btn-graphic" style="width: 120px;">
+                <div class="auth-wrapper">
+                    <img src="signup.png" alt="Sign Up" class="auth-btn-graphic">
+                    <div class="info-panel">Register securely using Discord, Google, or Email.</div>
+                </div>
             </div>
         </div>
     </div>
@@ -281,17 +310,15 @@
         </div>
 
         <div class="mission-statement">
-            <p class="mission-highlight">Who We Are & What We Do</p>
-            <p>We are a Community of Communities. A unified network dedicated to gaming, development, and digital creation.</p>
-            <p>Here you will find everything from active game server rosters and technical knowledge bases, to allied community networks and creator support.</p>
-            <p style="color: #ff0055; margin-top: 20px;">[Hover over the directory buttons below for more in-depth details on each page.]</p>
+            <p class="mission-highlight">TRANSMISSION INCOMING: OUR MISSION</p>
+            <p>Radio Anarchy isn't just a destination—it is a <strong>Community of Communities</strong>. We are a unified digital network built from the ground up for players, server owners, admins, content creators, and mod makers.</p>
+            <p><strong>Membership is 100% free.</strong> Securing a hub account grants you immediate access to the interactive Lounges, deep-dive tech Guides, our expanding Mod Repositories, Video Tutorials, the massive Retro Vault, and more.</p>
+            <p>This network grows with your help and becomes stronger through collaboration. Run your own community? Submit it to the hub and join a larger family of servers. Content creator? Broadcast your stream schedule. Mod maker? Advertise your work and link your GitHub. Curating a classic archive? Submit your Retro Game links.</p>
+            <p class="mission-highlight" style="margin-top: 20px;">Look around. Make friends. Have fun. Enjoy yourselves.</p>
+            <p style="color: #ff0055; font-size: 0.9rem; margin-top: 20px;">[Hover over the directory buttons below for detailed sector information]</p>
         </div>
 
         <div class="main-nav">
-            <div class="nav-wrapper">
-                <img src="home.png" alt="Home" class="btn-graphic">
-                <div class="info-panel">Return to the main broadcasting hub. Current news and network status.</div>
-            </div>
             <div class="nav-wrapper">
                 <img src="games.png" alt="Games" class="btn-graphic">
                 <div class="info-panel">Active server rosters, connection IPs, and rules for supported games.</div>
