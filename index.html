@@ -18,6 +18,55 @@
             overflow-x: hidden;
         }
 
+        /* --- NEW HEADER SECTION --- */
+        .top-banner {
+            width: 100%;
+            display: block;
+            background: #000; /* Keeps parallax from showing behind it */
+            position: relative;
+            z-index: 10;
+        }
+
+        .auth-bar {
+            background: linear-gradient(90deg, #3a0000 0%, #1a0000 100%);
+            border-bottom: 2px solid #ff0055;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 5px 15px rgba(255, 0, 85, 0.3);
+        }
+
+        .auth-bar-left h2 {
+            color: #00ffcc;
+            margin: 0;
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px #00ffcc;
+        }
+
+        .auth-bar-right {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .auth-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .auth-label {
+            color: #fff;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        /* Container for the rest of the page */
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -25,53 +74,19 @@
             position: relative;
         }
 
-        /* Header Section */
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 30px;
-            position: relative;
-        }
-
-        .logo-wrapper {
-            flex-grow: 1;
-            display: flex;
-            justify-content: center;
-        }
-
         .main-logo {
             width: 100%;
             max-width: 700px;
             filter: drop-shadow(0 0 20px rgba(255, 0, 85, 0.4));
+            margin-bottom: 30px;
         }
 
-        .auth-buttons {
-            position: absolute;
-            top: 0;
-            right: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .auth-btn {
-            width: 140px;
-            transition: transform 0.2s, filter 0.2s;
-            cursor: pointer;
-        }
-
-        .auth-btn:hover {
-            transform: scale(1.05);
-            filter: drop-shadow(0 0 12px #00ffcc);
-        }
-
-        /* Warning Banner */
+        /* Advisory & Mission Statement */
         .construction-warning {
             border: 2px dashed #ff0055;
             background: rgba(10, 10, 15, 0.85);
             padding: 15px;
-            margin: 0 auto 50px auto;
+            margin: 0 auto 20px auto;
             max-width: 800px;
             border-radius: 8px;
             color: #ff0055;
@@ -81,33 +96,99 @@
             letter-spacing: 1px;
         }
 
-        /* Main Navigation Row */
-        .main-nav {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 60px;
+        .mission-statement {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #00ffcc;
             padding: 25px;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 12px;
-            border-top: 1px solid #00ffcc;
-            border-bottom: 1px solid #00ffcc;
+            margin: 0 auto 50px auto;
+            max-width: 900px;
+            border-radius: 8px;
             box-shadow: inset 0 0 20px rgba(0, 255, 204, 0.1);
         }
 
-        .nav-btn {
+        .mission-statement p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin: 10px 0;
+            color: #ddd;
+        }
+
+        .mission-highlight {
+            color: #00ffcc;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* --- BUTTON STYLES & ANIMATIONS --- */
+        .btn-graphic {
             width: 180px;
             transition: transform 0.2s, filter 0.2s;
             cursor: pointer;
+            position: relative;
+            z-index: 2;
         }
 
-        .nav-btn:hover {
+        .btn-graphic:hover {
             transform: scale(1.05);
             filter: drop-shadow(0 0 12px #00ffcc);
         }
 
-        /* 3-Column Grid Layout */
+        /* The Click Flash Effect */
+        .btn-graphic:active {
+            transform: scale(0.95);
+            filter: brightness(2) hue-rotate(90deg) drop-shadow(0 0 20px #fff);
+            transition: all 0.1s;
+        }
+
+        /* Main Navigation Row (2x3 Grid) */
+        .main-nav {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px 20px;
+            margin: 0 auto 80px auto;
+            max-width: 800px;
+            padding: 30px;
+            background: rgba(10, 10, 15, 0.7);
+            border-radius: 12px;
+            border-top: 2px solid #ff0055;
+            border-bottom: 2px solid #ff0055;
+        }
+
+        /* --- SLIDE OUT INFO BOX --- */
+        .nav-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .info-panel {
+            position: absolute;
+            top: 80%; /* Starts hidden behind the button */
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            visibility: hidden;
+            background: rgba(5, 5, 5, 0.95);
+            border: 1px solid #00ffcc;
+            color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            width: 200px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            transition: all 0.4s ease-out; /* Medium pace slide */
+            z-index: 1;
+            pointer-events: none;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.8);
+        }
+
+        .nav-wrapper:hover .info-panel {
+            opacity: 1;
+            visibility: visible;
+            top: 110%; /* Slides down below the button */
+        }
+
+        /* 3-Column Content Grid */
         .content-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -136,18 +217,6 @@
             border-bottom: 1px dashed #555;
             padding-bottom: 15px;
             width: 100%;
-        }
-
-        .grid-btn {
-            width: 100%;
-            max-width: 240px;
-            transition: transform 0.2s, filter 0.2s;
-            cursor: pointer;
-        }
-
-        .grid-btn:hover {
-            transform: scale(1.05);
-            filter: drop-shadow(0 0 12px #ff0055);
         }
 
         /* Footer Elements */
@@ -182,70 +251,90 @@
             background: rgba(0,0,0,0.5);
             border-radius: 5px;
         }
-
-        /* Mobile Responsiveness */
-        @media (max-width: 850px) {
-            .header-top {
-                flex-direction: column;
-                align-items: center;
-            }
-            .auth-buttons {
-                position: relative;
-                flex-direction: row;
-                justify-content: center;
-                margin-top: 25px;
-                gap: 20px;
-            }
-        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header-top">
-            <div class="logo-wrapper">
-                <img src="radioanarchylogo.png" alt="Radio Anarchy Logo" class="main-logo">
+    <img src="RadioAnarchyBanner.png" class="top-banner" alt="Radio Anarchy Banner">
+    
+    <div class="auth-bar">
+        <div class="auth-bar-left">
+            <h2>WELCOME TO THE HUB</h2>
+        </div>
+        <div class="auth-bar-right">
+            <div class="auth-group">
+                <span class="auth-label">Members:</span>
+                <img src="signin.png" alt="Sign In" class="btn-graphic" style="width: 120px;">
             </div>
-            <div class="auth-buttons">
-                <img src="signin.png" alt="Sign In" class="auth-btn">
-                <img src="signup.png" alt="Sign Up" class="auth-btn">
+            <div class="auth-group">
+                <span class="auth-label">New to The Hub?</span>
+                <img src="signup.png" alt="Sign Up" class="btn-graphic" style="width: 120px;">
             </div>
         </div>
+    </div>
+
+    <div class="container">
+        <img src="radioanarchylogo.png" alt="Radio Anarchy Logo" class="main-logo">
 
         <div class="construction-warning">
             ⚠️ UNDER CONSTRUCTION: Many features and links are not working atm. ⚠️
         </div>
 
+        <div class="mission-statement">
+            <p class="mission-highlight">Who We Are & What We Do</p>
+            <p>We are a Community of Communities. A unified network dedicated to gaming, development, and digital creation.</p>
+            <p>Here you will find everything from active game server rosters and technical knowledge bases, to allied community networks and creator support.</p>
+            <p style="color: #ff0055; margin-top: 20px;">[Hover over the directory buttons below for more in-depth details on each page.]</p>
+        </div>
+
         <div class="main-nav">
-            <img src="home.png" alt="Home" class="nav-btn">
-            <img src="games.png" alt="Games" class="nav-btn">
-            <img src="store.png" alt="Store" class="nav-btn">
-            <img src="news.png" alt="News" class="nav-btn">
-            <img src="retrovault.png" alt="Retro Vault" class="nav-btn">
-            <img src="streamschedule.png" alt="Stream Schedule" class="nav-btn">
+            <div class="nav-wrapper">
+                <img src="home.png" alt="Home" class="btn-graphic">
+                <div class="info-panel">Return to the main broadcasting hub. Current news and network status.</div>
+            </div>
+            <div class="nav-wrapper">
+                <img src="games.png" alt="Games" class="btn-graphic">
+                <div class="info-panel">Active server rosters, connection IPs, and rules for supported games.</div>
+            </div>
+            <div class="nav-wrapper">
+                <img src="store.png" alt="Store" class="btn-graphic">
+                <div class="info-panel">Official apparel, server perks, and digital assets.</div>
+            </div>
+            <div class="nav-wrapper">
+                <img src="news.png" alt="News" class="btn-graphic">
+                <div class="info-panel">Latest community updates, patch notes, and hardware news.</div>
+            </div>
+            <div class="nav-wrapper">
+                <img src="retrovault.png" alt="Retro Vault" class="btn-graphic">
+                <div class="info-panel">Archives and repositories for classic emulation and gaming history.</div>
+            </div>
+            <div class="nav-wrapper">
+                <img src="streamschedule.png" alt="Stream Schedule" class="btn-graphic">
+                <div class="info-panel">The Creator TV Guide. See who is live across the network right now.</div>
+            </div>
         </div>
 
         <div class="content-grid">
             <div class="grid-column">
                 <h2>LEARNING</h2>
-                <img src="theknowledgebase.png" alt="The Knowledge Base" class="grid-btn">
-                <img src="modhub.png" alt="Mod Hub" class="grid-btn">
-                <img src="videotutorials.png" alt="Video Tutorials" class="grid-btn">
+                <img src="theknowledgebase.png" alt="The Knowledge Base" class="btn-graphic">
+                <img src="modhub.png" alt="Mod Hub" class="btn-graphic">
+                <img src="videotutorials.png" alt="Video Tutorials" class="btn-graphic">
             </div>
 
             <div class="grid-column">
                 <h2>NETWORKING</h2>
-                <img src="communitynetwork.png" alt="Community Network" class="grid-btn">
-                <img src="communitybillboard.png" alt="Community Billboard" class="grid-btn">
-                <img src="discordroles.png" alt="Discord Roles" class="grid-btn">
+                <img src="communitynetwork.png" alt="Community Network" class="btn-graphic">
+                <img src="communitybillboard.png" alt="Community Billboard" class="btn-graphic">
+                <img src="discordroles.png" alt="Discord Roles" class="btn-graphic">
             </div>
 
             <div class="grid-column">
                 <h2>THE LOUNGES</h2>
-                <img src="playerlounge.png" alt="Player Lounge" class="grid-btn">
-                <img src="serverownerlounge.png" alt="Server Owner Lounge" class="grid-btn">
-                <img src="creatorlounge.png" alt="Creator Lounge" class="grid-btn">
-                <img src="modderlounge.png" alt="Modder Lounge" class="grid-btn">
+                <img src="playerslounge.png" alt="Player Lounge" class="btn-graphic">
+                <img src="serverownerslounge.png" alt="Server Owner Lounge" class="btn-graphic">
+                <img src="creatorslounge.png" alt="Creator Lounge" class="btn-graphic">
+                <img src="modderlounge.png" alt="Modder Lounge" class="btn-graphic">
             </div>
         </div>
     </div>
