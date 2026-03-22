@@ -27,33 +27,33 @@
             border-bottom: 2px solid #ff0055;
         }
 
-        /* --- DYNAMIC USER PROFILE BOX --- */
+        /* --- UPDATED DYNAMIC USER PROFILE BOX --- */
         #user-profile-box {
-            background: rgba(15, 5, 10, 0.85);
+            background: rgba(15, 5, 10, 0.9);
             border: 2px solid #00ffcc;
             border-radius: 12px;
             padding: 15px 25px;
-            margin: 40px auto -20px auto; /* Tucked right above the hero row */
-            max-width: 400px;
+            margin: 40px auto -20px auto;
+            max-width: 420px;
+            display: none; /* Controlled by JS */
             align-items: center;
             justify-content: center;
             gap: 20px;
-            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+            box-shadow: 0 0 25px rgba(0, 255, 204, 0.3);
             position: relative;
             z-index: 20;
         }
 
         #user-avatar {
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             border: 2px solid #ff0055;
             object-fit: cover;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.4);
         }
 
-        .user-details {
-            text-align: left;
-        }
+        .user-details { text-align: left; }
 
         #user-name {
             color: #fff;
@@ -62,29 +62,32 @@
             text-shadow: 0 0 8px #fff;
         }
 
-        .profile-link-btn {
-            display: inline-block;
-            margin-top: 8px;
-            color: #00ffcc;
-            text-decoration: none;
-            font-size: 0.9rem;
-            border: 1px dashed #00ffcc;
-            padding: 5px 10px;
-            transition: all 0.2s;
+        /* --- GLOBAL GRAPHIC BUTTON ANIMATIONS --- */
+        .btn-graphic-main {
+            transition: transform 0.2s, filter 0.2s;
             cursor: pointer;
         }
 
-        .profile-link-btn:hover {
-            background: rgba(0, 255, 204, 0.2);
-            box-shadow: 0 0 10px #00ffcc;
+        .btn-graphic-main:hover {
+            transform: translateY(-5px);
+            filter: drop-shadow(0 0 10px #00ffcc);
         }
 
-        /* --- HEADER HERO ROW (Centered & Tightened) --- */
+        .btn-graphic-main:active {
+            transform: translateY(2px) scale(0.95);
+            filter: brightness(1.5) hue-rotate(90deg);
+        }
+
+        .btn-profile-access { width: 180px; margin-top: 10px; }
+        .auth-btn-graphic { width: 260px; }
+        .btn-graphic { width: 180px; }
+
+        /* --- HEADER HERO ROW --- */
         .header-hero-row {
             display: flex;
-            justify-content: center; /* Brought in from the edges */
+            justify-content: center;
             align-items: center;
-            gap: 40px; /* Controls spacing between the 3 elements */
+            gap: 40px;
             width: 100%;
             max-width: 1300px;
             margin: 50px auto 20px auto;
@@ -97,7 +100,6 @@
             border-radius: 12px;
             padding: 20px 30px;
             box-shadow: 0 0 20px rgba(255, 0, 85, 0.2);
-            z-index: 5;
         }
 
         .welcome-box h2 {
@@ -118,474 +120,67 @@
             border-radius: 12px;
             padding: 25px 30px;
             box-shadow: 0 0 20px rgba(255, 0, 85, 0.2);
-            z-index: 5;
         }
 
-        .auth-group {
-            display: flex;
-            flex-direction: column; 
-            align-items: center;
-            gap: 12px;
-        }
+        .auth-group { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        .auth-label { color: #00ffcc; font-size: 1.1rem; font-weight: bold; text-transform: uppercase; text-shadow: 0 0 10px #00ffcc; }
 
-        .auth-label {
-            color: #00ffcc;
-            font-size: 1.1rem;
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px #00ffcc;
-        }
+        .logo-container { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .main-logo-top { width: 100%; max-width: 450px; filter: drop-shadow(0 0 20px rgba(255, 0, 85, 0.4)); }
+        .coming-soon-img { width: 250px; filter: drop-shadow(0 0 10px rgba(0, 255, 204, 0.4)); transition: transform 0.2s; }
+        .coming-soon-img:hover { transform: scale(1.05); }
 
-        /* Logo Container for Stacking */
-        .logo-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            z-index: 10;
-        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px 30px 20px; position: relative; }
+        .construction-warning { border: 2px dashed #ff0055; background: rgba(10, 10, 15, 0.85); padding: 15px; margin: 0 auto 20px auto; max-width: 800px; border-radius: 8px; color: #ff0055; font-size: 1.2rem; font-weight: bold; }
+        .mission-statement { background: rgba(0, 0, 0, 0.7); border: 1px solid #00ffcc; padding: 25px; margin: 0 auto 50px auto; max-width: 900px; border-radius: 8px; }
+        .mission-highlight { color: #00ffcc; font-weight: bold; font-size: 1.2rem; text-shadow: 0 0 8px #00ffcc; }
 
-        .main-logo-top {
-            width: 100%;
-            max-width: 450px; /* Scaled down slightly */
-            filter: drop-shadow(0 0 20px rgba(255, 0, 85, 0.4));
-        }
-
-        .coming-soon-img {
-            width: 250px; /* Scaled up to match buttons */
-            filter: drop-shadow(0 0 10px rgba(0, 255, 204, 0.4));
-            transition: transform 0.2s;
-        }
-
-        .coming-soon-img:hover {
-            transform: scale(1.05);
-        }
-
-        /* Container for the rest of the page */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px 30px 20px;
-            position: relative;
-        }
-
-        /* Advisory & Mission Statement */
-        .construction-warning {
-            border: 2px dashed #ff0055;
-            background: rgba(10, 10, 15, 0.85);
-            padding: 15px;
-            margin: 0 auto 20px auto;
-            max-width: 800px;
-            border-radius: 8px;
-            color: #ff0055;
-            font-size: 1.2rem;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
-            letter-spacing: 1px;
-        }
-
-        .mission-statement {
-            background: rgba(0, 0, 0, 0.7);
-            border: 1px solid #00ffcc;
-            padding: 25px;
-            margin: 0 auto 50px auto;
-            max-width: 900px;
-            border-radius: 8px;
-            box-shadow: inset 0 0 20px rgba(0, 255, 204, 0.1);
-        }
-
-        .mission-statement p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin: 10px 0;
-            color: #ddd;
-        }
-
-        .mission-highlight {
-            color: #00ffcc;
-            font-weight: bold;
-            font-size: 1.2rem;
-            text-shadow: 0 0 8px #00ffcc;
-        }
-
-        /* --- BUTTON STYLES & ANIMATIONS --- */
-        .btn-graphic {
-            width: 180px;
-            transition: transform 0.2s, filter 0.2s;
-            cursor: pointer;
-            position: relative;
-            z-index: 2; 
-        }
-
-        .auth-btn-graphic {
-            width: 260px; 
-            transition: transform 0.2s, filter 0.2s;
-            cursor: pointer;
-            position: relative;
-            z-index: 2;
-        }
-
-        .btn-graphic:hover, .auth-btn-graphic:hover {
-            transform: scale(1.05);
-            filter: drop-shadow(0 0 12px #00ffcc);
-        }
-
-        .btn-graphic:active, .auth-btn-graphic:active {
-            transform: scale(0.95);
-            filter: brightness(2) hue-rotate(90deg) drop-shadow(0 0 20px #fff);
-            transition: all 0.1s;
-        }
-
-        /* --- THE INFORMATION STATION --- */
-        .info-station-wrapper {
-            margin: 0 auto 50px auto;
-            max-width: 1100px;
-            background: rgba(10, 10, 15, 0.7);
-            border-radius: 12px;
-            border-top: 2px solid #ff0055;
-            border-bottom: 2px solid #ff0055;
-            padding: 25px 20px 40px 20px;
-        }
-
-        .info-station-header {
-            color: #00ffcc;
-            font-size: 1.6rem;
-            letter-spacing: 3px;
-            text-shadow: 0 0 10px #00ffcc;
-            margin-bottom: 30px;
-            margin-top: 0;
-        }
-
-        .main-nav {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .info-station-wrapper .with-logo {
-            margin-top: 90px; 
-        }
-
-        .nav-separator {
-            color: #ff0055;
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-shadow: 0 0 8px #ff0055;
-            user-select: none;
-            margin-top: 90px; 
-        }
-
-        /* --- FULL WIDTH SCROLLING NEWS TICKER --- */
-        .news-ticker-container {
-            width: 100vw; 
-            position: relative;
-            left: 50%;
-            right: 50%;
-            margin-left: -50vw;
-            margin-right: -50vw;
-            background: rgba(0, 20, 40, 0.85); 
-            border-top: 2px dashed #00ffcc;
-            border-bottom: 2px dashed #00ffcc;
-            box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
-            overflow: hidden;
-            padding: 15px 0;
-            margin-bottom: 60px;
-        }
-
-        .news-ticker-text {
-            white-space: nowrap;
-            display: inline-block;
-            color: #00ffcc;
-            font-size: 1.1rem;
-            font-weight: bold;
-            letter-spacing: 2px;
-            text-shadow: 0 0 8px #00ffcc;
-            animation: tickerScroll 300s linear infinite; 
-            padding-left: 100%; 
-        }
-
-        .news-ticker-container:hover .news-ticker-text {
-            animation-play-state: paused;
-        }
-
-        @keyframes tickerScroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
-        }
-
-        /* --- COMMUNITY MEMBERS AREA HEADER --- */
-        .community-header {
-            background: rgba(15, 5, 10, 0.85);
-            border: 1px solid #ff0055;
-            padding: 20px;
-            margin: 0 auto 40px auto;
-            max-width: 1050px;
-            border-radius: 8px;
-            box-shadow: 0 5px 20px rgba(255, 0, 85, 0.2);
-        }
-
-        .community-header h2 {
-            color: #ff0055;
-            margin: 0;
-            font-size: 1.8rem;
-            letter-spacing: 4px;
-            text-shadow: 0 0 10px rgba(255, 0, 85, 0.6);
-        }
-
-        /* --- SLIDE OUT INFO BOX & PEEK-A-BOO LOGOS --- */
-        .nav-wrapper, .auth-wrapper {
-            position: relative;
-            display: flex;
-            justify-content: center;
-        }
-
-        .nav-wrapper:hover, .auth-wrapper:hover {
-            z-index: 50; 
-        }
-
-        .info-panel {
-            position: absolute;
-            top: 80%; 
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            visibility: hidden;
-            background: rgba(5, 5, 5, 0.95);
-            border: 1px solid #00ffcc;
-            color: #fff;
-            padding: 15px;
-            border-radius: 5px;
-            width: 220px;
-            font-size: 0.9rem;
-            line-height: 1.4;
-            transition: all 0.4s ease-out; 
-            pointer-events: none;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.8);
-        }
-
-        .auth-wrapper .info-panel {
-            width: 260px; 
-            font-size: 0.85rem;
-        }
-
-        .nav-wrapper:hover .info-panel, .auth-wrapper:hover .info-panel {
-            opacity: 1;
-            visibility: visible;
-            top: 110%; 
-        }
-
-        /* Peek-a-boo Background Logos Setup */
-        .behind-logo {
-            position: absolute;
-            top: -30px; 
-            left: 50%;
-            transform: translateX(-50%);
-            height: 50px; 
-            width: auto;
-            z-index: 1; 
-            opacity: 0.6;
-            transition: all 0.3s ease;
-            filter: drop-shadow(0 0 5px rgba(0, 255, 204, 0.3));
-        }
-
-        .nav-wrapper.with-logo:hover .behind-logo {
-            opacity: 1;
-            top: -42px; 
-            filter: drop-shadow(0 0 15px #00ffcc);
-        }
-
-        /* --- SPECIFIC LOGO SIZING & POSITIONING --- */
+        /* --- INFO STATION & TICKER --- */
+        .info-station-wrapper { margin: 0 auto 50px auto; max-width: 1100px; background: rgba(10, 10, 15, 0.7); border-radius: 12px; border-top: 2px solid #ff0055; border-bottom: 2px solid #ff0055; padding: 25px 20px 40px 20px; }
+        .main-nav { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 20px; }
+        .nav-separator { color: #ff0055; font-size: 1.5rem; font-weight: bold; margin-top: 90px; }
         
-        .info-station-wrapper .behind-logo { height: 100px; top: -75px; }
-        .info-station-wrapper .nav-wrapper.with-logo:hover .behind-logo { top: -90px; }
+        .news-ticker-container { width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; background: rgba(0, 20, 40, 0.85); border-top: 2px dashed #00ffcc; border-bottom: 2px dashed #00ffcc; overflow: hidden; padding: 15px 0; margin-bottom: 60px; }
+        .news-ticker-text { white-space: nowrap; display: inline-block; color: #00ffcc; font-size: 1.1rem; animation: tickerScroll 300s linear infinite; padding-left: 100%; }
+        @keyframes tickerScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+        /* --- TOOLTIPS --- */
+        .nav-wrapper, .auth-wrapper { position: relative; display: flex; justify-content: center; }
+        .info-panel { position: absolute; top: 80%; left: 50%; transform: translateX(-50%); opacity: 0; visibility: hidden; background: rgba(5, 5, 5, 0.95); border: 1px solid #00ffcc; padding: 15px; border-radius: 5px; width: 220px; transition: all 0.4s ease-out; z-index: 100; pointer-events: none; }
+        .nav-wrapper:hover .info-panel, .auth-wrapper:hover .info-panel { opacity: 1; visibility: visible; top: 110%; }
         
-        .info-station-wrapper .behind-logo.col-games, 
-        .info-station-wrapper .behind-logo.col-discord { height: 130px; top: -85px; }
-        .info-station-wrapper .nav-wrapper.with-logo:hover .behind-logo.col-games,
-        .info-station-wrapper .nav-wrapper.with-logo:hover .behind-logo.col-discord { top: -100px; }
+        .behind-logo { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); height: 50px; opacity: 0.6; transition: 0.3s; z-index: 1; }
+        .nav-wrapper:hover .behind-logo { opacity: 1; top: -40px; filter: drop-shadow(0 0 15px #00ffcc); }
+        .with-logo { margin-top: 80px; }
 
-        .behind-logo.wide-logo { width: 120px; height: auto; top: -20px; }
-        .nav-wrapper.with-logo:hover .behind-logo.wide-logo { top: -30px; }
+        .content-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 60px 40px; margin-bottom: 60px; }
+        .grid-column { display: flex; flex-direction: column; align-items: center; gap: 20px; background: rgba(10, 10, 15, 0.7); padding: 30px; border-radius: 8px; border: 1px solid #333; }
+        .grid-column h2 { color: #00ffcc; border-bottom: 1px dashed #555; padding-bottom: 15px; width: 100%; }
 
-        .behind-logo.xl-logo { width: 140px; height: auto; top: -20px; }
-        .nav-wrapper.with-logo:hover .behind-logo.xl-logo { top: -30px; }
+        .footer { background: #020202; padding: 50px 20px; line-height: 1.8; }
+        .footer a { color: #00ffcc; text-decoration: none; }
 
-        .behind-logo.main-mini { width: 140px; height: auto; top: -75px; }
-        .nav-wrapper.with-logo:hover .behind-logo.main-mini { top: -90px; }
-
-        .behind-logo.col-book { height: 90px; top: -55px; }
-        .behind-logo.col-git { height: 75px; top: -45px; }
-        .behind-logo.col-bill, .behind-logo.col-stream { height: 110px; top: -65px; }
-        
-        .nav-wrapper.with-logo:hover .behind-logo.col-book { top: -65px; }
-        .nav-wrapper.with-logo:hover .behind-logo.col-git { top: -55px; } 
-        .nav-wrapper.with-logo:hover .behind-logo.col-bill,
-        .nav-wrapper.with-logo:hover .behind-logo.col-stream { top: -75px; }
-
-        .behind-logo.col-player-l { height: 90px; top: -55px; }
-        .nav-wrapper.with-logo:hover .behind-logo.col-player-l { top: -65px; }
-        
-        .behind-logo.col-server-l, 
-        .behind-logo.col-creator-l, 
-        .behind-logo.col-modder-l { height: 100px; top: -60px; }
-        .nav-wrapper.with-logo:hover .behind-logo.col-server-l,
-        .nav-wrapper.with-logo:hover .behind-logo.col-creator-l,
-        .nav-wrapper.with-logo:hover .behind-logo.col-modder-l { top: -70px; }
-
-        /* 3-Column Content Grid */
-        .content-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 60px 40px; 
-            margin-bottom: 60px;
-        }
-
-        .grid-column {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            background: rgba(10, 10, 15, 0.7);
-            padding: 30px;
-            border-radius: 8px;
-            border: 1px solid #333;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-        }
-
-        .grid-column .with-logo { margin-top: 80px; }
-
-        .grid-column h2 {
-            color: #00ffcc;
-            text-shadow: 0 0 10px #00ffcc;
-            margin-top: 0;
-            font-size: 1.25rem;
-            letter-spacing: 1px;
-            border-bottom: 1px dashed #555;
-            padding-bottom: 15px;
-            width: 100%;
-        }
-
-        /* --- ADVERTISEMENT SPACE --- */
-        .ad-section {
-            background: rgba(15, 5, 10, 0.7);
-            border: 1px dashed #ff0055;
-            padding: 30px 20px;
-            margin: 0 auto 60px auto;
-            max-width: 1050px;
-            border-radius: 8px;
-        }
-
-        .ad-section h2 {
-            color: #ff0055;
-            margin-top: 0;
-            margin-bottom: 25px;
-            font-size: 1.4rem;
-            letter-spacing: 3px;
-            text-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
-        }
-
-        .ad-grid {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .ad-placeholder {
-            width: 300px;
-            height: 250px;
-            background: rgba(5, 5, 5, 0.9);
-            border: 2px dashed #333;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #555;
-            font-family: 'Courier New', Courier, monospace;
-            font-weight: bold;
-            font-size: 1.2rem;
-            letter-spacing: 2px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            box-shadow: inset 0 0 20px rgba(0,0,0,1);
-            text-decoration: none; 
-        }
-
-        .ad-placeholder:hover {
-            border-color: #00ffcc;
-            color: #00ffcc;
-            text-shadow: 0 0 10px #00ffcc;
-            box-shadow: 0 0 15px rgba(0, 255, 204, 0.2), inset 0 0 20px rgba(0, 255, 204, 0.1);
-            transform: scale(1.02);
-        }
-
-        /* Footer Elements */
-        .bottom-image {
-            width: 100%;
-            display: block;
-            border-top: 2px solid #00ffcc;
-        }
-
-        .footer {
-            background: #020202;
-            padding: 50px 20px;
-            line-height: 1.8;
-            font-size: 1.1rem;
-        }
-
-        .footer a {
-            color: #00ffcc;
-            text-decoration: none;
-        }
-
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
-        .visit-counter {
-            margin-top: 30px;
-            padding: 15px;
-            border: 1px solid #333;
-            display: inline-block;
-            background: rgba(0,0,0,0.5);
-            border-radius: 5px;
-        }
-
-        @media (max-width: 1000px) {
-            .header-hero-row { flex-direction: column; gap: 40px; }
-            .welcome-box { border-radius: 12px; transform: none; padding: 20px; width: 90%; }
-            .auth-box { border-radius: 12px; transform: none; padding: 20px; width: 90%; }
-            .main-logo-top { padding: 0 15px; }
-        }
-        @media (max-width: 900px) {
-            .nav-separator { display: none; }
-            .news-ticker-container { border-width: 1px; padding: 10px 0; }
-            .auth-btn-graphic { width: 220px; } 
-            .auth-wrapper .info-panel { width: 220px; }
-        }
+        @media (max-width: 1000px) { .header-hero-row { flex-direction: column; } }
     </style>
 </head>
 <body>
 
     <img src="RadioAnarchyBanner.png" class="top-banner" alt="Radio Anarchy Banner">
     
-    <div id="user-profile-box" style="display: none;">
+    <!-- DYNAMIC USER PROFILE BOX -->
+    <div id="user-profile-box">
         <img id="user-avatar" src="" alt="Anarchist Avatar">
         <div class="user-details">
             <span id="user-name"></span>
             <br>
-            <a href="profile.html" class="profile-link-btn">ACCESS TERMINAL (PROFILE)</a>
+            <a href="profile.html">
+                <img src="playerprofile.png" alt="Access Terminal" class="btn-graphic-main btn-profile-access">
+            </a>
         </div>
     </div>
 
     <div class="header-hero-row">
-        <div class="welcome-box">
-            <h2>WELCOME TO THE HUB</h2>
-        </div>
-
+        <div class="welcome-box"><h2>WELCOME TO THE HUB</h2></div>
         <div class="logo-container">
             <img src="radioanarchylogo.png" alt="Radio Anarchy Logo" class="main-logo-top">
             <img src="commingsoon.png" alt="Coming Soon" class="coming-soon-img">
@@ -595,30 +190,24 @@
             <div class="auth-group">
                 <span class="auth-label">Members:</span>
                 <div class="auth-wrapper">
-                    <a href="signin.html">
-                        <img src="signin.png" alt="Sign In" class="auth-btn-graphic">
-                    </a>
+                    <a href="signin.html"><img src="signin.png" alt="Sign In" class="btn-graphic-main auth-btn-graphic"></a>
                     <div class="info-panel">Access your account, Lounges, and settings.</div>
                 </div>
             </div>
             <div class="auth-group">
                 <span class="auth-label">New to The Hub?</span>
                 <div class="auth-wrapper">
-                    <a href="signup.html">
-                        <img src="signup.png" alt="Sign Up" class="auth-btn-graphic">
-                    </a>
+                    <a href="signup.html"><img src="signup.png" alt="Sign Up" class="btn-graphic-main auth-btn-graphic"></a>
                     <div class="info-panel">Register securely using Discord, Google, or Email.</div>
                 </div>
             </div>
         </div>
 
-        <div class="auth-box" id="logged-in-auth-section" style="display: none; justify-content: center;">
+        <div class="auth-box" id="logged-in-auth-section" style="display: none;">
             <div class="auth-group">
                 <span class="auth-label">Network Status: Connected</span>
                 <div class="auth-wrapper">
-                    <a href="#" id="logout-trigger">
-                        <img src="signout.png" alt="Sign Out" class="auth-btn-graphic">
-                    </a>
+                    <a href="#" id="logout-trigger"><img src="signout.png" alt="Sign Out" class="btn-graphic-main auth-btn-graphic"></a>
                     <div class="info-panel">Disconnect your session from the Hub.</div>
                 </div>
             </div>
@@ -626,226 +215,85 @@
     </div>
 
     <div class="container">
-        
-        <div class="construction-warning">
-            ⚠️ UNDER CONSTRUCTION: Many features and links are not working atm. ⚠️
-        </div>
+        <div class="construction-warning">⚠️ UNDER CONSTRUCTION: Many features and links are not working atm. ⚠️</div>
 
         <div class="mission-statement">
             <p class="mission-highlight">TRANSMISSION INCOMING: OUR MISSION</p>
-            <p>Radio Anarchy isn't just a destination—it is a <strong>Community of Communities</strong>. We are a unified digital network built from the ground up for players, server owners, admins, content creators, and mod makers.</p>
-            <p><strong>Membership is 100% free.</strong> Securing a hub account grants you immediate access to the interactive Lounges, deep-dive tech Guides, our expanding Mod Repositories, Video Tutorials, the massive Retro Vault, and more.</p>
-            <p>This network grows with your help and becomes stronger through collaboration. Run your own community? Submit it to the hub and join a larger family of servers. Content creator? Broadcast your stream schedule. Mod maker? Advertise your work and link your GitHub. Curating a classic archive? Submit your Retro Game links.</p>
-            <p class="mission-highlight" style="margin-top: 20px;">Look around. Make friends. Have fun. Enjoy yourselves.</p>
-            <p style="color: #ff0055; font-size: 0.9rem; margin-top: 20px;">[Hover over the directory buttons below for detailed sector information]</p>
+            <p>Radio Anarchy is a unified digital network built for players and creators alike. Membership is 100% free.</p>
         </div>
 
+        <!-- INFO STATION -->
         <div class="info-station-wrapper">
-            <h2 class="info-station-header">📖 INFORMATION STATION 📖</h2>
             <div class="main-nav">
-                
                 <div class="nav-wrapper with-logo">
-                    <img src="newslogo.png" alt="News Logo" class="behind-logo">
-                    <img src="news.png" alt="News" class="btn-graphic">
-                    <div class="info-panel">The latest gaming shifts, Radio Anarchy server updates, and critical hardware news. Tune in to the broadcast.</div>
+                    <img src="newslogo.png" class="behind-logo">
+                    <img src="news.png" class="btn-graphic-main btn-graphic">
+                    <div class="info-panel">The latest gaming shifts and Radio Anarchy updates.</div>
                 </div>
-
                 <span class="nav-separator">//</span>
-
                 <div class="nav-wrapper with-logo">
-                    <img src="gameslogo.png" alt="Games Logo" class="behind-logo col-games">
-                    <img src="games.png" alt="Games" class="btn-graphic">
-                    <div class="info-panel">All your favorite games under one roof. Active server IPs, game descriptions, and wipe schedules. Good luck, survivor.</div>
+                    <img src="gameslogo.png" class="behind-logo">
+                    <img src="games.png" class="btn-graphic-main btn-graphic">
+                    <div class="info-panel">All your favorite games and active server IPs.</div>
                 </div>
-
-                <span class="nav-separator">//</span>
-
-                <div class="nav-wrapper with-logo">
-                    <img src="storelogo.png" alt="Store Logo" class="behind-logo">
-                    <img src="store.png" alt="Store" class="btn-graphic">
-                    <div class="info-panel">Love your in-game attire? Bring it into the real world. Secure official apparel, server perks, and physical base flags at the Anarchy Shoppe.</div>
-                </div>
-
-                <span class="nav-separator">//</span>
-
-                <div class="nav-wrapper with-logo">
-                    <img src="discordlogo.png" alt="Discord Logo" class="behind-logo col-discord">
-                    <img src="discordroles.png" alt="Discord Roles" class="btn-graphic">
-                    <div class="info-panel">Already in the Discord? Stay updated on specific server events by securing your game roles here. Yes, you can grab more than one.</div>
-                </div>
-
             </div>
         </div>
 
+        <!-- NEWS TICKER (Condensed for example) -->
         <div class="news-ticker-container">
-            <div class="news-ticker-text">
-                [DAYZ NEWS] Survivors, gear up! Bohemia has confirmed that DayZ Update 1.30 is officially focusing on a "Total Medical Overhaul"—rumors suggest broken limbs will now require actual splinting time and infection rates are being cranked to "Brutal" mode... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [5M] Massive milestone! FiveM has officially shattered its concurrent player record, surpassing 300,000 users as Rockstar Games integrates the new Cfx Marketplace, allowing modders to officially monetize high-quality scripts for the first time... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [AD] 📢 Escape the chaos and find your squad at the Radio Anarchy Gaming Hub! Whether you're a builder or a bandit, our Discord is the heartbeat of the community—Join us now! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [TECH] Silicon wars heat up! AMD has just announced the Ryzen 7 9750X, boasting a massive 5.6 GHz boost clock to counter Intel’s Core Ultra 200S Plus—hope you have a beefy cooler for that 120W TDP! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [AD] Looking for high-octane survival? Check out Southern Cross Gaming and The Pumpkin Dynasty—join their Discords today for unique events and a non-toxic grind! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [VALHEIM] The Deep North teaser is finally here! Iron Gate has revealed the "Frost-Bound Gate," a massive endgame structure that requires a "Star-Core" to activate—Vikings, start hoarding your silver! ❄️ &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [BEAMNG] Update 0.35.4 is live! Featuring a full remaster of the Gavril T-Series braking physics and a new "Sport Mode" for CVT transmissions... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [AD] Hardcore fans, listen up: DayZLost and Collapsed Society are currently recruiting—hit their Discords to experience DayZ the way it was meant to be played! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [VEIN] Patch 0.023 has landed! You can now finally hitch vehicles together for massive loot hauls... 🤿 &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; 🃏 THE MID-TICKER MARKET WATCH: WAVE 2 🃏 MTG: Black Lotus (Alpha PSA 10) $3,000,000 | YGO: Radiant Typhoon Yummy (Starlight) $412.50 (+45.10) | MTG: Mox Diamond (FtV: Relics) $1,041.57 (+59.71) | YGO: Thunderclap Monk (Super) $6.50 (+5.80) | MTG: Jeweled Lotus (Textured Foil) $451.85 (+90.62) | YGO: Forbidden Droplet (Common) $2.10 (-1.50) | MTG: Mana Crypt (Special Guest) $215.00 (+12.40) | YGO: Fallen of the White Dragon $72.15 (+8.30) &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [WHAT THE F... MOMENT] A DayZ player on a high-pop server reportedly "tamed" a pack of wolves by playing Pink Floyd through VOIP for six hours straight; the wolves now allegedly follow him and only attack players wearing red... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [TECH] NVIDIA is reportedly prepping a $5,000 RTX 5090 specifically for the "Pro-sumer" AI market, leaving gamers wondering if they'll need to sell a kidney for the 600W power draw... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [EVENT] 🎸 THE LEGENDARY ADVENTURE: Mark your calendars for 4/3/2026! The Radio Anarchy crew are hitting Deerisle from 7PM to 7AM. Catch the 12-hour marathon on Twitch, Discord, and YouTube! 🎸 &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; 🏁 THE MEGA-TICKER 2.0: THE ULTIMATE SURVIVAL & TECH UPDATE 🏁 [BREAKING] DayZ Experimental 1.29 is officially back! After a period of silence, Bohemia has pushed the update to PC Experimental... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [TECH] Intel just unveiled the Core Ultra 200S Plus series (270K/250K), claiming up to 2x creator performance and reduced latency for gamers—available March 26, 2026! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; 🃏 THE MID-TICKER MARKET WATCH: WAVE 3 (RARE HITS) 🃏 MTG: Alpha Black Lotus (PSA 10) $3,000,000 | YGO: Radiant Typhoon Yummy (Starlight) $412.50 (+45.10) | YGO: Berserkion the Electromagna Warrior $28.40 (+25.00) | MTG: Biorhythm (Onslaught) $38.75 (+31.12) &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [WHAT THE F... MOMENT] A player in a high-stakes FiveM RP server reportedly spent 48 hours straight digging a "secret tunnel" under the city bank using only a spoon emoji script, only to realize they were digging toward the police station's breakroom... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [VEIN] In a weird twist, drinking cold water now grants a higher stress reduction bonus than warm soda—because realism matters when you're fighting for your life! 🥤 &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; 📺 SATURDAY STREAM ALERT! See me live on Twitch & YouTube! We’re going deep into the Radio Anarchy backend, site updates, and some brutal modding sessions. Bring your questions! 📺
-            </div>
-        </div>
-
-        <div class="community-header">
-            <h2>COMMUNITY MEMBERS AREA</h2>
+            <div class="news-ticker-text">[DAYZ NEWS] Update 1.30 incoming... // [AD] Join the Radio Anarchy Discord! // [TECH] Silicon wars heat up!</div>
         </div>
 
         <div class="content-grid">
-            
             <div class="grid-column">
-                <h2>RADIO ANARCHY COMMUNITY COLLEGE</h2>
-                
+                <h2>THE KNOWLEDGE BASE</h2>
                 <div class="nav-wrapper with-logo">
-                    <img src="book.png" alt="Book" class="behind-logo col-book">
-                    <img src="theknowledgebase.png" alt="The Knowledge Base" class="btn-graphic">
-                    <div class="info-panel">Courses and planned Guides on a plethora of subjects. Think of this as the Radio Anarchy server building library. Subjects include but are not limited to: How to start a server, Port forwarding 101, Admin training guide, DayZ Tools intro, and Blender for Dummies.</div>
-                </div>
-
-                <div class="nav-wrapper with-logo">
-                    <img src="Githublogo.png" alt="GitHub" class="behind-logo col-git">
-                    <img src="modhub.png" alt="Mod Hub" class="btn-graphic">
-                    <div class="info-panel">A list of do-it-yourself mod repositories.</div>
-                </div>
-
-                <div class="nav-wrapper with-logo">
-                    <img src="youtubelogo.png" alt="YouTube" class="behind-logo wide-logo">
-                    <img src="videotutorials.png" alt="Video Tutorials" class="btn-graphic">
-                    <div class="info-panel">A video bank of Pink and others walking you through many of the subjects in the knowledge base and the mod hub.</div>
-                </div>
-
-                <div class="nav-wrapper with-logo">
-                    <img src="retroarchlogo.png" alt="RetroArch" class="behind-logo xl-logo">
-                    <img src="retrovault.png" alt="Retro Vault" class="btn-graphic">
-                    <div class="info-panel">A list of online retro repositories for all your RetroArch needs. There is something for all the classic gamers here. Feel free to look up what you need. Don't be shy, there's plenty to go around.</div>
-                </div>
-
-            </div>
-
-            <div class="grid-column">
-                <h2>COMMUNITY INFORMATION HUB</h2>
-                
-                <div class="nav-wrapper with-logo">
-                    <img src="radioanarchylogo.png" alt="Radio Anarchy Mini" class="behind-logo main-mini">
-                    <img src="communitynetwork.png" alt="Community Network" class="btn-graphic">
-                    <div class="info-panel">Discover allied servers and affiliated gaming networks.</div>
-                </div>
-
-                <div class="nav-wrapper with-logo">
-                    <img src="communitybillboardlogo.png" alt="Billboard Logo" class="behind-logo col-bill">
-                    <img src="communitybillboard.png" alt="Community Billboard" class="btn-graphic">
-                    <div class="info-panel">Check out member advertisements, looking-for-group posts, and community events.</div>
-                </div>
-
-                <div class="nav-wrapper with-logo">
-                    <img src="streamschedulelogo.png" alt="Stream Logo" class="behind-logo col-stream">
-                    <img src="streamschedule.png" alt="Stream Schedule" class="btn-graphic">
-                    <div class="info-panel">The Creator TV Guide. See who is live across the network right now.</div>
+                    <img src="book.png" class="behind-logo">
+                    <img src="theknowledgebase.png" class="btn-graphic-main btn-graphic">
+                    <div class="info-panel">Deep-dive guides on server building.</div>
                 </div>
             </div>
-
             <div class="grid-column">
                 <h2>THE LOUNGES</h2>
-                
                 <div class="nav-wrapper with-logo">
-                    <img src="playersloungelogo.png" alt="Player Lounge Logo" class="behind-logo col-player-l">
-                    <img src="playerslounge.png" alt="Player Lounge" class="btn-graphic">
-                    <div class="info-panel">The main hangout for all registered survivors and gamers.</div>
-                </div>
-
-                <div class="nav-wrapper with-logo">
-                    <img src="serverownersloungelogo.png" alt="Server Owner Lounge Logo" class="behind-logo col-server-l">
-                    <img src="serverownerslounge.png" alt="Server Owner Lounge" class="btn-graphic">
-                    <div class="info-panel">A secured sector to discuss hosting, moderation, and community management.</div>
-                </div>
-
-                <div class="nav-wrapper with-logo">
-                    <img src="creatorsloungelogo.png" alt="Creator Lounge Logo" class="behind-logo col-creator-l">
-                    <img src="creatorslounge.png" alt="Creator Lounge" class="btn-graphic">
-                    <div class="info-panel">Network with streamers, YouTubers, and digital artists.</div>
-                </div>
-
-                <div class="nav-wrapper with-logo">
-                    <img src="moddersloungelogo.png" alt="Modders Lounge Logo" class="behind-logo col-modder-l">
-                    <img src="modderlounge.png" alt="Modder Lounge" class="btn-graphic">
-                    <div class="info-panel">The garage. Share scripts, troubleshoot code, and collaborate on mods.</div>
+                    <img src="playersloungelogo.png" class="behind-logo">
+                    <img src="playerslounge.png" class="btn-graphic-main btn-graphic">
+                    <div class="info-panel">Hang out with registered survivors.</div>
                 </div>
             </div>
-
         </div>
-
-        <div class="ad-section">
-            <h2>NETWORK AFFILIATES</h2>
-            <div class="ad-grid">
-                <a href="mailto:pinkfloyd@radioanarchy.gg" class="ad-placeholder">AD SPACE FOR SALE</a>
-                <a href="mailto:pinkfloyd@radioanarchy.gg" class="ad-placeholder">AD SPACE FOR SALE</a>
-                <a href="mailto:pinkfloyd@radioanarchy.gg" class="ad-placeholder">AD SPACE FOR SALE</a>
-            </div>
-        </div>
-
     </div>
 
-    <img src="DiscordInviteBG.png" class="bottom-image" alt="Discord Artwork">
-
     <div class="footer">
-        <img src="supportcontact.png" alt="Support Contact" style="height: 35px; margin-bottom: 10px;">
-        <p style="margin: 0;">
-            <strong>Owner:</strong> <a href="mailto:pinkfloyd@radioanarchy.gg">PinkFloyd@radioanarchy.gg</a><br>
-            <strong>Lead Dev:</strong> <a href="mailto:silent@radioanarchy.gg">Silent@radioanarchy.gg</a><br>
-            <strong>Head Admin:</strong> <a href="mailto:omega@radioanarchy.gg">Omega@radioanarchy.gg</a><br>
-            <strong>Admin:</strong> <a href="mailto:bmiller@radioanarchy.gg">BMiller@radioanarchy.gg</a><br>
-            <strong>Admin:</strong> <a href="mailto:joenugget@radioanarchy.gg">JoeNugget@radioanarchy.gg</a>
-        </p>
-
-        <div class="visit-counter">
-            <span style="font-size: 0.8rem; color: #00ffcc; display: block; margin-bottom: 5px; letter-spacing: 2px;">TRANSMISSIONS RECEIVED:</span>
-            <img src="https://api.visitorbadge.io/api/visitors?path=https%3A%2F%2Fradioanarchy.gg&label=HITS&countColor=%23000000&labelStyle=upper" alt="Visitor Counter" style="filter: hue-rotate(130deg) brightness(1.5); height: 25px;">
-        </div>
+        <p>Owner: <a href="mailto:pinkfloyd@radioanarchy.gg">PinkFloyd@radioanarchy.gg</a></p>
     </div>
 
     <script>
-        // Parallax Effect
-        window.addEventListener('scroll', function() {
-            const scrollPosition = window.pageYOffset;
-            document.body.style.backgroundPositionY = -(scrollPosition * 0.3) + 'px';
+        // Parallax
+        window.addEventListener('scroll', () => {
+            document.body.style.backgroundPositionY = -(window.pageYOffset * 0.3) + 'px';
         });
 
-        // The Engine Ping (Checks Login Status & Updates UI)
+        // Auth Engine
         window.addEventListener('DOMContentLoaded', () => {
-            fetch('https://api.radioanarchy.gg:8202/auth/me', {
-                method: 'GET',
-                credentials: 'include' // This is critical for reading the session cookie
-            })
+            fetch('https://api.radioanarchy.gg:8202/auth/me', { credentials: 'include' })
             .then(res => res.json())
             .then(data => {
                 if (data.loggedIn) {
-                    // Turn off guest mode, turn on member mode
                     document.getElementById('guest-auth-section').style.display = 'none';
                     document.getElementById('logged-in-auth-section').style.display = 'flex';
-                    
-                    // Populate and reveal the User Box
                     document.getElementById('user-profile-box').style.display = 'flex';
                     document.getElementById('user-name').innerText = data.displayUsername;
-                    document.getElementById('user-avatar').src = data.displayAvatar || 'default-avatar.png'; // Fallback just in case
+                    document.getElementById('user-avatar').src = data.displayAvatar || 'default-avatar.png';
                 }
-            })
-            .catch(err => console.error("Radio Anarchy Auth Engine unreachable:", err));
+            });
         });
 
-        // The Logout Engine
-        const logoutBtn = document.getElementById('logout-trigger');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                fetch('https://api.radioanarchy.gg:8202/auth/logout', {
-                    method: 'POST',
-                    credentials: 'include'
-                })
-                .then(res => res.json())
-                .then(data => {
-                    // Reload the page to reset the UI back to guest mode
-                    window.location.reload();
-                })
-                .catch(err => console.error("Logout failed:", err));
-            });
-        }
+        document.getElementById('logout-trigger').addEventListener('click', (e) => {
+            e.preventDefault();
+            fetch('https://api.radioanarchy.gg:8202/auth/logout', { method: 'POST', credentials: 'include' })
+            .then(() => window.location.reload());
+        });
     </script>
-
 </body>
 </html>

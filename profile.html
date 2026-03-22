@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radio Anarchy | The Terminal</title>
+    <style>
+        body {
+            margin: 0;
+            background: #050505 url('RadioAnarchyBackground.png') no-repeat center top fixed;
+            background-size: cover;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            display: flex; justify-content: center; align-items: center; min-height: 100vh;
+        }
+
+        .terminal-container {
+            background: rgba(15, 5, 10, 0.9);
+            border: 2px solid #ff0055;
+            border-radius: 12px;
+            padding: 40px;
+            width: 100%; max-width: 800px;
+            box-shadow: 0 0 30px rgba(255, 0, 85, 0.2);
+            position: relative;
+        }
+
+        .profile-header { position: absolute; top: 20px; left: 20px; }
+        .profile-logo { width: 180px; }
+
+        h1 { color: #00ffcc; text-align: center; text-shadow: 0 0 10px #00ffcc; margin-bottom: 40px; }
+
+        .section-box { background: rgba(0, 0, 0, 0.5); border: 1px solid #333; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+        .section-title { color: #ff0055; text-transform: uppercase; border-bottom: 1px dashed #ff0055; margin-bottom: 15px; }
+
+        .form-group { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
+        input[type="text"], select { background: #000; border: 1px solid #00ffcc; color: #fff; padding: 10px; border-radius: 4px; }
+
+        /* --- ANIMATED BUTTONS --- */
+        .btn-animate { transition: transform 0.2s, filter 0.2s; cursor: pointer; }
+        .btn-animate:hover { transform: translateY(-5px); filter: drop-shadow(0 0 10px #00ffcc); }
+        .btn-animate:active { transform: translateY(2px) scale(0.95); filter: brightness(1.5) hue-rotate(90deg); }
+
+        .submit-btn { width: 200px; display: block; margin: 20px auto 0; }
+        .social-matrix { display: flex; justify-content: space-around; gap: 20px; flex-wrap: wrap; }
+        .connection-unit { position: relative; text-align: center; min-width: 150px; }
+        .social-icon { height: 50px; }
+        .status-text { color: #00ffcc; font-size: 0.8rem; display: block; margin-top: 10px; }
+
+        .tooltip { position: absolute; bottom: 110%; background: #00ffcc; color: #000; padding: 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; opacity: 0; visibility: hidden; transition: 0.3s; width: 180px; left: 50%; transform: translateX(-50%); pointer-events: none; }
+        .connection-unit:hover .tooltip { opacity: 1; visibility: visible; }
+
+        .home-btn-container { position: absolute; bottom: 20px; right: 20px; }
+        .home-btn { width: 60px; }
+    </style>
+</head>
+<body>
+
+    <div class="terminal-container">
+        <div class="profile-header"><img src="playerprofilelogo.png" class="profile-logo"></div>
+        <h1>TERMINAL ACCESS</h1>
+
+        <div class="section-box">
+            <div class="section-title">Hub Identity (Manual)</div>
+            <div class="form-group">
+                <label>USERNAME</label>
+                <input type="text" id="hub-username">
+                <label>AVATAR (MAX 2MB)</label>
+                <input type="file" id="hub-avatar" accept="image/*">
+            </div>
+
+            <div class="section-title">Active Persona</div>
+            <select id="active-persona">
+                <option value="manual">Manual (Hub)</option>
+                <option value="discord">Discord</option>
+                <option value="google">Google</option>
+                <option value="github">GitHub</option>
+            </select>
+            <img src="submit.png" class="btn-animate submit-btn" id="submit-profile">
+        </div>
+
+        <div class="section-box">
+            <div class="section-title">Connection Matrix</div>
+            <div class="social-matrix" id="social-matrix">
+                <div class="connection-unit" id="unit-discord">
+                    <div class="tooltip">Secure your Discord data to your Hub identity.</div>
+                    <a href="https://api.radioanarchy.gg:8202/auth/discord"><img src="discordlogo.png" class="btn-animate social-icon"></a>
+                </div>
+                <div class="connection-unit" id="unit-google">
+                    <div class="tooltip">Secure your Google data to your Hub identity.</div>
+                    <a href="https://api.radioanarchy.gg:8202/auth/google"><img src="googlelogo.png" class="btn-animate social-icon"></a>
+                </div>
+                <div class="connection-unit" id="unit-github">
+                    <div class="tooltip">Secure your GitHub data to your Hub identity.</div>
+                    <a href="https://api.radioanarchy.gg:8202/auth/github"><img src="githublogo.png" class="btn-animate social-icon"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="home-btn-container">
+            <a href="index.html"><img src="home.png" class="btn-animate home-btn"></a>
+        </div>
+    </div>
+
+    <script>
+        const API = "https://api.radioanarchy.gg:8202";
+
+        async function init() {
+            const res = await fetch(`${API}/auth/me`, { credentials: 'include' });
+            const data = await res.json();
+            if (!data.loggedIn) return window.location.href = 'index.html';
+
+            document.getElementById('hub-username').value = data.displayUsername;
+            document.getElementById('active-persona').value = data.activePersona;
+
+            ['discord', 'google', 'github'].forEach(p => {
+                if (data.connections[p]) {
+                    document.getElementById(`unit-${p}`).innerHTML = `<span class="status-text">CONNECTED AS: ${data.displayUsername}</span>`;
+                }
+            });
+        }
+
+        document.getElementById('hub-avatar').onchange = function() {
+            if (this.files[0].size > 2097152) { alert("FILE TOO LARGE (MAX 2MB)"); this.value = ""; }
+        };
+
+        document.getElementById('submit-profile').onclick = async () => {
+            const formData = new FormData();
+            formData.append('username', document.getElementById('hub-username').value);
+            formData.append('active_persona', document.getElementById('active-persona').value);
+            const file = document.getElementById('hub-avatar').files[0];
+            if (file) formData.append('avatar', file);
+
+            const res = await fetch(`${API}/profile/update`, { method: 'POST', credentials: 'include', body: formData });
+            if (res.ok) { alert("TERMINAL UPDATED"); window.location.reload(); }
+        };
+
+        init();
+    </script>
+</body>
+</html>
