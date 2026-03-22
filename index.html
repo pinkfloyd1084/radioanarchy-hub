@@ -827,6 +827,24 @@
             })
             .catch(err => console.error("Radio Anarchy Auth Engine unreachable:", err));
         });
+
+        // The Logout Engine
+        const logoutBtn = document.getElementById('logout-trigger');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                fetch('https://api.radioanarchy.gg:8202/auth/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                })
+                .then(res => res.json())
+                .then(data => {
+                    // Reload the page to reset the UI back to guest mode
+                    window.location.reload();
+                })
+                .catch(err => console.error("Logout failed:", err));
+            });
+        }
     </script>
 
 </body>
