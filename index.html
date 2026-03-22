@@ -27,32 +27,83 @@
             border-bottom: 2px solid #ff0055;
         }
 
-        /* --- HEADER HERO ROW (Edge-to-Edge HUD) --- */
+        /* --- DYNAMIC USER PROFILE BOX --- */
+        #user-profile-box {
+            background: rgba(15, 5, 10, 0.85);
+            border: 2px solid #00ffcc;
+            border-radius: 12px;
+            padding: 15px 25px;
+            margin: 40px auto -20px auto; /* Tucked right above the hero row */
+            max-width: 400px;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+            position: relative;
+            z-index: 20;
+        }
+
+        #user-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 2px solid #ff0055;
+            object-fit: cover;
+        }
+
+        .user-details {
+            text-align: left;
+        }
+
+        #user-name {
+            color: #fff;
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-shadow: 0 0 8px #fff;
+        }
+
+        .profile-link-btn {
+            display: inline-block;
+            margin-top: 8px;
+            color: #00ffcc;
+            text-decoration: none;
+            font-size: 0.9rem;
+            border: 1px dashed #00ffcc;
+            padding: 5px 10px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .profile-link-btn:hover {
+            background: rgba(0, 255, 204, 0.2);
+            box-shadow: 0 0 10px #00ffcc;
+        }
+
+        /* --- HEADER HERO ROW (Centered & Tightened) --- */
         .header-hero-row {
             display: flex;
-            justify-content: space-between;
+            justify-content: center; /* Brought in from the edges */
             align-items: center;
+            gap: 40px; /* Controls spacing between the 3 elements */
             width: 100%;
-            margin-top: 50px;
-            margin-bottom: 20px;
+            max-width: 1300px;
+            margin: 50px auto 20px auto;
             position: relative;
         }
 
         .welcome-box {
             background: rgba(15, 5, 10, 0.85);
             border: 2px solid #ff0055;
-            border-left: none; 
-            border-radius: 0 12px 12px 0;
-            padding: 25px 40px 25px 20px;
-            box-shadow: 5px 5px 20px rgba(255, 0, 85, 0.2), inset -5px 0 15px rgba(255, 0, 85, 0.1);
-            transform: translateX(-15px); 
+            border-radius: 12px;
+            padding: 20px 30px;
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.2);
             z-index: 5;
         }
 
         .welcome-box h2 {
             color: #00ffcc;
             margin: 0;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             letter-spacing: 3px;
             text-shadow: 0 0 10px #00ffcc;
             white-space: nowrap;
@@ -61,14 +112,12 @@
         .auth-box {
             display: flex;
             flex-direction: column;
-            gap: 30px; 
+            gap: 20px; 
             background: rgba(15, 5, 10, 0.85);
             border: 2px solid #ff0055;
-            border-right: none; 
-            border-radius: 12px 0 0 12px;
-            padding: 30px 20px 30px 40px;
-            box-shadow: -5px 5px 20px rgba(255, 0, 85, 0.2), inset 5px 0 15px rgba(255, 0, 85, 0.1);
-            transform: translateX(15px); 
+            border-radius: 12px;
+            padding: 25px 30px;
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.2);
             z-index: 5;
         }
 
@@ -81,20 +130,36 @@
 
         .auth-label {
             color: #00ffcc;
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: bold;
             letter-spacing: 2px;
             text-transform: uppercase;
             text-shadow: 0 0 10px #00ffcc;
         }
 
+        /* Logo Container for Stacking */
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            z-index: 10;
+        }
+
         .main-logo-top {
             width: 100%;
-            max-width: 650px;
-            padding: 0 30px;
-            flex-shrink: 1; 
+            max-width: 450px; /* Scaled down slightly */
             filter: drop-shadow(0 0 20px rgba(255, 0, 85, 0.4));
-            z-index: 10;
+        }
+
+        .coming-soon-img {
+            width: 250px; /* Scaled up to match buttons */
+            filter: drop-shadow(0 0 10px rgba(0, 255, 204, 0.4));
+            transition: transform 0.2s;
+        }
+
+        .coming-soon-img:hover {
+            transform: scale(1.05);
         }
 
         /* Container for the rest of the page */
@@ -491,8 +556,8 @@
 
         @media (max-width: 1000px) {
             .header-hero-row { flex-direction: column; gap: 40px; }
-            .welcome-box { border-left: 2px solid #ff0055; border-radius: 12px; transform: none; padding: 20px; width: 90%; }
-            .auth-box { border-right: 2px solid #ff0055; border-radius: 12px; transform: none; padding: 20px; width: 90%; }
+            .welcome-box { border-radius: 12px; transform: none; padding: 20px; width: 90%; }
+            .auth-box { border-radius: 12px; transform: none; padding: 20px; width: 90%; }
             .main-logo-top { padding: 0 15px; }
         }
         @media (max-width: 900px) {
@@ -507,14 +572,26 @@
 
     <img src="RadioAnarchyBanner.png" class="top-banner" alt="Radio Anarchy Banner">
     
+    <div id="user-profile-box" style="display: none;">
+        <img id="user-avatar" src="" alt="Anarchist Avatar">
+        <div class="user-details">
+            <span id="user-name"></span>
+            <br>
+            <a href="profile.html" class="profile-link-btn">ACCESS TERMINAL (PROFILE)</a>
+        </div>
+    </div>
+
     <div class="header-hero-row">
         <div class="welcome-box">
             <h2>WELCOME TO THE HUB</h2>
         </div>
 
-        <img src="radioanarchylogo.png" alt="Radio Anarchy Logo" class="main-logo-top">
+        <div class="logo-container">
+            <img src="radioanarchylogo.png" alt="Radio Anarchy Logo" class="main-logo-top">
+            <img src="commingsoon.png" alt="Coming Soon" class="coming-soon-img">
+        </div>
 
-        <div class="auth-box">
+        <div class="auth-box" id="guest-auth-section">
             <div class="auth-group">
                 <span class="auth-label">Members:</span>
                 <div class="auth-wrapper">
@@ -531,6 +608,18 @@
                         <img src="signup.png" alt="Sign Up" class="auth-btn-graphic">
                     </a>
                     <div class="info-panel">Register securely using Discord, Google, or Email.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="auth-box" id="logged-in-auth-section" style="display: none; justify-content: center;">
+            <div class="auth-group">
+                <span class="auth-label">Network Status: Connected</span>
+                <div class="auth-wrapper">
+                    <a href="#" id="logout-trigger">
+                        <img src="signout.png" alt="Sign Out" class="auth-btn-graphic">
+                    </a>
+                    <div class="info-panel">Disconnect your session from the Hub.</div>
                 </div>
             </div>
         </div>
@@ -695,7 +784,7 @@
     <img src="DiscordInviteBG.png" class="bottom-image" alt="Discord Artwork">
 
     <div class="footer">
-        <h3 style="color: #00ffcc; text-shadow: 0 0 15px #00ffcc, 2px 2px 5px #000; letter-spacing: 3px; margin-top: 0;">SECURE CHANNELS</h3>
+        <img src="supportcontact.png" alt="Support Contact" style="height: 35px; margin-bottom: 10px;">
         <p style="margin: 0;">
             <strong>Owner:</strong> <a href="mailto:pinkfloyd@radioanarchy.gg">PinkFloyd@radioanarchy.gg</a><br>
             <strong>Lead Dev:</strong> <a href="mailto:silent@radioanarchy.gg">Silent@radioanarchy.gg</a><br>
@@ -711,12 +800,34 @@
     </div>
 
     <script>
+        // Parallax Effect
         window.addEventListener('scroll', function() {
             const scrollPosition = window.pageYOffset;
             document.body.style.backgroundPositionY = -(scrollPosition * 0.3) + 'px';
+        });
+
+        // The Engine Ping (Checks Login Status & Updates UI)
+        window.addEventListener('DOMContentLoaded', () => {
+            fetch('https://api.radioanarchy.gg:8202/auth/me', {
+                method: 'GET',
+                credentials: 'include' // This is critical for reading the session cookie
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.loggedIn) {
+                    // Turn off guest mode, turn on member mode
+                    document.getElementById('guest-auth-section').style.display = 'none';
+                    document.getElementById('logged-in-auth-section').style.display = 'flex';
+                    
+                    // Populate and reveal the User Box
+                    document.getElementById('user-profile-box').style.display = 'flex';
+                    document.getElementById('user-name').innerText = data.displayUsername;
+                    document.getElementById('user-avatar').src = data.displayAvatar || 'default-avatar.png'; // Fallback just in case
+                }
+            })
+            .catch(err => console.error("Radio Anarchy Auth Engine unreachable:", err));
         });
     </script>
 
 </body>
 </html>
-``
