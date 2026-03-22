@@ -59,9 +59,9 @@
         /* --- Social Buttons: Unified 1-column layout --- */
         .social-auth-row {
             display: flex;
-            flex-direction: column; /* Forces them into a single column */
-            align-items: center;    /* Centers them horizontally */
-            gap: 15px;              /* Space between buttons */
+            flex-direction: column; 
+            align-items: center;    
+            gap: 15px;              
             margin-bottom: 25px;
         }
 
@@ -75,12 +75,11 @@
             text-decoration: none;
             font-weight: bold;
             color: #fff;
-            transition: all 0.3s ease; /* Smooth hover transition */
+            transition: all 0.3s ease; 
             border: 2px solid transparent;
             
-            /* Sizing based on the Google button (75% of container) */
             width: 75%;
-            box-sizing: border-box; /* Ensures padding doesn't affect the width */
+            box-sizing: border-box; 
         }
 
         /* Hover: Red Glow, Outline, and "Rising" Effect */
@@ -88,7 +87,7 @@
             border: 2px solid #ff0055;
             box-shadow: 0 0 20px #ff0055, inset 0 0 8px #ff0055;
             
-            /* The "Rising" action: scale up 4% and lift 4px */
+            /* Social specific action: scale up slightly AND lift */
             transform: scale(1.04) translateY(-4px); 
         }
 
@@ -117,30 +116,37 @@
         }
         .input-group input:focus { border-color: #00ffcc; box-shadow: 0 0 10px rgba(0, 255, 204, 0.3); }
 
-        /* --- Reusable Anarchy Action Button (Modified) --- */
+        /* --- Reusable Anarchy Action Button (Modified with Raise) --- */
         .anarchy-action-btn {
             background: none; border: none; padding: 0; cursor: pointer;
             display: flex; justify-content: center; width: 100%;
-            transition: transform 0.1s ease; outline: none; margin-top: 15px;
+            transition: transform 0.2s ease, filter 0.3s ease; /* Added transition for raise/glow */
+            outline: none; margin-top: 15px;
         }
 
         .anarchy-action-btn img {
             width: 100%; 
-            
-            /* SHRINKAGE: Adjusted max-width down by ~30% from 440px to 310px */
-            max-width: 310px; 
-            
+            max-width: 310px; /* Reduced Size (~30% reduction) */
             height: auto;
             transition: filter 0.3s ease;
         }
 
-        /* Red Lighting on Hover */
+        /* Hover: Red Lighting AND "Rising" Effect */
+        .anarchy-action-btn:hover {
+            /* The physical rising action added to the container */
+            transform: translateY(-4px); 
+        }
+        
         .anarchy-action-btn:hover img {
+            /* The visual lighting added to the image */
             filter: drop-shadow(0 0 15px #ff0055) brightness(1.2);
         }
 
-        /* Click Animation ( tactile feel) */
-        .anarchy-action-btn:active { transform: scale(0.96); }
+        /* Click Animation (tactile feel) */
+        .anarchy-action-btn:active { 
+            /* Added scaling here for click feedback */
+            transform: scale(0.96) translateY(-2px); 
+        }
 
         /* Footer Links */
         .form-footer { margin-top: 25px; font-size: 0.9rem; }
@@ -212,7 +218,7 @@
             e.preventDefault();
             const formData = new FormData(e.target);
             
-            // Password verification
+            // Basic password check
             if(formData.get('password') !== formData.get('confirm_password')) {
                 alert("ERROR: Passwords do not match.");
                 return;
