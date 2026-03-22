@@ -56,7 +56,7 @@
             padding-bottom: 15px;
         }
 
-        /* --- Social Buttons: Unified 1-column layout --- */
+        /* Social Buttons: 1-column layout */
         .social-auth-row {
             display: flex;
             flex-direction: column; 
@@ -77,28 +77,21 @@
             color: #fff;
             transition: all 0.3s ease; 
             border: 2px solid transparent;
-            
             width: 75%;
             box-sizing: border-box; 
         }
 
-        /* Hover: Red Glow, Outline, and "Rising" Effect */
         .social-btn:hover {
             border: 2px solid #ff0055;
             box-shadow: 0 0 20px #ff0055, inset 0 0 8px #ff0055;
-            
-            /* Social specific action: scale up slightly AND lift */
             transform: scale(1.04) translateY(-4px); 
         }
 
-        /* Specific Button Colors */
         .discord-btn { background: #5865F2; }
         .github-btn { background: #24292e; }
         .google-btn { background: #111; border-color: #444; }
-
         .social-icon { width: 22px; height: 22px; }
 
-        /* Divider */
         .divider {
             color: #ff0055;
             font-size: 0.9rem;
@@ -116,42 +109,29 @@
         }
         .input-group input:focus { border-color: #00ffcc; box-shadow: 0 0 10px rgba(0, 255, 204, 0.3); }
 
-        /* --- Reusable Anarchy Action Button (Modified with Raise) --- */
-        .anarchy-action-btn {
+        /* --- Global Anarchy Action Button Style --- */
+        .anarchy-btn {
             background: none; border: none; padding: 0; cursor: pointer;
-            display: flex; justify-content: center; width: 100%;
-            transition: transform 0.2s ease, filter 0.3s ease; /* Added transition for raise/glow */
-            outline: none; margin-top: 15px;
+            display: inline-flex; justify-content: center; align-items: center;
+            transition: transform 0.2s ease; outline: none; text-decoration: none;
         }
 
-        .anarchy-action-btn img {
-            width: 100%; 
-            max-width: 310px; /* Reduced Size (~30% reduction) */
+        .anarchy-btn img {
             height: auto;
             transition: filter 0.3s ease;
         }
 
-        /* Hover: Red Lighting AND "Rising" Effect */
-        .anarchy-action-btn:hover {
-            /* The physical rising action added to the container */
-            transform: translateY(-4px); 
-        }
-        
-        .anarchy-action-btn:hover img {
-            /* The visual lighting added to the image */
-            filter: drop-shadow(0 0 15px #ff0055) brightness(1.2);
-        }
+        .anarchy-btn:hover { transform: translateY(-4px); }
+        .anarchy-btn:hover img { filter: drop-shadow(0 0 15px #ff0055) brightness(1.2); }
+        .anarchy-btn:active { transform: scale(0.96) translateY(-2px); }
 
-        /* Click Animation (tactile feel) */
-        .anarchy-action-btn:active { 
-            /* Added scaling here for click feedback */
-            transform: scale(0.96) translateY(-2px); 
-        }
+        /* Sizing variants */
+        .btn-submit img { width: 100%; max-width: 310px; }
+        .btn-footer img { width: 100%; max-width: 180px; } /* Smaller footer buttons */
 
-        /* Footer Links */
-        .form-footer { margin-top: 25px; font-size: 0.9rem; }
-        .form-footer a { color: #00ffcc; text-decoration: none; }
-        .form-footer a:hover { text-shadow: 0 0 8px #00ffcc; }
+        /* Footer Layout */
+        .form-footer { margin-top: 30px; display: flex; flex-direction: column; gap: 20px; align-items: center; }
+        .footer-item { font-size: 0.9rem; display: flex; flex-direction: column; gap: 8px; align-items: center; }
     </style>
 </head>
 <body>
@@ -201,14 +181,23 @@
                     <input type="password" id="confirm_password" name="confirm_password" placeholder="••••••••" required>
                 </div>
                 
-                <button type="submit" class="anarchy-action-btn">
+                <button type="submit" class="anarchy-btn btn-submit">
                     <img src="submit.png" alt="Submit">
                 </button>
             </form>
             
             <div class="form-footer">
-                <p>Already a member? <a href="signin.html">Access the Terminal</a></p>
-                <p><a href="index.html">Return to Main Hub</a></p>
+                <div class="footer-item">
+                    <span>Already a member?</span>
+                    <a href="signin.html" class="anarchy-btn btn-footer">
+                        <img src="signin.png" alt="Sign In">
+                    </a>
+                </div>
+                <div class="footer-item">
+                    <a href="index.html" class="anarchy-btn btn-footer">
+                        <img src="home.png" alt="Home">
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -217,30 +206,23 @@
         document.getElementById('registrationForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
-            
-            // Basic password check
             if(formData.get('password') !== formData.get('confirm_password')) {
                 alert("ERROR: Passwords do not match.");
                 return;
             }
-
             try {
-                // Send the data over the secure tunnel
                 const response = await fetch('https://api.radioanarchy.gg:8202/auth/register', {
                     method: 'POST',
                     body: formData
                 });
-
                 const result = await response.json();
-                
                 if (response.ok) {
                     alert("Welcome to the Hub, Anarchist! Enlistment successful.");
-                    window.location.href = 'signin.html'; // Redirect to login
+                    window.location.href = 'signin.html';
                 } else {
                     alert("ENLISTMENT FAILED: " + result.error);
                 }
             } catch (err) {
-                console.error("Connection Error:", err);
                 alert("CRITICAL ERROR: The Secure Terminal is offline.");
             }
         });
