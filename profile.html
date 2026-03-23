@@ -3,136 +3,349 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radio Anarchy | The Terminal</title>
+    <title>Radio Anarchy | Player Profile</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     <style>
+        /* --- GLOBAL AESTHETIC --- */
         body {
             margin: 0;
+            padding: 0;
             background: #050505 url('RadioAnarchyBackground.png') no-repeat center top fixed;
             background-size: cover;
             color: #fff;
-            font-family: 'Courier New', monospace;
-            display: flex; justify-content: center; align-items: center; min-height: 100vh;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
         .terminal-container {
-            background: rgba(15, 5, 10, 0.9);
+            background: rgba(15, 5, 10, 0.92);
             border: 2px solid #ff0055;
             border-radius: 12px;
             padding: 40px;
-            width: 100%; max-width: 800px;
-            box-shadow: 0 0 30px rgba(255, 0, 85, 0.2);
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 0 30px rgba(255, 0, 85, 0.3), inset 0 0 15px rgba(0, 0, 0, 0.5);
             position: relative;
+            text-align: center;
         }
 
-        .profile-header { position: absolute; top: 20px; left: 20px; }
-        .profile-logo { width: 180px; }
+        /* --- HEADER --- */
+        .profile-banner {
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto 30px auto;
+            display: block;
+        }
 
-        h1 { color: #00ffcc; text-align: center; text-shadow: 0 0 10px #00ffcc; margin-bottom: 40px; }
+        /* --- SECTION BOXES --- */
+        .mixer-box {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #333;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: inset 0 0 10px rgba(0, 255, 204, 0.05);
+        }
 
-        .section-box { background: rgba(0, 0, 0, 0.5); border: 1px solid #333; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
-        .section-title { color: #ff0055; text-transform: uppercase; border-bottom: 1px dashed #ff0055; margin-bottom: 15px; }
+        .section-title {
+            color: #00ffcc;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            text-shadow: 0 0 8px #00ffcc;
+        }
 
-        .form-group { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
-        input[type="text"], select { background: #000; border: 1px solid #00ffcc; color: #fff; padding: 10px; border-radius: 4px; }
+        /* --- FORM ELEMENTS --- */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
 
-        /* --- ANIMATED BUTTONS --- */
-        .btn-animate { transition: transform 0.2s, filter 0.2s; cursor: pointer; }
-        .btn-animate:hover { transform: translateY(-5px); filter: drop-shadow(0 0 10px #00ffcc); }
-        .btn-animate:active { transform: translateY(2px) scale(0.95); filter: brightness(1.5) hue-rotate(90deg); }
+        label {
+            color: #aaa;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
 
-        .submit-btn { width: 200px; display: block; margin: 20px auto 0; }
-        .social-matrix { display: flex; justify-content: space-around; gap: 20px; flex-wrap: wrap; }
-        .connection-unit { position: relative; text-align: center; min-width: 150px; }
-        .social-icon { height: 50px; }
-        .status-text { color: #00ffcc; font-size: 0.8rem; display: block; margin-top: 10px; }
+        select, input[type="file"] {
+            background: #000;
+            border: 1px solid #00ffcc;
+            color: #fff;
+            padding: 12px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            outline: none;
+        }
 
-        .tooltip { position: absolute; bottom: 110%; background: #00ffcc; color: #000; padding: 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; opacity: 0; visibility: hidden; transition: 0.3s; width: 180px; left: 50%; transform: translateX(-50%); pointer-events: none; }
-        .connection-unit:hover .tooltip { opacity: 1; visibility: visible; }
+        .avatar-preview-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
 
-        .home-btn-container { position: absolute; bottom: 20px; right: 20px; }
-        .home-btn { width: 60px; }
+        #current-avatar-preview {
+            width: 80px;
+            height: 80px;
+            border: 2px solid #00ffcc;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.3);
+        }
+
+        /* --- BUTTON ANIMATIONS --- */
+        .btn-animate {
+            transition: transform 0.2s, filter 0.2s;
+            cursor: pointer;
+        }
+
+        .btn-animate:hover {
+            transform: translateY(-5px);
+            filter: drop-shadow(0 0 12px #00ffcc);
+        }
+
+        .btn-animate:active {
+            transform: translateY(2px) scale(0.95);
+            filter: brightness(1.5) hue-rotate(90deg);
+        }
+
+        .submit-btn {
+            width: 220px;
+            margin: 20px auto 0 auto;
+            display: block;
+        }
+
+        /* --- SOCIAL CONNECTION MATRIX --- */
+        .matrix-grid {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            min-height: 80px;
+            align-items: center;
+        }
+
+        .connection-unit {
+            position: relative;
+            width: 60px;
+            height: 60px;
+        }
+
+        .social-icon {
+            width: 60px;
+            height: 60px;
+            display: block;
+        }
+
+        /* --- TOOLTIP STYLING --- */
+        .tooltip {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: #000;
+            color: #fff;
+            border: 1px solid #00ffcc;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            width: 200px;
+            text-align: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+            z-index: 100;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+        }
+
+        .connection-unit:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(20px);
+        }
+
+        /* --- NAVIGATION --- */
+        .home-btn-container {
+            margin-top: 40px;
+        }
+
+        .home-btn {
+            width: 100px; /* Scaled up as requested */
+        }
+
+        /* Hidden State */
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
     <div class="terminal-container">
-        <div class="profile-header"><img src="playerprofilelogo.png" class="profile-logo"></div>
-        <h1>TERMINAL ACCESS</h1>
+        <!-- Header Banner -->
+        <img src="playerprofilelogo.png" class="profile-banner" alt="Player Profile">
 
-        <div class="section-box">
-            <div class="section-title">Hub Identity (Manual)</div>
+        <!-- Identity Mixer -->
+        <div class="mixer-box">
+            <div class="section-title">Identity Mixer</div>
+            
             <div class="form-group">
-                <label>USERNAME</label>
-                <input type="text" id="hub-username">
-                <label>AVATAR (MAX 2MB)</label>
-                <input type="file" id="hub-avatar" accept="image/*">
+                <label>Select Active Username</label>
+                <select id="username-mixer">
+                    <!-- Dynamically Populated -->
+                </select>
             </div>
 
-            <div class="section-title">Active Persona</div>
-            <select id="active-persona">
-                <option value="manual">Manual (Hub)</option>
-                <option value="discord">Discord</option>
-                <option value="google">Google</option>
-                <option value="github">GitHub</option>
-            </select>
-            <img src="submit.png" class="btn-animate submit-btn" id="submit-profile">
+            <div class="form-group">
+                <label>Active Avatar Preview</label>
+                <div class="avatar-preview-wrapper">
+                    <img id="current-avatar-preview" src="default-avatar.png" alt="Preview">
+                    <div style="flex-grow: 1;">
+                        <label style="margin-bottom: 5px; display: block;">Upload Custom Hub Avatar</label>
+                        <input type="file" id="hub-avatar-upload" accept="image/*">
+                    </div>
+                </div>
+            </div>
+
+            <img src="submit.png" class="btn-animate submit-btn" id="submit-mixer" alt="Update Terminal">
         </div>
 
-        <div class="section-box">
-            <div class="section-title">Connection Matrix</div>
-            <div class="social-matrix" id="social-matrix">
+        <!-- Connection Matrix -->
+        <div class="mixer-box">
+            <div class="section-title">Secure Connections</div>
+            <div class="matrix-grid" id="matrix-grid">
+                <!-- Discord -->
                 <div class="connection-unit" id="unit-discord">
-                    <div class="tooltip">Secure your Discord data to your Hub identity.</div>
-                    <a href="https://api.radioanarchy.gg:8202/auth/discord"><img src="discordlogo.png" class="btn-animate social-icon"></a>
+                    <a href="https://api.radioanarchy.gg:8202/auth/discord">
+                        <img src="discordlogo.png" class="btn-animate social-icon">
+                    </a>
+                    <div class="tooltip">Click here to secure your Discord data to your Hub identity.</div>
                 </div>
+
+                <!-- Google -->
                 <div class="connection-unit" id="unit-google">
-                    <div class="tooltip">Secure your Google data to your Hub identity.</div>
-                    <a href="https://api.radioanarchy.gg:8202/auth/google"><img src="googlelogo.png" class="btn-animate social-icon"></a>
+                    <a href="https://api.radioanarchy.gg:8202/auth/google">
+                        <img src="googlelogo.png" class="btn-animate social-icon">
+                    </a>
+                    <div class="tooltip">Click here to secure your Google data to your Hub identity.</div>
                 </div>
+
+                <!-- GitHub -->
                 <div class="connection-unit" id="unit-github">
-                    <div class="tooltip">Secure your GitHub data to your Hub identity.</div>
-                    <a href="https://api.radioanarchy.gg:8202/auth/github"><img src="githublogo.png" class="btn-animate social-icon"></a>
+                    <a href="https://api.radioanarchy.gg:8202/auth/github">
+                        <img src="githublogo.png" class="btn-animate social-icon">
+                    </a>
+                    <div class="tooltip">Click here to secure your GitHub data to your Hub identity.</div>
                 </div>
             </div>
         </div>
 
+        <!-- Exit Navigation -->
         <div class="home-btn-container">
-            <a href="index.html"><img src="home.png" class="btn-animate home-btn"></a>
+            <a href="index.html">
+                <img src="home.png" class="btn-animate home-btn" alt="Home">
+            </a>
         </div>
     </div>
 
     <script>
         const API = "https://api.radioanarchy.gg:8202";
+        let unlockedData = {};
 
+        // 1. AUTH CHECK & INITIALIZE
         async function init() {
-            const res = await fetch(`${API}/auth/me`, { credentials: 'include' });
-            const data = await res.json();
-            if (!data.loggedIn) return window.location.href = 'index.html';
+            try {
+                const res = await fetch(`${API}/auth/me`, { credentials: 'include' });
+                const data = await res.json();
 
-            document.getElementById('hub-username').value = data.displayUsername;
-            document.getElementById('active-persona').value = data.activePersona;
-
-            ['discord', 'google', 'github'].forEach(p => {
-                if (data.connections[p]) {
-                    document.getElementById(`unit-${p}`).innerHTML = `<span class="status-text">CONNECTED AS: ${data.displayUsername}</span>`;
+                if (!data.loggedIn) {
+                    window.location.href = 'index.html';
+                    return;
                 }
-            });
+
+                unlockedData = data.unlocked;
+
+                // Update Preview
+                document.getElementById('current-avatar-preview').src = data.currentAvatar || 'default-avatar.png';
+
+                // 2. POPULATE USERNAME MIXER
+                const mixer = document.getElementById('username-mixer');
+                mixer.innerHTML = ''; // Clear
+
+                for (const [provider, info] of Object.entries(unlockedData)) {
+                    if (info && info.username) {
+                        const opt = document.createElement('option');
+                        opt.value = provider;
+                        opt.innerText = info.username + ` (${provider.toUpperCase()})`;
+                        if (data.activePersona === provider) opt.selected = true;
+                        mixer.appendChild(opt);
+                    }
+                }
+
+                // 3. UPDATE CONNECTION MATRIX
+                // If connected (true), hide the button.
+                if (data.connections.discord) document.getElementById('unit-discord').classList.add('hidden');
+                if (data.connections.google) document.getElementById('unit-google').classList.add('hidden');
+                if (data.connections.github) document.getElementById('unit-github').classList.add('hidden');
+
+            } catch (err) {
+                console.error("Terminal Error:", err);
+            }
         }
 
-        document.getElementById('hub-avatar').onchange = function() {
-            if (this.files[0].size > 2097152) { alert("FILE TOO LARGE (MAX 2MB)"); this.value = ""; }
+        // --- CLIENT SIDE VALIDATION ---
+        document.getElementById('hub-avatar-upload').onchange = function() {
+            if (this.files[0] && this.files[0].size > 2097152) { 
+                alert("FILE TOO LARGE: Access denied. (Max 2MB)"); 
+                this.value = ""; 
+            }
         };
 
-        document.getElementById('submit-profile').onclick = async () => {
+        // --- SUBMIT IDENTITY MIXER ---
+        document.getElementById('submit-mixer').onclick = async () => {
+            const selectedPersona = document.getElementById('username-mixer').value;
+            const fileInput = document.getElementById('hub-avatar-upload');
+            
             const formData = new FormData();
-            formData.append('username', document.getElementById('hub-username').value);
-            formData.append('active_persona', document.getElementById('active-persona').value);
-            const file = document.getElementById('hub-avatar').files[0];
-            if (file) formData.append('avatar', file);
+            formData.append('active_persona', selectedPersona);
+            
+            if (fileInput.files[0]) {
+                formData.append('avatar', fileInput.files[0]);
+                // If user uploads a file, we force persona to manual so the new avatar shows
+                formData.set('active_persona', 'manual');
+            }
 
-            const res = await fetch(`${API}/profile/update`, { method: 'POST', credentials: 'include', body: formData });
-            if (res.ok) { alert("TERMINAL UPDATED"); window.location.reload(); }
+            try {
+                const res = await fetch(`${API}/profile/update`, {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: formData
+                });
+
+                if (res.ok) {
+                    alert("IDENTITY RECONFIGURED: Terminal Updated.");
+                    window.location.reload();
+                } else {
+                    alert("UPDATE FAILED: Check system logs.");
+                }
+            } catch (err) {
+                console.error("Submit error:", err);
+            }
         };
+
+        // Parallax Background Effect
+        window.addEventListener('scroll', function() {
+            const scrollPosition = window.pageYOffset;
+            document.body.style.backgroundPositionY = -(scrollPosition * 0.3) + 'px';
+        });
 
         init();
     </script>
