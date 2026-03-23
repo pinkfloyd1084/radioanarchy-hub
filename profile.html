@@ -173,28 +173,29 @@
             visibility: visible;
             transform: translateX(-50%) translateY(20px);
         }
-		.role-toggle {
-			background: rgba(0, 255, 204, 0.05);
-			border: 1px solid #333;
-			padding: 12px;
+		
+		/* --- CLEARANCE BADGE STYLING --- */
+		.clearance-badge {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			background: rgba(255, 255, 255, 0.03);
+			border: 1px solid #222;
+			padding: 8px 15px;
 			border-radius: 4px;
-			cursor: pointer;
-			font-size: 0.8rem;
-			transition: all 0.2s;
+			font-size: 0.85rem;
+			color: #bbb;
 			text-transform: uppercase;
 			letter-spacing: 1px;
 		}
-		
-		.role-toggle.active {
-			border-color: #00ffcc;
-			background: rgba(0, 255, 204, 0.15);
-			color: #00ffcc;
-			box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
-		}
-		
-		.role-toggle:hover {
-			border-color: #ff0055;
-			background: rgba(255, 0, 85, 0.1);
+
+		.status-dot {
+			width: 10px;
+			height: 10px;
+			border-radius: 50%;
+			display: inline-block;
+			/* Neon glow based on the role color */
+			box-shadow: 0 0 8px currentColor; 
 		}
 
         /* --- NAVIGATION --- */
@@ -268,15 +269,10 @@
             </div>
         </div>
 		
-		<div class="mixer-box" id="role-terminal-box">
-			<div class="section-title">Sector Role Management</div>
-			<p style="font-size: 0.8rem; color: #888; margin-bottom: 20px;">
-				Synchronize your clearance levels. Toggling these will update your Discord permissions instantly.
-			</p>
-    
-			<div id="role-matrix" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px;">
-				<div class="loading-text" style="color: #ff0055; font-style: italic;">Accessing Discord API...</div>
-			</div>
+		<div class="mixer-box" id="clearance-box">
+			<div class="section-title">Verified Sector Clearances</div>
+			<div id="clearance-list" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;">
+				</div>
 		</div>
 
         <div class="home-btn-container">
@@ -345,6 +341,25 @@
                 if (data.connections.google) document.getElementById('unit-google').classList.add('hidden');
                 if (data.connections.github) document.getElementById('unit-github').classList.add('hidden');
 
+				// 5. RENDER SECTOR CLEARANCES
+				const clearanceList = document.getElementById('clearance-list');
+				clearanceList.innerHTML = ''; // Clear the box
+
+				if (data.roles && data.roles.length > 0) {
+					data.roles.forEach(role => {
+						const badge = document.createElement('div');
+						badge.className = 'clearance-badge';
+						// Using the actual color from Discord for the dot
+						badge.innerHTML = `
+							${role.name} 
+							<span class="status-dot" style="background-color: ${role.color}; color: ${role.color}"></span>
+						`;
+						clearanceList.appendChild(badge);
+					});
+				} else {
+					clearanceList.innerHTML = '<span style="color: #444; font-style: italic;">[ NO ACTIVE CLEARANCES DETECTED ]</span>';
+				}
+
             } catch (err) {
                 console.error("Terminal Error:", err);
             }
@@ -401,4 +416,3 @@
     </script>
 </body>
 </html>
-
