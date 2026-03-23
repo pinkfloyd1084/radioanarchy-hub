@@ -180,7 +180,7 @@
         }
 
         .home-btn {
-            width: 100px; /* Scaled up as requested */
+            width: 100px;
         }
 
         /* Hidden State */
@@ -190,26 +190,28 @@
 <body>
 
     <div class="terminal-container">
-        <!-- Header Banner -->
         <img src="playerprofilelogo.png" class="profile-banner" alt="Player Profile">
 
-        <!-- Identity Mixer -->
         <div class="mixer-box">
             <div class="section-title">Identity Mixer</div>
             
             <div class="form-group">
                 <label>Select Active Username</label>
                 <select id="username-mixer">
-                    <!-- Dynamically Populated -->
-                </select>
+                    </select>
             </div>
 
             <div class="form-group">
-                <label>Active Avatar Preview</label>
+                <label>Select Avatar Source</label>
+                <select id="avatar-mixer">
+                    </select>
+            </div>
+
+            <div class="form-group">
+                <label>Active Avatar Preview & Custom Upload</label>
                 <div class="avatar-preview-wrapper">
                     <img id="current-avatar-preview" src="default-avatar.png" alt="Preview">
                     <div style="flex-grow: 1;">
-                        <label style="margin-bottom: 5px; display: block;">Upload Custom Hub Avatar</label>
                         <input type="file" id="hub-avatar-upload" accept="image/*">
                     </div>
                 </div>
@@ -218,11 +220,9 @@
             <img src="submit.png" class="btn-animate submit-btn" id="submit-mixer" alt="Update Terminal">
         </div>
 
-        <!-- Connection Matrix -->
         <div class="mixer-box">
             <div class="section-title">Secure Connections</div>
             <div class="matrix-grid" id="matrix-grid">
-                <!-- Discord -->
                 <div class="connection-unit" id="unit-discord">
                     <a href="https://api.radioanarchy.gg:8202/auth/discord">
                         <img src="discordlogo.png" class="btn-animate social-icon">
@@ -230,7 +230,6 @@
                     <div class="tooltip">Click here to secure your Discord data to your Hub identity.</div>
                 </div>
 
-                <!-- Google -->
                 <div class="connection-unit" id="unit-google">
                     <a href="https://api.radioanarchy.gg:8202/auth/google">
                         <img src="googlelogo.png" class="btn-animate social-icon">
@@ -238,7 +237,6 @@
                     <div class="tooltip">Click here to secure your Google data to your Hub identity.</div>
                 </div>
 
-                <!-- GitHub -->
                 <div class="connection-unit" id="unit-github">
                     <a href="https://api.radioanarchy.gg:8202/auth/github">
                         <img src="githublogo.png" class="btn-animate social-icon">
@@ -248,7 +246,6 @@
             </div>
         </div>
 
-        <!-- Exit Navigation -->
         <div class="home-btn-container">
             <a href="index.html">
                 <img src="home.png" class="btn-animate home-btn" alt="Home">
@@ -273,25 +270,44 @@
 
                 unlockedData = data.unlocked;
 
-                // Update Preview
-                document.getElementById('current-avatar-preview').src = data.currentAvatar || 'default-avatar.png';
+                // Update Preview initially
+                const previewImg = document.getElementById('current-avatar-preview');
+                previewImg.src = data.currentAvatar || 'default-avatar.png';
 
-                // 2. POPULATE USERNAME MIXER
-                const mixer = document.getElementById('username-mixer');
-                mixer.innerHTML = ''; // Clear
+                // 2. POPULATE MIXERS
+                const userMixer = document.getElementById('username-mixer');
+                const avatarMixer = document.getElementById('avatar-mixer');
+                userMixer.innerHTML = ''; 
+                avatarMixer.innerHTML = ''; 
 
                 for (const [provider, info] of Object.entries(unlockedData)) {
                     if (info && info.username) {
-                        const opt = document.createElement('option');
-                        opt.value = provider;
-                        opt.innerText = info.username + ` (${provider.toUpperCase()})`;
-                        if (data.activePersona === provider) opt.selected = true;
-                        mixer.appendChild(opt);
+                        // Populate Username Dropdown
+                        const optU = document.createElement('option');
+                        optU.value = info.username; // Send actual text, not the provider name
+                        optU.innerText = info.username + ` (${provider.toUpperCase()})`;
+                        if (data.currentUsername === info.username) optU.selected = true;
+                        userMixer.appendChild(optU);
+                    }
+                    if (info && info.avatar) {
+                        // Populate Avatar Dropdown
+                        const optA = document.createElement('option');
+                        optA.value = provider; // Send the provider name to set active_persona
+                        optA.innerText = `${provider.toUpperCase()} Avatar`;
+                        if (data.activePersona === provider) optA.selected = true;
+                        avatarMixer.appendChild(optA);
                     }
                 }
 
-                // 3. UPDATE CONNECTION MATRIX
-                // If connected (true), hide the button.
+                // 3. LIVE AVATAR PREVIEW UPDATE
+                avatarMixer.addEventListener('change', (e) => {
+                    const selectedProvider = e.target.value;
+                    if (unlockedData[selectedProvider] && unlockedData[selectedProvider].avatar) {
+                        previewImg.src = unlockedData[selectedProvider].avatar;
+                    }
+                });
+
+                // 4. UPDATE CONNECTION MATRIX
                 if (data.connections.discord) document.getElementById('unit-discord').classList.add('hidden');
                 if (data.connections.google) document.getElementById('unit-google').classList.add('hidden');
                 if (data.connections.github) document.getElementById('unit-github').classList.add('hidden');
@@ -311,15 +327,16 @@
 
         // --- SUBMIT IDENTITY MIXER ---
         document.getElementById('submit-mixer').onclick = async () => {
-            const selectedPersona = document.getElementById('username-mixer').value;
+            const selectedUsername = document.getElementById('username-mixer').value;
+            const selectedPersona = document.getElementById('avatar-mixer').value;
             const fileInput = document.getElementById('hub-avatar-upload');
             
             const formData = new FormData();
-            formData.append('active_persona', selectedPersona);
+            formData.append('username', selectedUsername); // Saving actual username
+            formData.append('active_persona', selectedPersona); 
             
             if (fileInput.files[0]) {
                 formData.append('avatar', fileInput.files[0]);
-                // If user uploads a file, we force persona to manual so the new avatar shows
                 formData.set('active_persona', 'manual');
             }
 
