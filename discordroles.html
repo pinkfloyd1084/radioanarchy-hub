@@ -319,3 +319,170 @@
         <div class="theme-box">
             <h2 class="box-header">SELECTABLE ROLES</h2>
             <form id="form-selectable-roles">
+                <div class="role-grid">
+                    <div class="checkbox-wrapper"><input type="checkbox" id="role-dayz" value="1475248679463157945"> <label for="role-dayz">DayZ</label></div>
+                    <div class="checkbox-wrapper"><input type="checkbox" id="role-vein" value="1475252236350390393"> <label for="role-vein">Vein</label></div>
+                    <div class="checkbox-wrapper"><input type="checkbox" id="role-beamng" value="1475253102310592602"> <label for="role-beamng">BeamNG</label></div>
+                    <div class="checkbox-wrapper"><input type="checkbox" id="role-gta" value="1485639523822997524"> <label for="role-gta">5M - GTA</label></div>
+                    <div class="checkbox-wrapper"><input type="checkbox" id="role-mtg" value="1485639841562492948"> <label for="role-mtg">MTG</label></div>
+                    <div class="checkbox-wrapper"><input type="checkbox" id="role-yugioh" value="1485640077643350202"> <label for="role-yugioh">Yugioh!</label></div>
+                    <div class="checkbox-wrapper"><input type="checkbox" id="role-pokemon" value="1485640314189512916"> <label for="role-pokemon">Pokemon</label></div>
+                    <div class="checkbox-wrapper"><input type="checkbox" id="role-dnd" value="1485640514899284149"> <label for="role-dnd">Dungeons & Dragons</label></div>
+                    <div class="checkbox-wrapper"><input type="checkbox" id="role-retro" value="1485641794887618700"> <label for="role-retro">RetroArch</label></div>
+                </div>
+                <div class="btn-right-align">
+                    <button type="submit" class="btn-submit"><img src="submit.png" alt="Submit"></button>
+                </div>
+            </form>
+        </div>
+
+        <div class="theme-box">
+            <h2 class="box-header">APPLICABLE ROLES</h2>
+            <form id="form-applicable-roles">
+                <div class="role-grid">
+                    <div class="checkbox-wrapper"><input type="checkbox" id="app-og" value="1476869411972583556"> <label for="app-og">Radio Anarchy OG</label></div>
+                    <div class="checkbox-wrapper"><input type="checkbox" id="app-creator" value="1464113927431389358"> <label for="app-creator">Creator</label></div>
+                    <div class="checkbox-wrapper"><input type="checkbox" id="app-owner" value="1464112315988185311"> <label for="app-owner">Server Owner</label></div>
+                    <div class="checkbox-wrapper"><input type="checkbox" id="app-prof" value="1485607117699416246"> <label for="app-prof">Professor</label></div>
+                    <div class="checkbox-wrapper"><input type="checkbox" id="app-modder" value="1485607636727500982"> <label for="app-modder">Modder</label></div>
+                    <div class="checkbox-wrapper"><input type="checkbox" id="app-admin" value="1485607859294306344"> <label for="app-admin">Cert. Game Admin</label></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload any credentials</label>
+                    <input type="file" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-input" placeholder="Enter your contact email" required>
+                </div>
+                <div class="form-group">
+                    <label>Social or Discord Links</label>
+                    <input type="text" class="form-input" placeholder="Links to your work or server...">
+                </div>
+                <div class="form-group">
+                    <label>Anything you would like us to know?</label>
+                    <textarea class="form-input" placeholder="Tell us why you are applying..."></textarea>
+                </div>
+
+                <div class="btn-right-align">
+                    <button type="submit" class="btn-submit"><img src="submit.png" alt="Submit"></button>
+                </div>
+            </form>
+        </div>
+
+        <div class="theme-box">
+            <h2 class="box-header">JOIN THE RADIO ANARCHY STAFF</h2>
+            <form id="form-staff">
+                <div class="role-grid">
+                    <div class="checkbox-wrapper"><input type="checkbox" id="staff-head" value="1439630953222897815"> <label for="staff-head">Head Admin</label></div>
+                    <div class="checkbox-wrapper"><input type="checkbox" id="staff-admin" value="1365104351202250914"> <label for="staff-admin">Admin</label></div>
+                    <div class="checkbox-wrapper"><input type="checkbox" id="staff-social" value="1365104357472862228"> <label for="staff-social">Social Media Director</label></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload any credentials</label>
+                    <input type="file" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-input" placeholder="Enter your contact email" required>
+                </div>
+                <div class="form-group">
+                    <label>Social or Discord Links</label>
+                    <input type="text" class="form-input" placeholder="Links to your portfolio or socials...">
+                </div>
+                <div class="form-group">
+                    <label>Anything you would like us to know?</label>
+                    <textarea class="form-input" placeholder="Why do you want to join the staff team?"></textarea>
+                </div>
+
+                <div class="btn-right-align">
+                    <button type="submit" class="btn-submit"><img src="submit.png" alt="Submit"></button>
+                </div>
+            </form>
+        </div>
+
+        <div class="back-btn-wrapper">
+            <a href="index.html">
+                <img src="home.png" alt="Home" class="btn-home">
+            </a>
+        </div>
+
+    </div>
+
+    <script>
+        // Parallax Effect
+        window.addEventListener('scroll', function() {
+            const scrollPosition = window.pageYOffset;
+            document.body.style.backgroundPositionY = -(scrollPosition * 0.3) + 'px';
+        });
+
+        // Fetch User Data & Auto-Check Owned Roles
+        window.addEventListener('DOMContentLoaded', () => {
+            fetch('https://api.radioanarchy.gg:8202/auth/me', {
+                method: 'GET',
+                credentials: 'include' 
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.loggedIn) {
+                    // Populate User Box
+                    document.getElementById('user-profile-box').style.display = 'flex';
+                    document.getElementById('user-name').innerText = data.displayUsername;
+                    document.getElementById('user-avatar').src = data.displayAvatar || 'default-avatar.png';
+                    
+                    const rolesContainer = document.getElementById('user-roles-container');
+                    rolesContainer.innerHTML = ''; 
+                    
+                    // Display Top 5 Roles in the Box
+                    if (data.roles && data.roles.length > 0) {
+                        const topRoles = data.roles.slice(0, 5);
+                        topRoles.forEach(role => {
+                            const badge = document.createElement('div');
+                            badge.className = 'role-badge';
+                            const roleColor = (role.color && role.color !== '#000000') ? role.color : '#00ffcc';
+                            badge.style.borderLeftColor = roleColor;
+                            badge.innerText = role.name;
+                            rolesContainer.appendChild(badge);
+                        });
+
+                        // Auto-check the grid boxes for roles the user already has
+                        const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+                        const userRoleIds = data.roles.map(r => r.id);
+                        
+                        allCheckboxes.forEach(checkbox => {
+                            if (userRoleIds.includes(checkbox.value)) {
+                                checkbox.checked = true;
+                            }
+                        });
+                    } else {
+                        rolesContainer.innerHTML = '<span style="color:#aaa; font-size:0.8rem;">No Clearances Assigned</span>';
+                    }
+                } else {
+                    // If not logged in, boot them to home
+                    window.location.href = 'index.html';
+                }
+            })
+            .catch(err => console.error("Engine Error:", err));
+        });
+
+        // Form Submit Placeholders (Pending Backend Setup)
+        document.getElementById('form-selectable-roles').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert("Role Engine Setup Pending: The backend route to sync these directly to Discord is our next step!");
+        });
+
+        document.getElementById('form-applicable-roles').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert("Application System Pending: The webhook to ping PinkFloyd & Silent is currently offline.");
+        });
+
+        document.getElementById('form-staff').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert("Staff Application System Pending: The webhook to ping PinkFloyd & Silent is currently offline.");
+        });
+    </script>
+
+</body>
+</html>
