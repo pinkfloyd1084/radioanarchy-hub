@@ -62,21 +62,23 @@
             text-shadow: 0 0 8px #fff;
         }
 
-        .profile-link-btn {
-            display: inline-block;
-            margin-top: 8px;
-            color: #00ffcc;
-            text-decoration: none;
-            font-size: 0.9rem;
-            border: 1px dashed #00ffcc;
-            padding: 5px 10px;
-            transition: all 0.2s;
+        /* --- NEW PROFILE TERMINAL IMAGE BUTTON STYLING --- */
+        .btn-profile-terminal {
+            width: 180px;
+            margin-top: 10px;
+            transition: transform 0.2s, filter 0.2s;
             cursor: pointer;
+            display: block;
         }
 
-        .profile-link-btn:hover {
-            background: rgba(0, 255, 204, 0.2);
-            box-shadow: 0 0 10px #00ffcc;
+        .btn-profile-terminal:hover {
+            transform: translateY(-5px);
+            filter: drop-shadow(0 0 12px #00ffcc);
+        }
+
+        .btn-profile-terminal:active {
+            transform: translateY(2px) scale(0.95);
+            filter: brightness(1.5) hue-rotate(90deg);
         }
 
         /* --- HEADER HERO ROW (Centered & Tightened) --- */
@@ -577,7 +579,9 @@
         <div class="user-details">
             <span id="user-name"></span>
             <br>
-            <a href="profile.html" class="profile-link-btn">ACCESS TERMINAL (PROFILE)</a>
+            <a href="profile.html">
+                <img src="playerprofile.png" alt="Access Terminal" class="btn-profile-terminal">
+            </a>
         </div>
     </div>
 
