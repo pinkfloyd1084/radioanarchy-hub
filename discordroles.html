@@ -29,7 +29,7 @@
             margin: 0 auto;
         }
 
-        /* --- UPDATED: PROFILE BOX WITH HOME BUTTON --- */
+        /* Profile Box (Top Left) */
         #user-profile-box {
             background: rgba(15, 5, 10, 0.85);
             border: 2px solid #00ffcc;
@@ -38,11 +38,10 @@
             box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
             display: flex;
             flex-direction: column;
-            gap: 12px; /* Tighter vertical spacing */
+            gap: 15px;
             width: 320px;
             box-sizing: border-box;
             text-align: left;
-            min-height: 220px; /* Slight height increase for new button */
         }
 
         .profile-header {
@@ -91,34 +90,25 @@
             text-overflow: ellipsis;
         }
 
-        /* The container for the internal Home button to center it */
-        .profile-home-btn-container {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            margin-top: 5px;
-        }
-
-        /* --- UPDATED: LOGO STACK SIZING --- */
+        /* Logo Stack (Top Center) */
         .logo-stack {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 2px; /* Redced to nearly zero, so they are "just touching" */
+            gap: 10px;
             flex-grow: 1;
             margin-right: 320px; /* Balances the flex space against the profile box */
-            margin-top: 30px; /* Aligns visually with the profile box */
         }
 
         .main-discord-logo {
             width: 100%;
-            max-width: 337px; /* 25% Smaller than 450px */
+            max-width: 450px;
             filter: drop-shadow(0 0 15px rgba(88, 101, 242, 0.5));
         }
 
         .sub-discord-logo {
             width: 100%;
-            max-width: 525px; /* 75% Bigger than 300px */
+            max-width: 300px;
             filter: drop-shadow(0 0 10px #ff0055);
         }
 
@@ -265,24 +255,21 @@
             transform: scale(0.95);
         }
 
-        /* --- UPDATED: BUTTON STYLING FOR BOTH HOME BUTTONS --- */
+        /* Back Button */
+        .back-btn-wrapper {
+            margin-top: 60px;
+            display: flex;
+            justify-content: center;
+        }
+
         .btn-home {
-            width: 120px; /* The specified size */
+            width: 120px;
             transition: transform 0.2s, filter 0.2s;
-            cursor: pointer;
-            display: block;
         }
 
         .btn-home:hover {
             transform: scale(1.1);
             filter: drop-shadow(0 0 15px #ff0055);
-        }
-
-        /* Shared button behavior, separate positioning for the lower button */
-        .back-btn-wrapper {
-            margin-top: 60px;
-            display: flex;
-            justify-content: center;
         }
 
         @media (max-width: 1000px) {
@@ -300,12 +287,6 @@
                 <img id="user-avatar" src="" alt="Anarchist Avatar">
             </div>
             <div id="user-roles-container"></div>
-            
-            <div class="profile-home-btn-container">
-                <a href="index.html">
-                    <img src="home.png" alt="Home" class="btn-home">
-                </a>
-            </div>
         </div>
 
         <div class="logo-stack">
@@ -467,12 +448,34 @@
             .catch(err => console.error("Engine Error:", err));
         });
 
-        // Form Submit Placeholders (Pending Backend Setup)
-        document.getElementById('form-selectable-roles').addEventListener('submit', (e) => {
+		// --- ACTIVE TRANSMITTER: SELECTABLE ROLES ---
+        document.getElementById('form-selectable-roles').addEventListener('submit', async (e) => {
             e.preventDefault();
-            alert("Role Engine Setup Pending: The backend route to sync these directly to Discord is our next step!");
-        });
+            
+            // Gather all checked boxes in the grid
+            const checkboxes = document.querySelectorAll('#form-selectable-roles input[type="checkbox"]:checked');
+            const selectedRoles = Array.from(checkboxes).map(cb => cb.value);
 
+            try {
+                const response = await fetch('https://api.radioanarchy.gg:8202/roles/update', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ roles: selectedRoles })
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert("TERMINAL UPDATED: " + result.message);
+                    window.location.reload(); // Reload to show the new roles in the top-left box
+                } else {
+                    alert("UPDATE FAILED: " + result.error);
+                }
+            } catch (err) {
+                alert("CRITICAL ERROR: Connection to the Secure Engine failed.");
+            }
+        });
         document.getElementById('form-applicable-roles').addEventListener('submit', (e) => {
             e.preventDefault();
             alert("Application System Pending: The webhook to ping PinkFloyd & Silent is currently offline.");
@@ -485,4 +488,4 @@
     </script>
 
 </body>
-</html>
+</html>         
