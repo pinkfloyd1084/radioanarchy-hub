@@ -20,24 +20,10 @@
             position: relative; z-index: 10; border-bottom: 2px solid #ff0055;
         }
 
-      /* --- HEADER LOGO STACK --- */
-        .news-header-container {
-            position: relative; margin: 20px auto 40px auto; width: 100%; max-width: 600px;
-            display: flex; justify-content: center; align-items: center;
-        }
-        .behind-logo {
-            position: absolute; width: 220px; top: -110px; /* Bigger and pushed much higher */
-            filter: drop-shadow(0 0 10px rgba(0, 255, 204, 0.4)); z-index: 1;
-            /* opacity: 0.6; removed! */
-        }
-        .main-logo {
-            width: 300px; position: relative; z-index: 2;
-            filter: drop-shadow(0 0 20px #ff0055);
-        }
         /* --- TOP UI BAR (Profile & Nav) --- */
         .top-ui-row {
             display: flex; justify-content: space-between; align-items: flex-start;
-            width: 95%; max-width: 1600px; margin: 0 auto 30px auto;
+            width: 95%; max-width: 1600px; margin: 30px auto 30px auto;
         }
 
         /* Profile Box */
@@ -85,6 +71,20 @@
         .btn-graphic { width: 140px; transition: transform 0.2s, filter 0.2s; cursor: pointer; }
         .btn-graphic:hover { transform: translateY(-3px); filter: drop-shadow(0 0 12px #00ffcc); }
 
+        /* --- HEADER LOGO STACK --- */
+        .news-header-container {
+            position: relative; margin: 20px auto 40px auto; width: 100%; max-width: 600px;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .behind-logo {
+            position: absolute; width: 220px; top: -110px;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 204, 0.4)); z-index: 1;
+        }
+        .main-logo {
+            width: 300px; position: relative; z-index: 2;
+            filter: drop-shadow(0 0 20px #ff0055);
+        }
+
         /* --- THE NEWS GRID (90% Width) --- */
         .news-grid {
             display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
@@ -122,16 +122,10 @@
         .trend-up { color: #00ff55; font-weight: bold; }
         .trend-down { color: #ff0055; font-weight: bold; }
 
-        @media (max-width: 1100px) {
-            .news-grid { grid-template-columns: 1fr; width: 95%; }
-            .top-ui-row { flex-direction: column; align-items: center; gap: 30px; }
-            .hub-nav-wrapper { text-align: center; }
-            .dropdown-content { right: auto; left: 50%; transform: translateX(-50%); }
-        }
-		/* --- NEDRY SECURITY POP-UP --- */
+        /* --- NEDRY SECURITY POP-UP --- */
         #nedry-security-box {
             position: fixed;
-            bottom: -800px; /* Hidden WAY off-screen by default */
+            bottom: -800px;
             left: 50%;
             transform: translateX(-50%);
             background: rgba(15, 5, 10, 0.98);
@@ -139,16 +133,22 @@
             border-radius: 12px;
             padding: 30px;
             box-shadow: 0 0 50px rgba(255, 0, 85, 0.8);
-            z-index: 30000; /* Stays above absolutely everything */
+            z-index: 30000;
             text-align: center;
             transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             width: 90%;
             max-width: 550px;
         }
 
-        /* The JS will add this class to trigger the slide-up */
         #nedry-security-box.nedry-show {
             bottom: 40px; 
+        }
+
+        @media (max-width: 1100px) {
+            .news-grid { grid-template-columns: 1fr; width: 95%; }
+            .top-ui-row { flex-direction: column; align-items: center; gap: 30px; }
+            .hub-nav-wrapper { text-align: center; }
+            .dropdown-content { right: auto; left: 50%; transform: translateX(-50%); }
         }
     </style>
 </head>
@@ -156,7 +156,7 @@
 
     <img src="RadioAnarchyBanner.png" class="top-banner" alt="Banner">
 
-<div class="top-ui-row" style="margin-top: 30px;">
+    <div class="top-ui-row">
         
         <div id="user-profile-box" style="display: none;">
             <div class="profile-header">
@@ -205,12 +205,14 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     <div class="news-header-container">
         <img src="newslogo.png" alt="News Icon" class="behind-logo">
         <img src="news.png" alt="News" class="main-logo">
     </div>
+
     <div class="news-grid">
         
         <div class="terminal-box">
@@ -244,10 +246,10 @@
         </div>
 
     </div>
-	
-	<div id="nedry-security-box" class="nedry-hidden">
+
+    <div id="nedry-security-box">
         <h2 style="color: #ff0055; margin-top: 0; font-size: 1.8rem; text-shadow: 0 0 10px #ff0055;">Ah ah ah! You didn't say the magic word...</h2>
-        <img src="silentsaysno.gif" alt="Access Denied" style="width: 100%; max-width: 400px; border: 2px solid #00ffcc; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);">
+        <img id="nedry-gif" src="silentsaysno.gif" alt="Access Denied" style="width: 100%; max-width: 400px; border: 2px solid #00ffcc; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);">
     </div>
 
     <script>
@@ -255,38 +257,47 @@
             const scrollPosition = window.pageYOffset;
             document.body.style.backgroundPositionY = -(scrollPosition * 0.3) + 'px';
         });
-		
-		// Global variable to hold their clearances
+
+        // Global variable to hold their clearances
         let activeClearances = [];
 
         // THE NEDRY PROTOCOL
+        const nedrySound = new Audio('dennis_nerdy_ahahah.mp3'); // File name matches your spelling!
+        nedrySound.preload = 'auto';
+        let nedryPlayCount = 0;
+
         function triggerNedry() {
             const nedryBox = document.getElementById('nedry-security-box');
-            const nedrySound = new Audio('dennis_nedry_ahahah.mp3');
+            const nedryGif = document.getElementById('nedry-gif');
             
-            // Slide up
+            // The cache buster trick forces the GIF to loop infinitely while visible
+            const timestamp = new Date().getTime();
+            nedryGif.src = 'silentsaysno.gif?t=' + timestamp; 
+            
             nedryBox.classList.add('nedry-show');
             
-            // Play first time
-            nedrySound.play().catch(err => console.log("Audio blocked:", err));
-
-            // Wait 2.5 seconds (adjust if your MP3 is longer/shorter), play again
-            setTimeout(() => {
-                nedrySound.play().catch(err => console.log("Audio blocked:", err));
-            }, 2500);
-
-            // Hide the box after the second play finishes (around 5.5 seconds total)
-            setTimeout(() => {
-                nedryBox.classList.remove('nedry-show');
-            }, 5500);
+            nedryPlayCount = 0; 
+            nedrySound.play().catch(err => console.error("Audio Error:", err));
         }
 
-        // Attach the security check to the restricted links
+        // Wait strictly for audio to end, pause 1s, play again, then close.
+        nedrySound.addEventListener('ended', () => {
+            nedryPlayCount++;
+            
+            if (nedryPlayCount === 1) {
+                setTimeout(() => {
+                    nedrySound.play().catch(err => console.error("Audio Error 2:", err));
+                }, 1000);
+            } else if (nedryPlayCount === 2) {
+                const nedryBox = document.getElementById('nedry-security-box');
+                nedryBox.classList.remove('nedry-show');
+            }
+        });
+
+        // Attach security to restricted links
         document.querySelectorAll('.restricted-link').forEach(link => {
             link.addEventListener('click', function(e) {
                 const requiredRole = this.getAttribute('data-role');
-                
-                // If they don't have the role, stop the click and fire Nedry
                 if (!activeClearances.includes(requiredRole)) {
                     e.preventDefault(); 
                     triggerNedry();
@@ -294,12 +305,13 @@
             });
         });
 
-       // 1. AUTH CHECK FOR PROFILE & NAV
+        // 1. AUTH CHECK FOR PROFILE & NAV
         fetch('https://api.radioanarchy.gg:8202/auth/me', { method: 'GET', credentials: 'include' })
             .then(res => res.json())
             .then(data => {
                 if (data.loggedIn) {
-                    // --- SAVE ROLES FOR NEDRY SECURITY ---
+                    
+                    // Populate global clearances for security
                     if (data.roles) {
                         activeClearances = data.roles.map(r => r.name);
                     }
@@ -328,6 +340,7 @@
                     document.getElementById('auth-nav').style.display = 'block';
                 }
             }).catch(err => console.error("Auth check failed:", err));
+
         // 2. FETCH HUB DATA (News & Market)
         fetch('https://api.radioanarchy.gg:8202/api/hub-data')
             .then(res => res.json())
