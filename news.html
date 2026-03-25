@@ -20,20 +20,20 @@
             position: relative; z-index: 10; border-bottom: 2px solid #ff0055;
         }
 
-        /* --- HEADER LOGO STACK --- */
+      /* --- HEADER LOGO STACK --- */
         .news-header-container {
-            position: relative; margin: 40px auto; width: 100%; max-width: 600px;
+            position: relative; margin: 20px auto 40px auto; width: 100%; max-width: 600px;
             display: flex; justify-content: center; align-items: center;
         }
         .behind-logo {
-            position: absolute; width: 150px; opacity: 0.6; top: -30px;
+            position: absolute; width: 220px; top: -110px; /* Bigger and pushed much higher */
             filter: drop-shadow(0 0 10px rgba(0, 255, 204, 0.4)); z-index: 1;
+            /* opacity: 0.6; removed! */
         }
         .main-logo {
             width: 300px; position: relative; z-index: 2;
             filter: drop-shadow(0 0 20px #ff0055);
         }
-
         /* --- TOP UI BAR (Profile & Nav) --- */
         .top-ui-row {
             display: flex; justify-content: space-between; align-items: flex-start;
@@ -134,12 +134,7 @@
 
     <img src="RadioAnarchyBanner.png" class="top-banner" alt="Banner">
 
-    <div class="news-header-container">
-        <img src="newslogo.png" alt="News Icon" class="behind-logo">
-        <img src="news.png" alt="News" class="main-logo">
-    </div>
-
-    <div class="top-ui-row">
+<div class="top-ui-row" style="margin-top: 30px;">
         
         <div id="user-profile-box" style="display: none;">
             <div class="profile-header">
@@ -160,9 +155,11 @@
             <div id="auth-nav" style="display: none;">
                 <div class="nav-trigger-btn">HUB NAV ▼</div>
                 <div class="dropdown-content">
-                    <div class="drop-header">DIRECTORY</div>
+                    <div class="drop-header">HOME</div>
                     <a href="index.html" class="drop-link">Home Terminal</a>
-                    <a href="news.html" class="drop-link">Information Station</a>
+
+                    <div class="drop-header" style="margin-top: 5px;">INFORMATION STATION</div>
+                    <a href="news.html" class="drop-link">News Station</a>
                     <a href="games.html" class="drop-link">Games & Servers</a>
                     <a href="store.html" class="drop-link">The Shoppe</a>
                     <a href="discordroles.html" class="drop-link">Discord Roles</a>
@@ -186,9 +183,12 @@
                 </div>
             </div>
         </div>
-
     </div>
 
+    <div class="news-header-container">
+        <img src="newslogo.png" alt="News Icon" class="behind-logo">
+        <img src="news.png" alt="News" class="main-logo">
+    </div>
     <div class="news-grid">
         
         <div class="terminal-box">
