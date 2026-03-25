@@ -938,7 +938,13 @@
             <p id="ra-notif-message">Message goes here.</p>
         </div>
     </div>
-  
+    <div id="system-auth-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 5, 5, 0.95); z-index: 20000; flex-direction: column; justify-content: center; align-items: center; cursor: pointer;">
+		<img src="radioanarchylogo.png" style="width: 300px; margin-bottom: 40px; filter: drop-shadow(0 0 20px #ff0055);">
+		<div style="border: 2px solid #00ffcc; padding: 20px 40px; border-radius: 8px; box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);">
+			<h1 style="color: #00ffcc; font-family: 'Courier New', monospace; letter-spacing: 5px; margin: 0; text-shadow: 0 0 10px #00ffcc;">[ ACCESS TERMINAL ]</h1>
+			<p style="color: #fff; margin-top: 15px; font-size: 0.9rem; letter-spacing: 2px;">CLICK TO SYNCHRONIZE SECURE FEED</p>
+		</div>
+	</div>
     <script>
         // --- MASTER NOTIFICATION FUNCTION (Dormant until you call it) ---
         function showNotification(title, message, gifName, audioName) {
@@ -976,16 +982,22 @@
 			const urlParams = new URLSearchParams(window.location.search);
 
 			if (urlParams.get('login') === 'success') {
-				// Play the welcome back sound
-				const sound = new Audio('welcomeback.mp3');
-				sound.play().catch(err => {
-					console.log("Autoplay blocked: Browser requires a click first.");
-				});
+				const authOverlay = document.getElementById('system-auth-overlay');
+				authOverlay.style.display = 'flex'; // Show the "Click to Sync" screen
 
-				// CLEANUP: Remove the flag from the URL bar so it looks clean 
-				// and doesn't replay if they refresh the page!
-				const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
-				window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+				// When they click ANYWHERE on that overlay:
+				authOverlay.addEventListener('click', () => {
+					// Play the welcome back sound (now allowed because of the click!)
+					const sound = new Audio('welcomeback.mp3');
+					sound.play().catch(err => console.log("Audio still blocked:", err));
+
+					// Hide the overlay so they can see the Hub
+					authOverlay.style.display = 'none';
+
+					// Clean the URL bar so it doesn't replay on refresh
+					const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+					window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+				}, { once: true }); // { once: true } ensures this only fires the first time they click
 			}
 
             // 2. Auth Check & UI Update
