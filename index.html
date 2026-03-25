@@ -107,7 +107,7 @@
             background: rgba(0, 0, 0, 0.6);
             padding: 5px 10px;
             border-radius: 4px;
-            border-left: 4px solid #00ffcc; /* Default color, overridden by JS */
+            border-left: 4px solid #00ffcc; 
             color: #ddd;
             text-shadow: 0 0 5px rgba(255,255,255,0.3);
             white-space: nowrap;
@@ -121,7 +121,7 @@
         }
 
         .btn-profile-terminal {
-            width: 140px; /* Scaled down */
+            width: 140px; 
             transition: transform 0.2s, filter 0.2s;
             cursor: pointer;
             display: block;
@@ -589,7 +589,7 @@
 
         .footer-support-img {
             height: 140px; 
-            margin-top: -65px; /* Pulls it up flush against the background image */
+            margin-top: -65px;
             margin-bottom: 20px;
             filter: drop-shadow(0 0 15px rgba(0,0,0,0.8));
         }
@@ -624,6 +624,62 @@
             .news-ticker-container { border-width: 1px; padding: 10px 0; }
             .auth-btn-graphic { width: 220px; } 
             .auth-wrapper .info-panel { width: 220px; }
+        }
+        
+        /* --- CUSTOM NOTIFICATION ENGINE --- */
+        #ra-notification {
+            position: fixed;
+            bottom: -500px; /* Hidden WAY off-screen by default */
+            right: 20px;
+            width: 350px;
+            background: rgba(15, 5, 10, 0.98);
+            border: 2px solid #ff0055;
+            border-radius: 8px;
+            box-shadow: 0 0 25px rgba(255, 0, 85, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            z-index: 10000;
+            transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            font-family: 'Courier New', Courier, monospace;
+            pointer-events: none; /* Prevents clicks while hidden */
+        }
+
+        /* Class added by JS to slide it up */
+        #ra-notification.show-notif {
+            bottom: 30px; 
+            pointer-events: auto; /* Allows interaction when visible */
+        }
+
+        #ra-notif-gif {
+            width: 60px;
+            height: 60px;
+            border-radius: 4px;
+            object-fit: cover;
+            border: 1px solid #00ffcc;
+        }
+
+        .ra-notif-content {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            text-align: left;
+        }
+
+        #ra-notif-title {
+            margin: 0;
+            color: #00ffcc;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px #00ffcc;
+        }
+
+        #ra-notif-message {
+            margin: 0;
+            color: #ddd;
+            font-size: 0.85rem;
+            line-height: 1.3;
         }
     </style>
 </head>
@@ -875,15 +931,55 @@
         </div>
     </div>
 
+    <div id="ra-notification" class="ra-notification-hidden">
+        <img id="ra-notif-gif" src="" alt="Notification Icon">
+        <div class="ra-notif-content">
+            <h3 id="ra-notif-title">SYSTEM ALERT</h3>
+            <p id="ra-notif-message">Message goes here.</p>
+        </div>
+    </div>
+  
     <script>
-        // Parallax Effect
-        window.addEventListener('scroll', function() {
-            const scrollPosition = window.pageYOffset;
-            document.body.style.backgroundPositionY = -(scrollPosition * 0.3) + 'px';
-        });
+        // --- MASTER NOTIFICATION FUNCTION (Dormant until you call it) ---
+        function showNotification(title, message, gifName, audioName) {
+            const notifBox = document.getElementById('ra-notification');
+            const notifTitle = document.getElementById('ra-notif-title');
+            const notifMessage = document.getElementById('ra-notif-message');
+            const notifGif = document.getElementById('ra-notif-gif');
 
-        // The Engine Ping (Checks Login Status & Updates UI & Injects Roles)
+            notifTitle.innerText = title;
+            notifMessage.innerText = message;
+            
+            if (gifName) {
+                notifGif.src = gifName;
+                notifGif.style.display = 'block';
+            } else {
+                notifGif.style.display = 'none';
+            }
+
+            if (audioName) {
+                const sound = new Audio(audioName);
+                sound.play().catch(err => console.log("Audio play failed:", err));
+            }
+
+            notifBox.classList.add('show-notif');
+
+            setTimeout(() => {
+                notifBox.classList.remove('show-notif');
+            }, 5000); 
+        }
+
+        // --- PAGE INITIALIZATION ---
         window.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. Check for Login Flag (AUDIO ONLY, as requested)
+            if (sessionStorage.getItem('justLoggedIn') === 'true') {
+                const sound = new Audio('welcomeback.mp3');
+                sound.play().catch(err => console.log("Browser blocked auto-play:", err));
+                sessionStorage.removeItem('justLoggedIn');
+            }
+
+            // 2. Auth Check & UI Update
             fetch('https://api.radioanarchy.gg:8202/auth/me', {
                 method: 'GET',
                 credentials: 'include' 
@@ -891,31 +987,25 @@
             .then(res => res.json())
             .then(data => {
                 if (data.loggedIn) {
-                    // Swap Auth Boxes
                     document.getElementById('guest-auth-section').style.display = 'none';
                     document.getElementById('logged-in-auth-section').style.display = 'flex';
                     
-                    // Reveal User Box
                     const profileBox = document.getElementById('user-profile-box');
                     profileBox.style.display = 'flex';
                     document.getElementById('user-name').innerText = data.displayUsername;
                     document.getElementById('user-avatar').src = data.displayAvatar || 'default-avatar.png';
                     
-                    // Inject Top 5 Roles
                     const rolesContainer = document.getElementById('user-roles-container');
-                    rolesContainer.innerHTML = ''; // Clear container
+                    rolesContainer.innerHTML = ''; 
                     
                     if (data.roles && data.roles.length > 0) {
                         const topRoles = data.roles.slice(0, 5);
                         topRoles.forEach(role => {
                             const badge = document.createElement('div');
                             badge.className = 'role-badge';
-                            
-                            // Use the specific Discord hex color, or default to teal if none is set
                             const roleColor = (role.color && role.color !== '#000000') ? role.color : '#00ffcc';
                             badge.style.borderLeftColor = roleColor;
                             badge.innerText = role.name;
-                            
                             rolesContainer.appendChild(badge);
                         });
                     } else {
@@ -926,7 +1016,13 @@
             .catch(err => console.error("Radio Anarchy Auth Engine unreachable:", err));
         });
 
-        // The Logout Engine
+        // --- PARALLAX EFFECT ---
+        window.addEventListener('scroll', function() {
+            const scrollPosition = window.pageYOffset;
+            document.body.style.backgroundPositionY = -(scrollPosition * 0.3) + 'px';
+        });
+
+        // --- LOGOUT ENGINE ---
         const logoutBtn = document.getElementById('logout-trigger');
         if (logoutBtn) {
             logoutBtn.addEventListener('click', (e) => {
@@ -937,12 +1033,11 @@
                 })
                 .then(res => res.json())
                 .then(data => {
-                    window.location.reload();
+                    window.location.reload(); 
                 })
                 .catch(err => console.error("Logout failed:", err));
             });
         }
     </script>
-
 </body>
 </html>

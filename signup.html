@@ -56,7 +56,7 @@
             padding-bottom: 15px;
         }
 
-        /* Social Buttons: 1-column layout */
+        /* Social Buttons */
         .social-auth-row {
             display: flex;
             flex-direction: column; 
@@ -109,7 +109,6 @@
         }
         .input-group input:focus { border-color: #00ffcc; box-shadow: 0 0 10px rgba(0, 255, 204, 0.3); }
 
-        /* --- Global Anarchy Action Button Style --- */
         .anarchy-btn {
             background: none; border: none; padding: 0; cursor: pointer;
             display: inline-flex; justify-content: center; align-items: center;
@@ -125,11 +124,9 @@
         .anarchy-btn:hover img { filter: drop-shadow(0 0 15px #ff0055) brightness(1.2); }
         .anarchy-btn:active { transform: scale(0.96) translateY(-2px); }
 
-        /* Sizing variants */
         .btn-submit img { width: 100%; max-width: 310px; }
-        .btn-footer img { width: 100%; max-width: 180px; } /* Smaller footer buttons */
+        .btn-footer img { width: 100%; max-width: 180px; }
 
-        /* Footer Layout */
         .form-footer { margin-top: 30px; display: flex; flex-direction: column; gap: 20px; align-items: center; }
         .footer-item { font-size: 0.9rem; display: flex; flex-direction: column; gap: 8px; align-items: center; }
     </style>
@@ -143,15 +140,15 @@
             
             <div class="fast-track">
                 <div class="social-auth-row">
-                    <a href="https://api.radioanarchy.gg:8202/auth/discord" class="social-btn discord-btn">
+                    <a href="https://api.radioanarchy.gg:8202/auth/discord" class="social-btn discord-btn" onclick="handleSignUp(event)">
                         <img src="discordlogo.png" alt="Discord" class="social-icon">
                         <span>Discord</span>
                     </a>
-                    <a href="https://api.radioanarchy.gg:8202/auth/github" class="social-btn github-btn">
+                    <a href="https://api.radioanarchy.gg:8202/auth/github" class="social-btn github-btn" onclick="handleSignUp(event)">
                         <img src="Githublogo.png" alt="GitHub" class="social-icon">
                         <span>GitHub</span>
                     </a>
-                    <a href="https://api.radioanarchy.gg:8202/auth/google" class="social-btn google-btn">
+                    <a href="https://api.radioanarchy.gg:8202/auth/google" class="social-btn google-btn" onclick="handleSignUp(event)">
                         <img src="googlelogo.png" alt="Google" class="social-icon">
                         <span>Google</span>
                     </a>
@@ -181,7 +178,7 @@
                     <input type="password" id="confirm_password" name="confirm_password" placeholder="••••••••" required>
                 </div>
                 
-                <button type="submit" class="anarchy-btn btn-submit">
+                <button type="submit" class="anarchy-btn btn-submit" onclick="handleSignUp(event)">
                     <img src="submit.png" alt="Submit">
                 </button>
             </form>
@@ -203,28 +200,55 @@
     </div>
 
     <script>
+        // MASTER DELAY FUNCTION
+        async function handleSignUp(event) {
+            const target = event.currentTarget;
+            const isFormSubmit = target.type === 'submit';
+
+            // If it's a form submit, let the manual registration logic below handle the delay
+            if (isFormSubmit) return;
+
+            // Otherwise, it's a social link (Discord/Google/GitHub)
+            event.preventDefault();
+            const sound = new Audio('welcome.mp3');
+            sound.play().catch(err => console.log("Audio play failed:", err));
+
+            setTimeout(() => {
+                window.location.href = target.href;
+            }, 1000);
+        }
+
+        // MANUAL REGISTRATION LOGIC
         document.getElementById('registrationForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const formData = new FormData(e.target);
+
             if(formData.get('password') !== formData.get('confirm_password')) {
                 alert("ERROR: Passwords do not match.");
                 return;
             }
-            try {
-                const response = await fetch('https://api.radioanarchy.gg:8202/auth/register', {
-                    method: 'POST',
-                    body: formData
-                });
-                const result = await response.json();
-                if (response.ok) {
-                    alert("Welcome to the Hub, Anarchist! Enlistment successful.");
-                    window.location.href = 'signin.html';
-                } else {
-                    alert("ENLISTMENT FAILED: " + result.error);
+
+            // Play sound for manual registration
+            const sound = new Audio('welcome.mp3');
+            sound.play().catch(err => console.log("Audio play failed:", err));
+
+            // Wait 1 second before firing the fetch request
+            setTimeout(async () => {
+                try {
+                    const response = await fetch('https://api.radioanarchy.gg:8202/auth/register', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await response.json();
+                    if (response.ok) {
+                        window.location.href = 'signin.html';
+                    } else {
+                        alert("ENLISTMENT FAILED: " + result.error);
+                    }
+                } catch (err) {
+                    alert("CRITICAL ERROR: The Secure Terminal is offline.");
                 }
-            } catch (err) {
-                alert("CRITICAL ERROR: The Secure Terminal is offline.");
-            }
+            }, 1000);
         });
     </script>
 </body>

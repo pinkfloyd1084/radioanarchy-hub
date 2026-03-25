@@ -54,7 +54,7 @@
             padding-bottom: 15px;
         }
 
-        /* Social Buttons: Matching Signup Page */
+        /* Social Buttons */
         .social-auth-row {
             display: flex;
             flex-direction: column; 
@@ -107,7 +107,6 @@
         }
         .input-group input:focus { border-color: #00ffcc; box-shadow: 0 0 10px rgba(0, 255, 204, 0.3); }
 
-        /* Global Anarchy Button Logic */
         .anarchy-btn {
             background: none; border: none; padding: 0; cursor: pointer;
             display: inline-flex; justify-content: center; align-items: center;
@@ -122,7 +121,6 @@
         .btn-submit img { width: 100%; max-width: 310px; }
         .btn-footer img { width: 100%; max-width: 180px; }
 
-        /* Footer */
         .form-footer { margin-top: 30px; display: flex; flex-direction: column; gap: 20px; align-items: center; }
         .footer-item { font-size: 0.9rem; display: flex; flex-direction: column; gap: 8px; align-items: center; }
     </style>
@@ -136,15 +134,15 @@
             
             <div class="fast-track">
                 <div class="social-auth-row">
-                    <a href="https://api.radioanarchy.gg:8202/auth/discord" class="social-btn discord-btn">
+                    <a href="https://api.radioanarchy.gg:8202/auth/discord" class="social-btn discord-btn" onclick="handleSignIn()">
                         <img src="discordlogo.png" alt="Discord" class="social-icon">
                         <span>Discord</span>
                     </a>
-                    <a href="https://api.radioanarchy.gg:8202/auth/github" class="social-btn github-btn">
+                    <a href="https://api.radioanarchy.gg:8202/auth/github" class="social-btn github-btn" onclick="handleSignIn()">
                         <img src="Githublogo.png" alt="GitHub" class="social-icon">
                         <span>GitHub</span>
                     </a>
-                    <a href="https://api.radioanarchy.gg:8202/auth/google" class="social-btn google-btn">
+                    <a href="https://api.radioanarchy.gg:8202/auth/google" class="social-btn google-btn" onclick="handleSignIn()">
                         <img src="googlelogo.png" alt="Google" class="social-icon">
                         <span>Google</span>
                     </a>
@@ -163,7 +161,7 @@
                     <input type="password" id="password" name="password" placeholder="••••••••" required>
                 </div>
                 
-                <button type="submit" class="anarchy-btn btn-submit">
+                <button type="submit" class="anarchy-btn btn-submit" onclick="handleSignIn()">
                     <img src="submit.png" alt="Login">
                 </button>
             </form>
@@ -185,6 +183,11 @@
     </div>
 
     <script>
+        // Set the arrival flag for the next page
+        function handleSignIn() {
+            sessionStorage.setItem('justLoggedIn', 'true');
+        }
+
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
@@ -199,12 +202,15 @@
 
                 const result = await response.json();
                 if (response.ok) {
-                    alert("Access Granted. Entering the Hub...");
-                    window.location.href = 'dashboard.html';
+                    // Redirecting to index.html to hear the welcomeback.mp3
+                    window.location.href = 'index.html';
                 } else {
+                    // If login fails, remove the flag so it doesn't play later by accident
+                    sessionStorage.removeItem('justLoggedIn');
                     alert("ACCESS DENIED: " + result.error);
                 }
             } catch (err) {
+                sessionStorage.removeItem('justLoggedIn');
                 alert("The Terminal is offline. Connection failed.");
             }
         });

@@ -276,6 +276,59 @@
             .top-header-area { flex-direction: column; align-items: center; gap: 40px; }
             .logo-stack { margin-right: 0; }
         }
+
+        /* --- CUSTOM NOTIFICATION ENGINE --- */
+        #ra-notification {
+            position: fixed;
+            bottom: -150px; /* Hidden off-screen by default */
+            right: 20px;
+            width: 350px;
+            background: rgba(15, 5, 10, 0.95);
+            border: 2px solid #ff0055;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            z-index: 9999;
+            transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        #ra-notification.show-notif {
+            bottom: 20px; 
+        }
+
+        #ra-notif-gif {
+            width: 60px;
+            height: 60px;
+            border-radius: 4px;
+            object-fit: cover;
+            border: 1px solid #00ffcc;
+        }
+
+        .ra-notif-content {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            text-align: left;
+        }
+
+        #ra-notif-title {
+            margin: 0;
+            color: #00ffcc;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            text-shadow: 0 0 5px #00ffcc;
+        }
+
+        #ra-notif-message {
+            margin: 0;
+            color: #ddd;
+            font-size: 0.85rem;
+            line-height: 1.3;
+        }
     </style>
 </head>
 <body>
@@ -331,19 +384,19 @@
 
                 <div class="form-group">
                     <label>Upload any credentials</label>
-                    <input type="file" class="form-input">
+                    <input type="file" name="credential" class="form-input">
                 </div>
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="email" class="form-input" placeholder="Enter your contact email" required>
+                    <input type="email" name="contactEmail" class="form-input" placeholder="Enter your contact email" required>
                 </div>
                 <div class="form-group">
                     <label>Social or Discord Links</label>
-                    <input type="text" class="form-input" placeholder="Links to your work or server...">
+                    <input type="text" name="links" class="form-input" placeholder="Links to your work or server...">
                 </div>
                 <div class="form-group">
                     <label>Anything you would like us to know?</label>
-                    <textarea class="form-input" placeholder="Tell us why you are applying..."></textarea>
+                    <textarea name="info" class="form-input" placeholder="Tell us why you are applying..."></textarea>
                 </div>
 
                 <div class="btn-right-align">
@@ -363,19 +416,19 @@
 
                 <div class="form-group">
                     <label>Upload any credentials</label>
-                    <input type="file" class="form-input">
+                    <input type="file" name="credential" class="form-input">
                 </div>
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="email" class="form-input" placeholder="Enter your contact email" required>
+                    <input type="email" name="contactEmail" class="form-input" placeholder="Enter your contact email" required>
                 </div>
                 <div class="form-group">
                     <label>Social or Discord Links</label>
-                    <input type="text" class="form-input" placeholder="Links to your portfolio or socials...">
+                    <input type="text" name="links" class="form-input" placeholder="Links to your portfolio or socials...">
                 </div>
                 <div class="form-group">
                     <label>Anything you would like us to know?</label>
-                    <textarea class="form-input" placeholder="Why do you want to join the staff team?"></textarea>
+                    <textarea name="info" class="form-input" placeholder="Why do you want to join the staff team?"></textarea>
                 </div>
 
                 <div class="btn-right-align">
@@ -390,9 +443,46 @@
             </a>
         </div>
 
+        <div id="ra-notification" class="ra-notification-hidden">
+            <img id="ra-notif-gif" src="" alt="Notification Icon">
+            <div class="ra-notif-content">
+                <h3 id="ra-notif-title">SYSTEM ALERT</h3>
+                <p id="ra-notif-message">Message goes here.</p>
+            </div>
+        </div>
+
     </div>
 
     <script>
+        // --- CUSTOM SYSTEM NOTIFICATION ENGINE ---
+        function showNotification(title, message, gifName, audioName) {
+            const notifBox = document.getElementById('ra-notification');
+            const notifTitle = document.getElementById('ra-notif-title');
+            const notifMessage = document.getElementById('ra-notif-message');
+            const notifGif = document.getElementById('ra-notif-gif');
+
+            notifTitle.innerText = title;
+            notifMessage.innerText = message;
+            
+            if (gifName) {
+                notifGif.src = gifName;
+                notifGif.style.display = 'block';
+            } else {
+                notifGif.style.display = 'none';
+            }
+
+            if (audioName) {
+                const sound = new Audio(audioName);
+                sound.play().catch(err => console.log("Audio playback failed:", err));
+            }
+
+            notifBox.classList.add('show-notif');
+
+            setTimeout(() => {
+                notifBox.classList.remove('show-notif');
+            }, 5000); 
+        }
+
         // Parallax Effect
         window.addEventListener('scroll', function() {
             const scrollPosition = window.pageYOffset;
@@ -448,7 +538,7 @@
             .catch(err => console.error("Engine Error:", err));
         });
 
-		// --- ACTIVE TRANSMITTER: SELECTABLE ROLES ---
+        // --- ACTIVE TRANSMITTER: SELECTABLE ROLES ---
         document.getElementById('form-selectable-roles').addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -467,25 +557,75 @@
                 const result = await response.json();
                 
                 if (response.ok) {
-                    alert("TERMINAL UPDATED: " + result.message);
-                    window.location.reload(); // Reload to show the new roles in the top-left box
+                    // Use custom pop-up with yessir.gif and NO sound
+                    showNotification("TERMINAL UPDATED", "Your role choices have been modified.", "yessir.gif", "");
+                    
+                    // Delay the reload by 3 seconds so the user can see the GIF and message!
+                    setTimeout(() => window.location.reload(), 3000); 
                 } else {
-                    alert("UPDATE FAILED: " + result.error);
+                    showNotification("UPDATE FAILED", result.error, "silentsaysno.gif", "dennis_nerdy_ahahah.mp3");
                 }
             } catch (err) {
-                alert("CRITICAL ERROR: Connection to the Secure Engine failed.");
+                showNotification("CRITICAL ERROR", "Connection to the Secure Engine failed.", "silentsaysno.gif", "dennis_nerdy_ahahah.mp3");
             }
         });
-        document.getElementById('form-applicable-roles').addEventListener('submit', (e) => {
+
+        // --- ACTIVE TRANSMITTER: APPLICABLE ROLES ---
+        document.getElementById('form-applicable-roles').addEventListener('submit', async (e) => {
             e.preventDefault();
-            alert("Application System Pending: The webhook to ping PinkFloyd & Silent is currently offline.");
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            // Gather checked roles to send as a string
+            const checkboxes = form.querySelectorAll('input[type="checkbox"]:checked');
+            const selectedRoles = Array.from(checkboxes).map(cb => cb.nextElementSibling.innerText).join(', ');
+            formData.append('roles', selectedRoles);
+
+            try {
+                const response = await fetch('https://api.radioanarchy.gg:8202/roles/apply', {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    showNotification("APPLICATION SUBMITTED", "Your application has been securely routed to High Command.", "emailsent.gif", "type.mp3");
+                    form.reset(); // Clears the form after sending
+                } else {
+                    showNotification("TRANSMISSION FAILED", "Could not send application.", "silentsaysno.gif", "");
+                }
+            } catch (err) {
+                showNotification("CRITICAL ERROR", "Connection to the Secure Engine failed.", "silentsaysno.gif", "");
+            }
         });
 
-        document.getElementById('form-staff').addEventListener('submit', (e) => {
+        // --- ACTIVE TRANSMITTER: STAFF APPLICATIONS ---
+        document.getElementById('form-staff').addEventListener('submit', async (e) => {
             e.preventDefault();
-            alert("Staff Application System Pending: The webhook to ping PinkFloyd & Silent is currently offline.");
+            const form = e.target;
+            const formData = new FormData(form);
+            
+            const checkboxes = form.querySelectorAll('input[type="checkbox"]:checked');
+            const selectedRoles = Array.from(checkboxes).map(cb => cb.nextElementSibling.innerText).join(', ');
+            formData.append('roles', selectedRoles);
+
+            try {
+                const response = await fetch('https://api.radioanarchy.gg:8202/staff/apply', {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    showNotification("APPLICATION SUBMITTED", "Your application has been securely routed to High Command.", "emailsent.gif", "type.mp3");
+                    form.reset();
+                } else {
+                    showNotification("TRANSMISSION FAILED", "Could not send application.", "silentsaysno.gif", "");
+                }
+            } catch (err) {
+                showNotification("CRITICAL ERROR", "Connection to the Secure Engine failed.", "silentsaysno.gif", "");
+            }
         });
     </script>
-
 </body>
-</html>         
+</html>
