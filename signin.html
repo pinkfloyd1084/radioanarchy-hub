@@ -203,7 +203,7 @@
                 const result = await response.json();
                 if (response.ok) {
                     // Redirecting to index.html to hear the welcomeback.mp3
-                    window.location.href = 'index.html';
+                    window.location.href = 'index.html?login=success';
                 } else {
                     // If login fails, remove the flag so it doesn't play later by accident
                     sessionStorage.removeItem('justLoggedIn');
