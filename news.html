@@ -261,23 +261,44 @@
         // Global variable to hold their clearances
         let activeClearances = [];
 
+       // Global variable to hold their clearances
+        let activeClearances = [];
+
         // THE NEDRY PROTOCOL
-        const nedrySound = new Audio('dennis_nerdy_ahahah.mp3'); // File name matches your spelling!
+        const nedrySound = new Audio('dennis_nedry_ahahah.mp3'); // Spelling verified!
         nedrySound.preload = 'auto';
-        let nedryPlayCount = 0;
 
         function triggerNedry() {
             const nedryBox = document.getElementById('nedry-security-box');
             const nedryGif = document.getElementById('nedry-gif');
             
-            // The cache buster trick forces the GIF to loop infinitely while visible
-            const timestamp = new Date().getTime();
-            nedryGif.src = 'silentsaysno.gif?t=' + timestamp; 
+            // 1. Safe GIF Restart: Just re-assign the source to trigger frame 1
+            nedryGif.src = 'silentsaysno.gif'; 
             
+            // 2. Slide the box up
             nedryBox.classList.add('nedry-show');
             
-            nedryPlayCount = 0; 
-            nedrySound.play().catch(err => console.error("Audio Error:", err));
+            // 3. Play the audio (First Laugh)
+            nedrySound.currentTime = 0;
+            let playAttempt1 = nedrySound.play();
+            if (playAttempt1 !== undefined) {
+                playAttempt1.catch(error => console.log("Browser blocked first laugh."));
+            }
+
+            // 4. Play the audio again after 2.5 seconds (Second Laugh)
+            setTimeout(() => {
+                nedrySound.currentTime = 0;
+                let playAttempt2 = nedrySound.play();
+                if (playAttempt2 !== undefined) {
+                    playAttempt2.catch(error => console.log("Browser blocked second laugh."));
+                }
+            }, 2500);
+
+            // 5. THE FAIL-SAFE: ALWAYS slide the box down after 5.5 seconds
+            // This guarantees it won't get stuck, even if the audio is completely blocked!
+            setTimeout(() => {
+                nedryBox.classList.remove('nedry-show');
+            }, 5500);
         }
 
         // Wait strictly for audio to end, pause 1s, play again, then close.
