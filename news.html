@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radio Anarchy | News Station</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        /* Base and Parallax Background */
+        body {
+            margin: 0; padding: 0;
+            background: #050505 url('RadioAnarchyBackground.png') no-repeat center top fixed;
+            background-size: cover; color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center; overflow-x: hidden;
+        }
+
+        .top-banner {
+            width: 100%; display: block; background: #000; 
+            position: relative; z-index: 10; border-bottom: 2px solid #ff0055;
+        }
+
+        /* --- HEADER LOGO STACK --- */
+        .news-header-container {
+            position: relative; margin: 40px auto; width: 100%; max-width: 600px;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .behind-logo {
+            position: absolute; width: 150px; opacity: 0.6; top: -30px;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 204, 0.4)); z-index: 1;
+        }
+        .main-logo {
+            width: 300px; position: relative; z-index: 2;
+            filter: drop-shadow(0 0 20px #ff0055);
+        }
+
+        /* --- TOP UI BAR (Profile & Nav) --- */
+        .top-ui-row {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            width: 95%; max-width: 1600px; margin: 0 auto 30px auto;
+        }
+
+        /* Profile Box */
+        #user-profile-box {
+            background: rgba(15, 5, 10, 0.85); border: 2px solid #00ffcc; border-radius: 12px;
+            padding: 20px; box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+            display: flex; flex-direction: column; gap: 15px; width: 320px; box-sizing: border-box;
+        }
+        .profile-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        #user-name { color: #fff; font-size: 1.3rem; font-weight: bold; text-shadow: 0 0 8px #fff; text-align: left; }
+        #user-avatar { width: 65px; height: 65px; border-radius: 50%; border: 2px solid #ff0055; object-fit: cover; }
+        #user-roles-container { display: flex; flex-direction: column; gap: 6px; text-align: left; margin-bottom: 5px; }
+        .role-badge {
+            font-size: 0.85rem; font-weight: bold; background: rgba(0, 0, 0, 0.6);
+            padding: 5px 10px; border-radius: 4px; border-left: 4px solid #00ffcc; 
+            color: #ddd; text-shadow: 0 0 5px rgba(255,255,255,0.3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        /* Hub Nav Dropdown */
+        .hub-nav-wrapper { position: relative; display: inline-block; text-align: right; }
+        .nav-trigger-btn {
+            background: rgba(15, 5, 10, 0.9); border: 2px solid #ff0055; color: #ff0055;
+            padding: 15px 30px; font-size: 1.2rem; font-weight: bold; letter-spacing: 2px;
+            border-radius: 8px; cursor: pointer; text-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.2); transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+        .nav-trigger-btn:hover { background: #ff0055; color: #000; box-shadow: 0 0 25px #ff0055; }
+        
+        .dropdown-content {
+            display: none; position: absolute; right: 0; top: 110%;
+            background: rgba(5, 5, 8, 0.98); border: 2px solid #00ffcc; border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.9), 0 0 20px rgba(0, 255, 204, 0.3);
+            min-width: 280px; z-index: 1000; text-align: left; overflow: hidden;
+        }
+        .hub-nav-wrapper:hover .dropdown-content { display: flex; flex-direction: column; }
+        
+        .drop-link {
+            color: #fff; padding: 12px 20px; text-decoration: none; border-bottom: 1px dashed #333;
+            transition: all 0.2s ease; font-size: 0.95rem; font-weight: bold;
+        }
+        .drop-link:hover { background: rgba(0, 255, 204, 0.15); color: #00ffcc; padding-left: 25px; }
+        .drop-header { background: #00ffcc; color: #000; padding: 8px 20px; font-size: 0.8rem; font-weight: bold; letter-spacing: 2px; }
+
+        .btn-graphic { width: 140px; transition: transform 0.2s, filter 0.2s; cursor: pointer; }
+        .btn-graphic:hover { transform: translateY(-3px); filter: drop-shadow(0 0 12px #00ffcc); }
+
+        /* --- THE NEWS GRID (90% Width) --- */
+        .news-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+            width: 90%; max-width: 1600px; margin: 0 auto 60px auto;
+        }
+
+        .terminal-box {
+            background: rgba(15, 5, 10, 0.85); border: 2px solid #ff0055; border-radius: 12px;
+            padding: 30px; box-shadow: 0 0 20px rgba(255, 0, 85, 0.15); text-align: left;
+        }
+
+        .terminal-box h2 {
+            color: #00ffcc; font-size: 1.6rem; letter-spacing: 2px;
+            text-shadow: 0 0 10px #00ffcc; margin-top: 0; border-bottom: 1px dashed #555; padding-bottom: 15px;
+        }
+
+        /* News Article Styling */
+        .article { margin-bottom: 25px; }
+        .article a { color: #fff; text-decoration: none; font-size: 1.2rem; font-weight: bold; display: block; margin-bottom: 5px; transition: color 0.2s; }
+        .article a:hover { color: #00ffcc; text-shadow: 0 0 8px #00ffcc; }
+        .article p { color: #bbb; font-size: 0.95rem; line-height: 1.4; margin: 0; }
+
+        /* Radio Anarchy Static News */
+        .ra-news-list { list-style: none; padding: 0; margin: 0; }
+        .ra-news-list li { color: #00ff55; margin-bottom: 20px; line-height: 1.6; font-size: 1.05rem; position: relative; padding-left: 20px; }
+        .ra-news-list li::before { content: ">"; position: absolute; left: 0; color: #ff0055; font-weight: bold; }
+        .ra-news-list strong { color: #fff; text-shadow: 0 0 5px #fff; }
+
+        /* Card Index Styling */
+        .market-sector { margin-bottom: 25px; }
+        .market-sector h3 { color: #ff0055; border-bottom: 1px solid #333; padding-bottom: 5px; margin-bottom: 10px; }
+        .market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .market-col h4 { margin: 0 0 10px 0; font-size: 0.9rem; color: #888; }
+        .market-item { display: flex; justify-content: space-between; font-size: 0.85rem; padding: 4px 0; border-bottom: 1px dashed #222; }
+        .trend-up { color: #00ff55; font-weight: bold; }
+        .trend-down { color: #ff0055; font-weight: bold; }
+
+        @media (max-width: 1100px) {
+            .news-grid { grid-template-columns: 1fr; width: 95%; }
+            .top-ui-row { flex-direction: column; align-items: center; gap: 30px; }
+            .hub-nav-wrapper { text-align: center; }
+            .dropdown-content { right: auto; left: 50%; transform: translateX(-50%); }
+        }
+    </style>
+</head>
+<body>
+
+    <img src="RadioAnarchyBanner.png" class="top-banner" alt="Banner">
+
+    <div class="news-header-container">
+        <img src="newslogo.png" alt="News Icon" class="behind-logo">
+        <img src="news.png" alt="News" class="main-logo">
+    </div>
+
+    <div class="top-ui-row">
+        
+        <div id="user-profile-box" style="display: none;">
+            <div class="profile-header">
+                <span id="user-name"></span>
+                <img id="user-avatar" src="default-avatar.png" alt="Avatar">
+            </div>
+            <div id="user-roles-container"></div>
+            <a href="profile.html"><img src="playerprofile.png" alt="Profile" class="btn-graphic" style="margin-top: 10px;"></a>
+        </div>
+
+        <div id="nav-spacer"></div>
+
+        <div class="hub-nav-wrapper">
+            <a href="index.html" id="guest-nav" style="display: block;">
+                <img src="home.png" alt="Home" class="btn-graphic">
+            </a>
+
+            <div id="auth-nav" style="display: none;">
+                <div class="nav-trigger-btn">HUB NAV ▼</div>
+                <div class="dropdown-content">
+                    <div class="drop-header">DIRECTORY</div>
+                    <a href="index.html" class="drop-link">Home Terminal</a>
+                    <a href="news.html" class="drop-link">Information Station</a>
+                    <a href="games.html" class="drop-link">Games & Servers</a>
+                    <a href="store.html" class="drop-link">The Shoppe</a>
+                    <a href="discordroles.html" class="drop-link">Discord Roles</a>
+                    
+                    <div class="drop-header" style="margin-top: 5px;">COMMUNITY COLLEGE</div>
+                    <a href="tkb.html" class="drop-link">The Knowledge Base</a>
+                    <a href="modhub.html" class="drop-link">Mod Hub</a>
+                    <a href="video.html" class="drop-link">Video Tutorials</a>
+                    <a href="vault.html" class="drop-link">Retro Vault</a>
+
+                    <div class="drop-header" style="margin-top: 5px;">COMMUNITY HUB</div>
+                    <a href="comnet.html" class="drop-link">Community Network</a>
+                    <a href="combil.html" class="drop-link">Community Billboard</a>
+                    <a href="watch.html" class="drop-link">Stream Schedule</a>
+
+                    <div class="drop-header" style="margin-top: 5px;">THE LOUNGES</div>
+                    <a href="players.html" class="drop-link">Players Lounge</a>
+                    <a href="owners.html" class="drop-link">Server Owners Lounge</a>
+                    <a href="create.html" class="drop-link">Creators Lounge</a>
+                    <a href="mod.html" class="drop-link">Modders Lounge</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="news-grid">
+        
+        <div class="terminal-box">
+            <h2>RADIO ANARCHY TRANSMISSIONS</h2>
+            <ul class="ra-news-list">
+                <li><strong>New Gaming Hub</strong> - Welcome to the new Community of Communities! A neutral ground for players, admins, and creators to share resources, link up, and build the ultimate gaming network.</li>
+                <li><strong>Silent's New 5M Server is Live!</strong> - Jump into the most optimized, high-performance RP city yet. Custom scripts, fresh economy, and zero tolerance for the usual headaches. Secure your whitelist spot now.</li>
+                <li><strong>DayZ Deerisle Server</strong> - Check out the new Side Quest! Explore the uncharted islands and survive the brutal elements. New custom prizes await if you can complete the ultimate survival challenge.</li>
+            </ul>
+        </div>
+
+        <div class="terminal-box">
+            <h2>GLOBAL GAMING INTEL</h2>
+            <div id="gaming-news-container">
+                <p style="color: #aaa;">Scanning feeds...</p>
+            </div>
+        </div>
+
+        <div class="terminal-box">
+            <h2>THE CARD INDEX</h2>
+            <div id="market-news-container">
+                <p style="color: #aaa;">Accessing market databases...</p>
+            </div>
+        </div>
+
+        <div class="terminal-box">
+            <h2>HARDWARE & TECH FEED</h2>
+            <div id="tech-news-container">
+                <p style="color: #aaa;">Scanning feeds...</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        window.addEventListener('scroll', function() {
+            const scrollPosition = window.pageYOffset;
+            document.body.style.backgroundPositionY = -(scrollPosition * 0.3) + 'px';
+        });
+
+        // 1. AUTH CHECK FOR PROFILE & NAV
+        fetch('https://api.radioanarchy.gg:8202/auth/me', { method: 'GET', credentials: 'include' })
+            .then(res => res.json())
+            .then(data => {
+                if (data.loggedIn) {
+                    // Show Profile
+                    document.getElementById('nav-spacer').style.display = 'none';
+                    document.getElementById('user-profile-box').style.display = 'flex';
+                    document.getElementById('user-name').innerText = data.displayUsername;
+                    document.getElementById('user-avatar').src = data.displayAvatar || 'default-avatar.png';
+                    
+                    const rolesContainer = document.getElementById('user-roles-container');
+                    if (data.roles && data.roles.length > 0) {
+                        data.roles.slice(0, 5).forEach(role => {
+                            const badge = document.createElement('div');
+                            badge.className = 'role-badge';
+                            badge.style.borderLeftColor = (role.color && role.color !== '#000000') ? role.color : '#00ffcc';
+                            badge.innerText = role.name;
+                            rolesContainer.appendChild(badge);
+                        });
+                    } else {
+                        rolesContainer.innerHTML = '<span style="color:#aaa; font-size:0.8rem;">No Clearances</span>';
+                    }
+
+                    // Swap Nav to Dropdown
+                    document.getElementById('guest-nav').style.display = 'none';
+                    document.getElementById('auth-nav').style.display = 'block';
+                }
+            }).catch(err => console.error("Auth check failed:", err));
+
+        // 2. FETCH HUB DATA (News & Market)
+        fetch('https://api.radioanarchy.gg:8202/api/hub-data')
+            .then(res => res.json())
+            .then(data => {
+                
+                // Render Gaming News
+                const gameContainer = document.getElementById('gaming-news-container');
+                if(data.gaming && data.gaming.length > 0) {
+                    gameContainer.innerHTML = data.gaming.map(news => `
+                        <div class="article">
+                            <a href="${news.link}" target="_blank">${news.title}</a>
+                            <p>${news.snippet}</p>
+                        </div>
+                    `).join('');
+                } else { gameContainer.innerHTML = '<p style="color:#ff0055;">Feed offline.</p>'; }
+
+                // Render Tech News
+                const techContainer = document.getElementById('tech-news-container');
+                if(data.tech && data.tech.length > 0) {
+                    techContainer.innerHTML = data.tech.map(news => `
+                        <div class="article">
+                            <a href="${news.link}" target="_blank">${news.title}</a>
+                            <p>${news.snippet}</p>
+                        </div>
+                    `).join('');
+                } else { techContainer.innerHTML = '<p style="color:#ff0055;">Feed offline.</p>'; }
+
+                // Render Market Data
+                const marketContainer = document.getElementById('market-news-container');
+                if(data.market) {
+                    let marketHTML = '';
+                    const systems = [
+                        { id: 'mtg', name: 'MAGIC: THE GATHERING' },
+                        { id: 'yugioh', name: 'YU-GI-OH!' },
+                        { id: 'pokemon', name: 'POKÉMON TCG' }
+                    ];
+
+                    systems.forEach(sys => {
+                        const upsHTML = data.market[sys.id].ups.map(card => `
+                            <div class="market-item"><span>${card.name}</span> <span class="trend-up">${card.change}</span></div>
+                        `).join('');
+                        const downsHTML = data.market[sys.id].downs.map(card => `
+                            <div class="market-item"><span>${card.name}</span> <span class="trend-down">${card.change}</span></div>
+                        `).join('');
+
+                        marketHTML += `
+                            <div class="market-sector">
+                                <h3>${sys.name}</h3>
+                                <div class="market-grid">
+                                    <div class="market-col">
+                                        <h4>TOP GAINERS</h4>
+                                        ${upsHTML}
+                                    </div>
+                                    <div class="market-col">
+                                        <h4>TOP LOSERS</h4>
+                                        ${downsHTML}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    marketContainer.innerHTML = marketHTML;
+                }
+            }).catch(err => console.error("Data fetch failed:", err));
+    </script>
+</body>
+</html>
