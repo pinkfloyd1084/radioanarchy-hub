@@ -972,12 +972,21 @@
         // --- PAGE INITIALIZATION ---
         window.addEventListener('DOMContentLoaded', () => {
             
-            // 1. Check for Login Flag (AUDIO ONLY, as requested)
-            if (sessionStorage.getItem('justLoggedIn') === 'true') {
-                const sound = new Audio('welcomeback.mp3');
-                sound.play().catch(err => console.log("Browser blocked auto-play:", err));
-                sessionStorage.removeItem('justLoggedIn');
-            }
+            // 1. Check for Login Flag in the URL
+			const urlParams = new URLSearchParams(window.location.search);
+
+			if (urlParams.get('login') === 'success') {
+				// Play the welcome back sound
+				const sound = new Audio('welcomeback.mp3');
+				sound.play().catch(err => {
+					console.log("Autoplay blocked: Browser requires a click first.");
+				});
+
+				// CLEANUP: Remove the flag from the URL bar so it looks clean 
+				// and doesn't replay if they refresh the page!
+				const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+				window.history.replaceState({ path: cleanUrl }, '', cleanUrl);
+			}
 
             // 2. Auth Check & UI Update
             fetch('https://api.radioanarchy.gg:8202/auth/me', {
