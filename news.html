@@ -252,20 +252,17 @@
         <img id="nedry-gif" src="silentsaysno.gif" alt="Access Denied" style="width: 100%; max-width: 400px; border: 2px solid #00ffcc; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);">
     </div>
 
-    <script>
+<script>
         window.addEventListener('scroll', function() {
             const scrollPosition = window.pageYOffset;
             document.body.style.backgroundPositionY = -(scrollPosition * 0.3) + 'px';
         });
 
-        // Global variable to hold their clearances
-        let activeClearances = [];
-
-       // Global variable to hold their clearances
+        // Global variable to hold their clearances (ONLY ONE THIS TIME!)
         let activeClearances = [];
 
         // THE NEDRY PROTOCOL
-        const nedrySound = new Audio('dennis_nedry_ahahah.mp3'); // Spelling verified!
+        const nedrySound = new Audio('dennis_nedry_ahahah.mp3'); 
         nedrySound.preload = 'auto';
 
         function triggerNedry() {
@@ -295,25 +292,10 @@
             }, 2500);
 
             // 5. THE FAIL-SAFE: ALWAYS slide the box down after 5.5 seconds
-            // This guarantees it won't get stuck, even if the audio is completely blocked!
             setTimeout(() => {
                 nedryBox.classList.remove('nedry-show');
             }, 5500);
         }
-
-        // Wait strictly for audio to end, pause 1s, play again, then close.
-        nedrySound.addEventListener('ended', () => {
-            nedryPlayCount++;
-            
-            if (nedryPlayCount === 1) {
-                setTimeout(() => {
-                    nedrySound.play().catch(err => console.error("Audio Error 2:", err));
-                }, 1000);
-            } else if (nedryPlayCount === 2) {
-                const nedryBox = document.getElementById('nedry-security-box');
-                nedryBox.classList.remove('nedry-show');
-            }
-        });
 
         // Attach security to restricted links
         document.querySelectorAll('.restricted-link').forEach(link => {
