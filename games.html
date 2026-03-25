@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radio Anarchy | Games & Servers</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        /* Base and Parallax Background */
+        body {
+            margin: 0; padding: 0;
+            background: #050505 url('RadioAnarchyBackground.png') no-repeat center top fixed;
+            background-size: cover; color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center; overflow-x: hidden;
+        }
+
+        .top-banner {
+            width: 100%; display: block; background: #000; 
+            position: relative; z-index: 10; border-bottom: 2px solid #ff0055;
+        }
+
+        /* --- TOP UI BAR (Profile & Nav) --- */
+        .top-ui-row {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            width: 95%; max-width: 1600px; margin: 30px auto 30px auto;
+        }
+
+        #user-profile-box {
+            background: rgba(15, 5, 10, 0.85); border: 2px solid #00ffcc; border-radius: 12px;
+            padding: 20px; box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+            display: flex; flex-direction: column; gap: 15px; width: 320px; box-sizing: border-box;
+        }
+        .profile-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        #user-name { color: #fff; font-size: 1.3rem; font-weight: bold; text-shadow: 0 0 8px #fff; text-align: left; }
+        #user-avatar { width: 65px; height: 65px; border-radius: 50%; border: 2px solid #ff0055; object-fit: cover; }
+        #user-roles-container { display: flex; flex-direction: column; gap: 6px; text-align: left; margin-bottom: 5px; }
+        .role-badge {
+            font-size: 0.85rem; font-weight: bold; background: rgba(0, 0, 0, 0.6);
+            padding: 5px 10px; border-radius: 4px; border-left: 4px solid #00ffcc; 
+            color: #ddd; text-shadow: 0 0 5px rgba(255,255,255,0.3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        /* Hub Nav Dropdown */
+        .hub-nav-wrapper { position: relative; display: inline-block; text-align: right; }
+        .nav-trigger-btn {
+            background: rgba(15, 5, 10, 0.9); border: 2px solid #ff0055; color: #ff0055;
+            padding: 15px 30px; font-size: 1.2rem; font-weight: bold; letter-spacing: 2px;
+            border-radius: 8px; cursor: pointer; text-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.2); transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+        .nav-trigger-btn:hover { background: #ff0055; color: #000; box-shadow: 0 0 25px #ff0055; }
+        
+        .dropdown-content {
+            display: none; position: absolute; right: 0; top: 110%;
+            background: rgba(5, 5, 8, 0.98); border: 2px solid #00ffcc; border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.9), 0 0 20px rgba(0, 255, 204, 0.3);
+            min-width: 280px; z-index: 1000; text-align: left; overflow: hidden;
+        }
+        .hub-nav-wrapper:hover .dropdown-content { display: flex; flex-direction: column; }
+        
+        .drop-link {
+            color: #fff; padding: 12px 20px; text-decoration: none; border-bottom: 1px dashed #333;
+            transition: all 0.2s ease; font-size: 0.95rem; font-weight: bold;
+        }
+        .drop-link:hover { background: rgba(0, 255, 204, 0.15); color: #00ffcc; padding-left: 25px; }
+        .drop-header { background: #00ffcc; color: #000; padding: 8px 20px; font-size: 0.8rem; font-weight: bold; letter-spacing: 2px; }
+
+        .btn-graphic { width: 140px; transition: transform 0.2s, filter 0.2s; cursor: pointer; }
+        .btn-graphic:hover { transform: translateY(-3px); filter: drop-shadow(0 0 12px #00ffcc); }
+
+        /* --- HEADER LOGO STACK --- */
+        .games-header-container {
+            position: relative; margin: 20px auto 40px auto; width: 100%; max-width: 600px;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .behind-logo {
+            position: absolute; width: 220px; top: -110px;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 204, 0.4)); z-index: 1;
+        }
+        .main-logo {
+            width: 300px; position: relative; z-index: 2;
+            filter: drop-shadow(0 0 20px #ff0055);
+        }
+
+        /* --- THE COMMAND GRID --- */
+        .games-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+            width: 90%; max-width: 1600px; margin: 0 auto 60px auto;
+        }
+
+        .terminal-box {
+            background: rgba(15, 5, 10, 0.85); border: 2px solid #ff0055; border-radius: 12px;
+            padding: 25px; box-shadow: 0 0 20px rgba(255, 0, 85, 0.15); text-align: left;
+            display: flex; flex-direction: column; gap: 15px;
+        }
+
+        /* Box Header: Logo + Title */
+        .box-header {
+            display: flex; align-items: flex-start; gap: 20px; border-bottom: 1px dashed #555; padding-bottom: 15px;
+        }
+        .game-logo-mini { width: 100px; object-fit: contain; filter: drop-shadow(0 0 5px #00ffcc); }
+        .game-info-top h2 { margin: 0 0 5px 0; color: #00ffcc; font-size: 1.4rem; letter-spacing: 2px; text-shadow: 0 0 10px #00ffcc; }
+        .game-desc { margin: 0; color: #bbb; font-size: 0.9rem; line-height: 1.4; }
+
+        /* Telemetry Section */
+        .telemetry-row {
+            display: flex; justify-content: space-around; background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #333; border-radius: 8px; padding: 15px; margin-top: 10px;
+        }
+        .stat-block { display: flex; flex-direction: column; align-items: center; gap: 5px; text-align: center; }
+        .stat-label-img { height: 20px; object-fit: contain; margin-bottom: 5px; }
+        .stat-value { color: #fff; font-size: 1.2rem; font-weight: bold; text-shadow: 0 0 5px #fff; }
+        .stat-label-text { color: #ff0055; font-size: 0.75rem; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; }
+
+        /* Server List Section */
+        .server-list { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .server-item {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(20, 20, 25, 0.8); border-left: 3px solid #00ffcc; padding: 10px 15px; border-radius: 4px;
+        }
+        .server-name { color: #fff; font-weight: bold; font-size: 1rem; }
+        .status-icon { height: 24px; object-fit: contain; }
+
+        /* Links List */
+        .ways-to-play { list-style: none; padding: 0; margin: 10px 0 0 0; }
+        .ways-to-play li { margin-bottom: 8px; }
+        .ways-to-play a { color: #00ffcc; text-decoration: none; font-weight: bold; font-size: 1rem; transition: all 0.2s; }
+        .ways-to-play a:hover { color: #fff; text-shadow: 0 0 8px #fff; margin-left: 5px; }
+
+        /* --- NEDRY SECURITY POP-UP --- */
+        #nedry-security-box {
+            position: fixed; bottom: -800px; left: 50%; transform: translateX(-50%);
+            background: rgba(15, 5, 10, 0.98); border: 3px solid #ff0055; border-radius: 12px;
+            padding: 30px; box-shadow: 0 0 50px rgba(255, 0, 85, 0.8); z-index: 30000;
+            text-align: center; transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 90%; max-width: 550px;
+        }
+        #nedry-security-box.nedry-show { bottom: 40px; }
+
+        @media (max-width: 1100px) {
+            .games-grid { grid-template-columns: 1fr; width: 95%; }
+            .top-ui-row { flex-direction: column; align-items: center; gap: 30px; }
+            .hub-nav-wrapper { text-align: center; }
+            .dropdown-content { right: auto; left: 50%; transform: translateX(-50%); }
+            .box-header { flex-direction: column; align-items: center; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <img src="RadioAnarchyBanner.png" class="top-banner" alt="Banner">
+
+    <div class="top-ui-row">
+        <div id="user-profile-box" style="display: none;">
+            <div class="profile-header">
+                <span id="user-name"></span>
+                <img id="user-avatar" src="default-avatar.png" alt="Avatar">
+            </div>
+            <div id="user-roles-container"></div>
+            <a href="profile.html"><img src="playerprofile.png" alt="Profile" class="btn-graphic" style="margin-top: 10px;"></a>
+        </div>
+
+        <div id="nav-spacer"></div>
+
+        <div class="hub-nav-wrapper">
+            <a href="index.html" id="guest-nav" style="display: block;">
+                <img src="home.png" alt="Home" class="btn-graphic">
+            </a>
+            <div id="auth-nav" style="display: none;">
+                <div class="nav-trigger-btn">HUB NAV ▼</div>
+                <div class="dropdown-content">
+                    <div class="drop-header">HOME</div>
+                    <a href="index.html" class="drop-link">Home Terminal</a>
+
+                    <div class="drop-header" style="margin-top: 5px;">INFORMATION STATION</div>
+                    <a href="news.html" class="drop-link">News Station</a>
+                    <a href="games.html" class="drop-link">Games & Servers</a>
+                    <a href="store.html" class="drop-link">The Shoppe</a>
+                    <a href="discordroles.html" class="drop-link">Discord Roles</a>
+                    
+                    <div class="drop-header" style="margin-top: 5px;">COMMUNITY COLLEGE</div>
+                    <a href="tkb.html" class="drop-link">The Knowledge Base</a>
+                    <a href="modhub.html" class="drop-link">Mod Hub</a>
+                    <a href="video.html" class="drop-link">Video Tutorials</a>
+                    <a href="vault.html" class="drop-link">Retro Vault</a>
+
+                    <div class="drop-header" style="margin-top: 5px;">COMMUNITY HUB</div>
+                    <a href="comnet.html" class="drop-link">Community Network</a>
+                    <a href="combil.html" class="drop-link">Community Billboard</a>
+                    <a href="watch.html" class="drop-link">Stream Schedule</a>
+
+                    <div class="drop-header" style="margin-top: 5px;">THE LOUNGES</div>
+                    <a href="players.html" class="drop-link">Players Lounge</a>
+                    <a href="owners.html" class="drop-link restricted-link" data-role="Server Owner">Server Owners Lounge</a>
+                    <a href="create.html" class="drop-link restricted-link" data-role="Creator">Creators Lounge</a>
+                    <a href="mod.html" class="drop-link restricted-link" data-role="Modder">Modders Lounge</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="games-header-container">
+        <img src="gameslogo.png" alt="Games Icon" class="behind-logo">
+        <img src="games.png" alt="Games" class="main-logo">
+    </div>
+
+    <div class="games-grid">
+        
+        <div class="terminal-box" id="box-dayz">
+            <div class="box-header">
+                <img src="dayzlogo.png" alt="DayZ" class="game-logo-mini">
+                <div class="game-info-top">
+                    <h2>DAYZ</h2>
+                    <p class="game-desc">How long can you survive a post-apocalyptic world? A land overrun with an infected "zombie" population, where you compete with other survivors for limited resources.</p>
+                </div>
+            </div>
+            <div class="telemetry-row">
+                <div class="stat-block"><span class="stat-label-text">STEAM PRICE</span><span class="stat-value" id="price-dayz">Scanning...</span></div>
+                <div class="stat-block"><img src="globalplayercount.png" class="stat-label-img" alt="Global"><span class="stat-value" id="global-dayz">Scanning...</span></div>
+                <div class="stat-block"><img src="radioanarchyplayercount.png" class="stat-label-img" alt="RA Network"><span class="stat-value" id="ra-dayz">Scanning...</span></div>
+            </div>
+            <div class="server-list">
+                <div class="server-item">
+                    <div class="server-name">RA | Deerisle</div>
+                    <img src="offline.png" class="status-icon" id="status-dayz-deerisle">
+                </div>
+                <div class="server-item">
+                    <div class="server-name">RA | Chernarus</div>
+                    <img src="offline.png" class="status-icon" id="status-dayz-chernarus">
+                </div>
+                <div class="server-item">
+                    <div class="server-name">RA | Deathmatch</div>
+                    <img src="offline.png" class="status-icon" id="status-dayz-dm">
+                </div>
+            </div>
+        </div>
+
+        <div class="terminal-box" id="box-fivem">
+            <div class="box-header">
+                <img src="fivemlogo.png" alt="FiveM" class="game-logo-mini">
+                <div class="game-info-top">
+                    <h2>GRAND THEFT AUTO: FIVEM</h2>
+                    <p class="game-desc">The ultimate multiplayer modification framework for GTA V, allowing you to play on customized dedicated servers with entirely new RP mechanics.</p>
+                </div>
+            </div>
+            <div class="telemetry-row">
+                <div class="stat-block"><span class="stat-label-text">STEAM PRICE</span><span class="stat-value" id="price-gta">Scanning...</span></div>
+                <div class="stat-block"><img src="globalplayercount.png" class="stat-label-img"><span class="stat-value" id="global-gta">Scanning...</span></div>
+                <div class="stat-block"><img src="radioanarchyplayercount.png" class="stat-label-img"><span class="stat-value" id="ra-gta">Scanning...</span></div>
+            </div>
+            <div class="server-list">
+                <div class="server-item">
+                    <div class="server-name">Silent's RP City</div>
+                    <img src="offline.png" class="status-icon" id="status-fivem">
+                </div>
+            </div>
+        </div>
+
+        <div class="terminal-box" id="box-beamng">
+            <div class="box-header">
+                <img src="beamnglogo.png" alt="BeamNG" class="game-logo-mini">
+                <div class="game-info-top">
+                    <h2>BEAMNG.DRIVE</h2>
+                    <p class="game-desc">A dynamic soft-body physics vehicle simulator capable of doing just about anything. Experience the most realistic damage engine in gaming.</p>
+                </div>
+            </div>
+            <div class="telemetry-row">
+                <div class="stat-block"><span class="stat-label-text">STEAM PRICE</span><span class="stat-value" id="price-beamng">Scanning...</span></div>
+                <div class="stat-block"><img src="globalplayercount.png" class="stat-label-img"><span class="stat-value" id="global-beamng">Scanning...</span></div>
+                <div class="stat-block"><img src="radioanarchyplayercount.png" class="stat-label-img"><span class="stat-value" id="ra-beamng">Scanning...</span></div>
+            </div>
+            <div class="server-list">
+                <div class="server-item">
+                    <div class="server-name">RA | BeamMP Server</div>
+                    <img src="offline.png" class="status-icon" id="status-beamng">
+                </div>
+            </div>
+        </div>
+
+        <div class="terminal-box" id="box-vein">
+            <div class="box-header">
+                <img src="veinlogo.png" alt="VEIN" class="game-logo-mini">
+                <div class="game-info-top">
+                    <h2>VEIN</h2>
+                    <p class="game-desc">A post-apocalyptic survival multiplayer game with highly detailed scavenging, base building, and deep simulation mechanics.</p>
+                </div>
+            </div>
+            <div class="telemetry-row">
+                <div class="stat-block"><span class="stat-label-text">STEAM PRICE</span><span class="stat-value" id="price-vein">Scanning...</span></div>
+                <div class="stat-block"><img src="globalplayercount.png" class="stat-label-img"><span class="stat-value" id="global-vein">Scanning...</span></div>
+                <div class="stat-block"><img src="radioanarchyplayercount.png" class="stat-label-img"><span class="stat-value" id="ra-vein">Scanning...</span></div>
+            </div>
+            <div class="server-list">
+                <div class="server-item">
+                    <div class="server-name">RA | Vein Survival</div>
+                    <img src="offline.png" class="status-icon" id="status-vein">
+                </div>
+            </div>
+        </div>
+
+        <div class="terminal-box" id="box-valheim">
+            <div class="box-header">
+                <img src="valheimlogo.png" alt="Valheim" class="game-logo-mini">
+                <div class="game-info-top">
+                    <h2>VALHEIM</h2>
+                    <p class="game-desc">A brutal exploration and survival game for 1-10 players set in a procedurally-generated purgatory inspired by viking culture.</p>
+                </div>
+            </div>
+            <div class="telemetry-row">
+                <div class="stat-block"><span class="stat-label-text">STEAM PRICE</span><span class="stat-value" id="price-valheim">Scanning...</span></div>
+                <div class="stat-block"><img src="globalplayercount.png" class="stat-label-img"><span class="stat-value" id="global-valheim">Scanning...</span></div>
+                <div class="stat-block"><img src="radioanarchyplayercount.png" class="stat-label-img"><span class="stat-value" id="ra-valheim">Scanning...</span></div>
+            </div>
+            <div class="server-list">
+                <div class="server-item">
+                    <div class="server-name">RA | Valhalla</div>
+                    <img src="offline.png" class="status-icon" id="status-valheim">
+                </div>
+            </div>
+        </div>
+
+        <div class="terminal-box">
+            <div class="box-header">
+                <img src="magicthegatheringlogo.png" alt="MTG" class="game-logo-mini">
+                <div class="game-info-top">
+                    <h2>MAGIC: THE GATHERING</h2>
+                    <p class="game-desc">The original collectible card game. Build deep, strategic decks and battle opponents in intense multiplayer formats like Commander.</p>
+                </div>
+            </div>
+            <div class="telemetry-row" style="justify-content: center;">
+                <div class="stat-block"><img src="radioanarchyplayercount.png" class="stat-label-img"><span class="stat-value" id="ra-mtg">Scanning...</span></div>
+            </div>
+            <h3 style="color:#ff0055; border-bottom:1px solid #333; padding-bottom:5px;">DIGITAL ARENAS</h3>
+            <ul class="ways-to-play">
+                <li><a href="https://magic.wizards.com/en/mtgarena" target="_blank">> MTG Arena (Official)</a></li>
+                <li><a href="https://cockatrice.github.io/" target="_blank">> Cockatrice (Free/Open Source)</a></li>
+                <li><a href="https://store.steampowered.com/app/286160/Tabletop_Simulator/" target="_blank">> Tabletop Simulator</a></li>
+            </ul>
+        </div>
+
+        <div class="terminal-box">
+            <div class="box-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/11/Yu-Gi-Oh%21_Logo.svg" alt="Yu-Gi-Oh!" class="game-logo-mini" style="background:#fff; padding:5px; border-radius:4px;">
+                <div class="game-info-top">
+                    <h2>YU-GI-OH!</h2>
+                    <p class="game-desc">It's time to duel! Fast-paced, combo-heavy card battles where every draw can change the course of the game.</p>
+                </div>
+            </div>
+            <div class="telemetry-row" style="justify-content: center;">
+                <div class="stat-block"><img src="radioanarchyplayercount.png" class="stat-label-img"><span class="stat-value" id="ra-yugioh">Scanning...</span></div>
+            </div>
+            <h3 style="color:#ff0055; border-bottom:1px solid #333; padding-bottom:5px;">DIGITAL ARENAS</h3>
+            <ul class="ways-to-play">
+                <li><a href="https://store.steampowered.com/app/1449850/YuGiOh_Master_Duel/" target="_blank">> Master Duel (Official)</a></li>
+                <li><a href="https://duelingnexus.com/" target="_blank">> Dueling Nexus (Browser)</a></li>
+                <li><a href="https://omega.duelistsunite.org/" target="_blank">> YGO Omega</a></li>
+            </ul>
+        </div>
+
+        <div class="terminal-box">
+            <div class="box-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Pok%C3%A9mon_Trading_Card_Game_logo.svg" alt="Pokemon" class="game-logo-mini">
+                <div class="game-info-top">
+                    <h2>POKÉMON TCG</h2>
+                    <p class="game-desc">Train and evolve your favorite Pokémon to battle for prize cards in this globally recognized tactical card game.</p>
+                </div>
+            </div>
+            <div class="telemetry-row" style="justify-content: center;">
+                <div class="stat-block"><img src="radioanarchyplayercount.png" class="stat-label-img"><span class="stat-value" id="ra-pokemon">Scanning...</span></div>
+            </div>
+            <h3 style="color:#ff0055; border-bottom:1px solid #333; padding-bottom:5px;">DIGITAL ARENAS</h3>
+            <ul class="ways-to-play">
+                <li><a href="https://tcg.pokemon.com/en-us/tcgl/" target="_blank">> PTCG Live (Official)</a></li>
+                <li><a href="https://ptcglive.com/" target="_blank">> Limitless TCG Tools</a></li>
+                <li><a href="https://store.steampowered.com/app/286160/Tabletop_Simulator/" target="_blank">> Tabletop Simulator</a></li>
+            </ul>
+        </div>
+
+        <div class="terminal-box">
+            <div class="box-header">
+                <img src="dndlogo.png" alt="DND" class="game-logo-mini">
+                <div class="game-info-top">
+                    <h2>DUNGEONS & DRAGONS</h2>
+                    <p class="game-desc">The legendary tabletop roleplaying game. Grab your dice, gather your party, and craft endless stories in realms of high fantasy.</p>
+                </div>
+            </div>
+            <div class="telemetry-row" style="justify-content: center;">
+                <div class="stat-block"><img src="radioanarchyplayercount.png" class="stat-label-img"><span class="stat-value" id="ra-dnd">Scanning...</span></div>
+            </div>
+            <h3 style="color:#ff0055; border-bottom:1px solid #333; padding-bottom:5px;">DIGITAL TAVERNS</h3>
+            <ul class="ways-to-play">
+                <li><a href="https://www.dndbeyond.com/" target="_blank">> D&D Beyond</a></li>
+                <li><a href="https://roll20.net/" target="_blank">> Roll20</a></li>
+                <li><a href="https://store.steampowered.com/app/720620/TaleSpire/" target="_blank">> TaleSpire (3D VTT)</a></li>
+                <li><a href="https://foundryvtt.com/" target="_blank">> Foundry VTT</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div id="nedry-security-box">
+        <h2 style="color: #ff0055; margin-top: 0; font-size: 1.8rem; text-shadow: 0 0 10px #ff0055;">Ah ah ah! You didn't say the magic word...</h2>
+        <img id="nedry-gif" src="silentsaysno.gif" alt="Access Denied" style="width: 100%; max-width: 400px; border: 2px solid #00ffcc; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);">
+    </div>
+
+    <script>
+        window.addEventListener('scroll', function() {
+            const scrollPosition = window.pageYOffset;
+            document.body.style.backgroundPositionY = -(scrollPosition * 0.3) + 'px';
+        });
+
+        let activeClearances = [];
+        const nedrySound = new Audio('dennis_nedry_ahahah.mp3'); 
+        nedrySound.preload = 'auto';
+
+        function triggerNedry() {
+            const nedryBox = document.getElementById('nedry-security-box');
+            const nedryGif = document.getElementById('nedry-gif');
+            
+            nedryGif.src = 'silentsaysno.gif'; 
+            nedryBox.classList.add('nedry-show');
+            
+            nedrySound.currentTime = 0;
+            let playAttempt1 = nedrySound.play();
+            if (playAttempt1 !== undefined) {
+                playAttempt1.catch(error => console.log("Browser blocked first laugh."));
+            }
+
+            // User Timing: 5000ms for second laugh
+            setTimeout(() => {
+                nedrySound.currentTime = 0;
+                let playAttempt2 = nedrySound.play();
+                if (playAttempt2 !== undefined) {
+                    playAttempt2.catch(error => console.log("Browser blocked second laugh."));
+                }
+            }, 5000);
+
+            // User Timing: 10000ms for slide down
+            setTimeout(() => {
+                nedryBox.classList.remove('nedry-show');
+            }, 10000);
+        }
+
+        document.querySelectorAll('.restricted-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const requiredRole = this.getAttribute('data-role');
+                if (!activeClearances.includes(requiredRole)) {
+                    e.preventDefault(); 
+                    triggerNedry();
+                }
+            });
+        });
+
+        // 1. AUTH CHECK
+        fetch('https://api.radioanarchy.gg:8202/auth/me', { method: 'GET', credentials: 'include' })
+            .then(res => res.json())
+            .then(data => {
+                if (data.loggedIn) {
+                    if (data.roles) {
+                        activeClearances = data.roles.map(r => r.name);
+                    }
+                    document.getElementById('nav-spacer').style.display = 'none';
+                    document.getElementById('user-profile-box').style.display = 'flex';
+                    document.getElementById('user-name').innerText = data.displayUsername;
+                    document.getElementById('user-avatar').src = data.displayAvatar || 'default-avatar.png';
+                    
+                    const rolesContainer = document.getElementById('user-roles-container');
+                    if (data.roles && data.roles.length > 0) {
+                        data.roles.slice(0, 5).forEach(role => {
+                            const badge = document.createElement('div');
+                            badge.className = 'role-badge';
+                            badge.style.borderLeftColor = (role.color && role.color !== '#000000') ? role.color : '#00ffcc';
+                            badge.innerText = role.name;
+                            rolesContainer.appendChild(badge);
+                        });
+                    } else {
+                        rolesContainer.innerHTML = '<span style="color:#aaa; font-size:0.8rem;">No Clearances</span>';
+                    }
+
+                    document.getElementById('guest-nav').style.display = 'none';
+                    document.getElementById('auth-nav').style.display = 'block';
+                }
+            }).catch(err => console.error("Auth check failed:", err));
+
+        // 2. FETCH LIVE SERVER & DISCORD TELEMETRY
+        fetch('https://api.radioanarchy.gg:8202/api/games-data')
+            .then(res => res.json())
+            .then(data => {
+                console.log("Telemetry received:", data);
+            }).catch(err => console.log("Waiting on backend telemetry..."));
+    </script>
+</body>
+</html>
