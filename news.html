@@ -117,10 +117,9 @@
         .market-sector { margin-bottom: 25px; }
         .market-sector h3 { color: #ff0055; border-bottom: 1px solid #333; padding-bottom: 5px; margin-bottom: 10px; }
         .market-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .market-col h4 { margin: 0 0 10px 0; font-size: 0.9rem; color: #888; }
+        .market-col h4 { margin: 0 0 10px 0; font-size: 0.9rem; color: #888; letter-spacing: 1px; }
         .market-item { display: flex; justify-content: space-between; font-size: 0.85rem; padding: 4px 0; border-bottom: 1px dashed #222; }
-        .trend-up { color: #00ff55; font-weight: bold; }
-        .trend-down { color: #ff0055; font-weight: bold; }
+        .price-tag { color: #00ff55; font-weight: bold; text-shadow: 0 0 5px rgba(0, 255, 85, 0.4); }
 
         /* --- NEDRY SECURITY POP-UP --- */
         #nedry-security-box {
@@ -252,13 +251,13 @@
         <img id="nedry-gif" src="silentsaysno.gif" alt="Access Denied" style="width: 100%; max-width: 400px; border: 2px solid #00ffcc; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);">
     </div>
 
-<script>
+    <script>
         window.addEventListener('scroll', function() {
             const scrollPosition = window.pageYOffset;
             document.body.style.backgroundPositionY = -(scrollPosition * 0.3) + 'px';
         });
 
-        // Global variable to hold their clearances (ONLY ONE THIS TIME!)
+        // Global variable to hold their clearances
         let activeClearances = [];
 
         // THE NEDRY PROTOCOL
@@ -282,7 +281,7 @@
                 playAttempt1.catch(error => console.log("Browser blocked first laugh."));
             }
 
-            // 4. Play the audio again after 2.5 seconds (Second Laugh)
+            // 4. Play the audio again after 5 seconds (Second Laugh)
             setTimeout(() => {
                 nedrySound.currentTime = 0;
                 let playAttempt2 = nedrySound.play();
@@ -291,7 +290,7 @@
                 }
             }, 5000);
 
-            // 5. THE FAIL-SAFE: ALWAYS slide the box down after 5.5 seconds
+            // 5. THE FAIL-SAFE: ALWAYS slide the box down after 10 seconds
             setTimeout(() => {
                 nedryBox.classList.remove('nedry-show');
             }, 10000);
@@ -371,7 +370,7 @@
                     `).join('');
                 } else { techContainer.innerHTML = '<p style="color:#ff0055;">Feed offline.</p>'; }
 
-                // Render Market Data
+                // Render Market Data (Updated to Legacy vs. Modern)
                 const marketContainer = document.getElementById('market-news-container');
                 if(data.market) {
                     let marketHTML = '';
@@ -382,11 +381,11 @@
                     ];
 
                     systems.forEach(sys => {
-                        const upsHTML = data.market[sys.id].ups.map(card => `
-                            <div class="market-item"><span>${card.name}</span> <span class="trend-up">${card.change}</span></div>
+                        const legacyHTML = (data.market[sys.id].legacy || []).map(card => `
+                            <div class="market-item"><span>${card.name}</span> <span class="price-tag">${card.price}</span></div>
                         `).join('');
-                        const downsHTML = data.market[sys.id].downs.map(card => `
-                            <div class="market-item"><span>${card.name}</span> <span class="trend-down">${card.change}</span></div>
+                        const modernHTML = (data.market[sys.id].modern || []).map(card => `
+                            <div class="market-item"><span>${card.name}</span> <span class="price-tag">${card.price}</span></div>
                         `).join('');
 
                         marketHTML += `
@@ -394,12 +393,12 @@
                                 <h3>${sys.name}</h3>
                                 <div class="market-grid">
                                     <div class="market-col">
-                                        <h4>TOP GAINERS</h4>
-                                        ${upsHTML}
+                                        <h4>LEGACY WATCHLIST</h4>
+                                        ${legacyHTML}
                                     </div>
                                     <div class="market-col">
-                                        <h4>TOP LOSERS</h4>
-                                        ${downsHTML}
+                                        <h4>MODERN CHASE CARDS</h4>
+                                        ${modernHTML}
                                     </div>
                                 </div>
                             </div>

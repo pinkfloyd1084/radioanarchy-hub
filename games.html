@@ -428,7 +428,6 @@
                 playAttempt1.catch(error => console.log("Browser blocked first laugh."));
             }
 
-            // User Timing: 5000ms for second laugh
             setTimeout(() => {
                 nedrySound.currentTime = 0;
                 let playAttempt2 = nedrySound.play();
@@ -437,7 +436,6 @@
                 }
             }, 5000);
 
-            // User Timing: 10000ms for slide down
             setTimeout(() => {
                 nedryBox.classList.remove('nedry-show');
             }, 10000);
@@ -488,8 +486,38 @@
         fetch('https://api.radioanarchy.gg:8202/api/games-data')
             .then(res => res.json())
             .then(data => {
-                console.log("Telemetry received:", data);
-            }).catch(err => console.log("Waiting on backend telemetry..."));
+                // A. Update Steam Prices & Global Player Counts
+                const games = ['dayz', 'gta', 'beamng', 'vein', 'valheim'];
+                games.forEach(game => {
+                    if (data.stats && data.stats[game]) {
+                        const priceEl = document.getElementById(`price-${game}`);
+                        const globalEl = document.getElementById(`global-${game}`);
+                        if (priceEl) priceEl.innerText = data.stats[game].price;
+                        if (globalEl) globalEl.innerText = data.stats[game].global;
+                    }
+                });
+
+                // B. Update Radio Anarchy Role Counts
+                const raGames = ['dayz', 'gta', 'beamng', 'vein', 'valheim', 'mtg', 'yugioh', 'pokemon', 'dnd'];
+                raGames.forEach(game => {
+                    if (data.ra_counts && data.ra_counts[game] !== undefined) {
+                        const raEl = document.getElementById(`ra-${game}`);
+                        if (raEl) raEl.innerText = data.ra_counts[game];
+                    }
+                });
+
+                // C. Switch Server Status Icons (Online/Offline)
+                if (data.servers) {
+                    for (const [serverId, isOnline] of Object.entries(data.servers)) {
+                        const iconEl = document.getElementById(`status-${serverId}`);
+                        if (iconEl) {
+                            iconEl.src = isOnline ? 'online.png' : 'offline.png';
+                            // Add a little glow if it's online
+                            if (isOnline) iconEl.style.filter = 'drop-shadow(0 0 8px #00ff55)';
+                        }
+                    }
+                }
+            }).catch(err => console.log("Waiting on backend telemetry...", err));
     </script>
 </body>
 </html>
