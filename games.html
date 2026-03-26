@@ -104,16 +104,23 @@
         .game-info-top h2 { margin: 0 0 5px 0; color: #00ffcc; font-size: 1.4rem; letter-spacing: 2px; text-shadow: 0 0 10px #00ffcc; }
         .game-desc { margin: 0; color: #bbb; font-size: 0.9rem; line-height: 1.4; }
 
-        /* Telemetry Section */
+       /* Telemetry Section */
         .telemetry-row {
             display: flex; justify-content: space-around; background: rgba(0, 0, 0, 0.6);
             border: 1px solid #333; border-radius: 8px; padding: 15px; margin-top: 10px;
         }
         .stat-block { display: flex; flex-direction: column; align-items: center; gap: 5px; text-align: center; }
-        .stat-label-img { height: 20px; object-fit: contain; margin-bottom: 5px; }
+        
+        /* Increased player count icons to 40px */
+        .stat-label-img { height: 40px; object-fit: contain; margin-bottom: 5px; }
+        
+        /* New styling for the Steam buttons */
+        .steam-buy-btn { height: 30px; object-fit: contain; transition: transform 0.2s, filter 0.2s; cursor: pointer; margin-bottom: 5px; }
+        .steam-buy-btn:hover { transform: scale(1.05); filter: drop-shadow(0 0 10px #00ffcc); }
+        
         .stat-value { color: #fff; font-size: 1.2rem; font-weight: bold; text-shadow: 0 0 5px #fff; }
         .stat-label-text { color: #ff0055; font-size: 0.75rem; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; }
-
+		
         /* Server List Section */
         .server-list { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
         .server-item {
@@ -217,7 +224,11 @@
                 </div>
             </div>
             <div class="telemetry-row">
-                <div class="stat-block"><span class="stat-label-text">STEAM PRICE</span><span class="stat-value" id="price-dayz">Scanning...</span></div>
+                <div class="stat-block">
+				<a href="https://store.steampowered.com/app/APP_ID_HERE/" target="_blank">
+					<img src="buyonsteam.png" class="steam-buy-btn" alt="Buy on Steam">
+				</a>
+				<span class="stat-value" id="price-dayz">Scanning...</span></div>
                 <div class="stat-block"><img src="globalplayercount.png" class="stat-label-img" alt="Global"><span class="stat-value" id="global-dayz">Scanning...</span></div>
                 <div class="stat-block"><img src="radioanarchyplayercount.png" class="stat-label-img" alt="RA Network"><span class="stat-value" id="ra-dayz">Scanning...</span></div>
             </div>
@@ -243,17 +254,26 @@
                 <div class="game-info-top">
                     <h2>GRAND THEFT AUTO: FIVEM</h2>
                     <p class="game-desc">The ultimate multiplayer modification framework for GTA V, allowing you to play on customized dedicated servers with entirely new RP mechanics.</p>
+                    <p style="font-size: 0.85rem; color: #ffaa00; margin-top: 8px;">
+                        * Requires base game <a href="https://store.steampowered.com/app/271590/" target="_blank" style="color: #00ffcc;">GTA V</a> to play. 
+                        <a href="https://fivem.net/" target="_blank" style="color: #00ffcc;">Get FiveM Client Here</a>.
+                    </p>
                 </div>
             </div>
             <div class="telemetry-row">
-                <div class="stat-block"><span class="stat-label-text">STEAM PRICE</span><span class="stat-value" id="price-gta">Scanning...</span></div>
+                <div class="stat-block">
+                    <a href="https://store.steampowered.com/app/271590/" target="_blank">
+                        <img src="buyonsteam.png" class="steam-buy-btn" alt="Buy on Steam">
+                    </a>
+                    <span class="stat-value" id="price-gta">Scanning...</span>
+                </div>
                 <div class="stat-block"><img src="globalplayercount.png" class="stat-label-img"><span class="stat-value" id="global-gta">Scanning...</span></div>
                 <div class="stat-block"><img src="radioanarchyplayercount.png" class="stat-label-img"><span class="stat-value" id="ra-gta">Scanning...</span></div>
             </div>
             <div class="server-list">
                 <div class="server-item">
                     <div class="server-name">Silent's RP City</div>
-                    <img src="offline.png" class="status-icon" id="status-fivem">
+                    <img src="serveroffline.png" class="status-icon" id="status-fivem">
                 </div>
             </div>
         </div>
@@ -266,11 +286,9 @@
                     <p class="game-desc">A dynamic soft-body physics vehicle simulator capable of doing just about anything. Experience the most realistic damage engine in gaming.</p>
                 </div>
             </div>
-            <div class="telemetry-row">
-                <div class="stat-block"><span class="stat-label-text">STEAM PRICE</span><span class="stat-value" id="price-beamng">Scanning...</span></div>
-                <div class="stat-block"><img src="globalplayercount.png" class="stat-label-img"><span class="stat-value" id="global-beamng">Scanning...</span></div>
-                <div class="stat-block"><img src="radioanarchyplayercount.png" class="stat-label-img"><span class="stat-value" id="ra-beamng">Scanning...</span></div>
-            </div>
+            <a href="https://store.steampowered.com/app/APP_ID_HERE/" target="_blank">
+				<img src="buyonsteam.png" class="steam-buy-btn" alt="Buy on Steam">
+			</a>
             <div class="server-list">
                 <div class="server-item">
                     <div class="server-name">RA | BeamMP Server</div>
@@ -288,7 +306,11 @@
                 </div>
             </div>
             <div class="telemetry-row">
-                <div class="stat-block"><span class="stat-label-text">STEAM PRICE</span><span class="stat-value" id="price-vein">Scanning...</span></div>
+                <div class="stat-block">
+					<a href="https://store.steampowered.com/app/APP_ID_HERE/" target="_blank">
+						<img src="buyonsteam.png" class="steam-buy-btn" alt="Buy on Steam">
+					</a>
+			<span class="stat-value" id="price-vein">Scanning...</span></div>
                 <div class="stat-block"><img src="globalplayercount.png" class="stat-label-img"><span class="stat-value" id="global-vein">Scanning...</span></div>
                 <div class="stat-block"><img src="radioanarchyplayercount.png" class="stat-label-img"><span class="stat-value" id="ra-vein">Scanning...</span></div>
             </div>
@@ -309,7 +331,11 @@
                 </div>
             </div>
             <div class="telemetry-row">
-                <div class="stat-block"><span class="stat-label-text">STEAM PRICE</span><span class="stat-value" id="price-valheim">Scanning...</span></div>
+                <div class="stat-block">
+				<a href="https://store.steampowered.com/app/APP_ID_HERE/" target="_blank">
+					<img src="buyonsteam.png" class="steam-buy-btn" alt="Buy on Steam">
+				</a>
+				<span class="stat-value" id="price-valheim">Scanning...</span></div>
                 <div class="stat-block"><img src="globalplayercount.png" class="stat-label-img"><span class="stat-value" id="global-valheim">Scanning...</span></div>
                 <div class="stat-block"><img src="radioanarchyplayercount.png" class="stat-label-img"><span class="stat-value" id="ra-valheim">Scanning...</span></div>
             </div>
@@ -511,7 +537,8 @@
                     for (const [serverId, isOnline] of Object.entries(data.servers)) {
                         const iconEl = document.getElementById(`status-${serverId}`);
                         if (iconEl) {
-                            iconEl.src = isOnline ? 'online.png' : 'offline.png';
+                            // Fixed the file names right here:
+                            iconEl.src = isOnline ? 'serveronline.png' : 'serveroffline.png';
                             // Add a little glow if it's online
                             if (isOnline) iconEl.style.filter = 'drop-shadow(0 0 8px #00ff55)';
                         }
