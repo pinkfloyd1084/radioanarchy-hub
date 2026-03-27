@@ -147,14 +147,17 @@
         /* Box 3: Thin Stat Bar */
         .box-3 { 
             grid-column: 1 / 3; 
-            display: flex; justify-content: space-around; align-items: center;
+            display: flex; 
+            flex-direction: row; /* THIS OVERRIDES TERMINAL-BOX AND FIXES THE STACKING */
+            justify-content: space-around; 
+            align-items: center;
             padding: 15px 25px;
         }
         .stat-item { 
-            display: none; /* Hidden by default until JS populates */
-            flex-direction: row; /* Forces left-to-right */
-            align-items: baseline; 
-            gap: 10px; 
+            display: none; 
+            flex-direction: column; /* Puts the number centered above the text */
+            align-items: center; 
+            gap: 5px; 
         }
         .stat-number { color: #00ffcc; font-size: 1.8rem; font-weight: bold; text-shadow: 0 0 10px #00ffcc; }
         .stat-label { color: #ff0055; font-size: 0.8rem; font-weight: bold; letter-spacing: 1px; }
@@ -299,9 +302,9 @@
             <div class="chat-window" id="chat-window">
                 <div class="chat-message"><span class="chat-user">System:</span> Welcome to the live comms channel.</div>
             </div>
-            <div class="chat-input-area">
-                <input type="text" class="chat-input" maxlength="250" placeholder="Transmit message...">
-                <img src="reply.png" alt="Send" class="btn-graphic btn-graphic-small">
+			<div class="chat-input-area">
+                <input type="text" id="chat-msg-input" class="chat-input" maxlength="250" placeholder="Transmit message...">
+                <img src="reply.png" alt="Send" class="btn-graphic btn-graphic-small" id="btn-send-chat">
             </div>
         </div>
 
@@ -368,9 +371,9 @@
             <div class="modal-close" onclick="closeModal()">[X] CLOSE</div>
             <h2 style="color: #00ffcc; margin-top: 0; border-bottom: 1px dashed #555; padding-bottom: 10px;">SUBMIT NEW ARCHIVE</h2>
             
-            <input type="text" class="modal-input" placeholder="Title">
-            <input type="text" class="modal-input" placeholder="Subject">
-            <textarea class="modal-input" rows="8" placeholder="Enter document text manually..."></textarea>
+            <input type="text" id="post-title" class="modal-input" placeholder="Title">
+            <input type="text" id="post-subject" class="modal-input" placeholder="Subject">
+            <textarea id="post-content" class="modal-input" rows="8" placeholder="Enter document text manually..."></textarea>
             
             <div style="margin-top: 10px;">
                 <label style="color: #ff0055; font-size: 0.9rem; font-weight: bold; display: block; margin-bottom: 5px;">Or Upload .TXT File:</label>
@@ -378,7 +381,7 @@
             </div>
 
             <div style="text-align: right; margin-top: 15px;">
-                <img src="submit.png" alt="Submit" class="btn-graphic btn-graphic-small" onclick="closeModal()">
+                <img src="submit.png" alt="Submit" class="btn-graphic btn-graphic-small" id="btn-submit-post">
             </div>
         </div>
     </div>
@@ -633,6 +636,144 @@
                 ).join('');
             }
         }
+		// ==========================================
+        // FORUM & CHAT DATA ENGINE
+        // ==========================================
+        const CURRENT_ROOM = 'tkb'; // Change this string on other pages (e.g., 'modhub')
+
+        // --- 1. THE FORUM SYSTEM ---
+        async function loadForumPosts() {
+            try {
+                const res = await fetch(`https://api.radioanarchy.gg:8202/api/forum/${CURRENT_ROOM}`);
+                const posts = await res.json();
+                const tbody = document.getElementById('forum-body');
+                tbody.innerHTML = ''; // Clear the mock data
+
+                if (posts.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#888;">No archives found in this node.</td></tr>';
+                    return;
+                }
+
+                posts.forEach((post, index) => {
+                    const date = new Date(post.created_at).toLocaleDateString();
+                    // Display posts in reverse order number (newest is highest number)
+                    const rowNumber = String(posts.length - index).padStart(3, '0'); 
+                    
+                    const rowHtml = `
+                        <tr class="forum-row" onclick="toggleExpand('doc-${post.id}')">
+                            <td>${rowNumber}</td>
+                            <td>${post.title}</td>
+                            <td>${post.subject || 'N/A'}</td>
+                            <td><span style="color:#00ffcc;">${post.author}</span></td>
+                            <td>${date}</td>
+                        </tr>
+                        <tr id="doc-${post.id}" class="forum-expanded">
+                            <td colspan="5">
+                                <div class="document-text">${post.content}</div>
+                                <div class="comment-section">
+                                    <p style="color: #ff0055; font-size: 0.9rem; margin-top: 0;">Replies disabled for this archive.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.insertAdjacentHTML('beforeend', rowHtml);
+                });
+            } catch (err) {
+                console.error("Failed to load forum archives:", err);
+            }
+        }
+
+        // Handle New Post Submission
+        document.getElementById('btn-submit-post').addEventListener('click', async () => {
+            const title = document.getElementById('post-title').value;
+            const subject = document.getElementById('post-subject').value;
+            const content = document.getElementById('post-content').value;
+            const author = document.getElementById('user-name').innerText || 'Unknown Agent';
+
+            if (!title || !content) {
+                alert("Title and Content are required to submit an archive.");
+                return;
+            }
+
+            try {
+                const res = await fetch(`https://api.radioanarchy.gg:8202/api/forum/${CURRENT_ROOM}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, subject, content, author })
+                });
+
+                if (res.ok) {
+                    // Clear the form, close modal, and reload the table
+                    document.getElementById('post-title').value = '';
+                    document.getElementById('post-subject').value = '';
+                    document.getElementById('post-content').value = '';
+                    closeModal();
+                    loadForumPosts(); 
+                }
+            } catch (err) {
+                console.error("Post failed:", err);
+            }
+        });
+
+        // --- 2. THE LIVE CHAT SYSTEM ---
+        async function loadChat() {
+            try {
+                const res = await fetch(`https://api.radioanarchy.gg:8202/api/chat/${CURRENT_ROOM}`);
+                const messages = await res.json();
+                const chatWindow = document.getElementById('chat-window');
+                
+                // Only update if we have messages to prevent flashing
+                if (messages.length > 0) {
+                    chatWindow.innerHTML = ''; 
+                    messages.forEach(msg => {
+                        chatWindow.innerHTML += `<div class="chat-message"><span class="chat-user">${msg.author}:</span> ${msg.message}</div>`;
+                    });
+                    // Auto-scroll to the newest message at the bottom
+                    chatWindow.scrollTop = chatWindow.scrollHeight; 
+                }
+            } catch (err) {
+                console.error("Chat load failed:", err);
+            }
+        }
+
+        async function sendChat() {
+            const inputEl = document.getElementById('chat-msg-input');
+            const message = inputEl.value;
+            const author = document.getElementById('user-name').innerText || 'Unknown Agent';
+            
+            if (!message) return;
+
+            try {
+                const res = await fetch(`https://api.radioanarchy.gg:8202/api/chat/${CURRENT_ROOM}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ author, message })
+                });
+
+                if (res.ok) {
+                    inputEl.value = ''; // Clear input box
+                    loadChat(); // Refresh chat immediately
+                }
+            } catch (err) {
+                console.error("Chat send failed:", err);
+            }
+        }
+
+        // Fire chat on click or Enter key
+        document.getElementById('btn-send-chat').addEventListener('click', sendChat);
+        document.getElementById('chat-msg-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendChat();
+        });
+
+        // --- 3. BOOT SEQUENCE ---
+        // Load data immediately on page load
+        setTimeout(() => {
+            loadForumPosts();
+            loadChat();
+        }, 1000); // Slight delay to ensure auth sets the username first
+
+        // Auto-refresh chat every 5 seconds to keep it "Live"
+        setInterval(loadChat, 5000);
     </script>
 </body>
 </html>
