@@ -257,13 +257,15 @@
 
             <table class="forum-table">
                 <thead>
+                    <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Title</th>
-                        <th>Subject</th>
-                        <th>Author</th>
-                        <th>Date</th>
+                        <th onclick="sortPosts('id')"># ↕</th>
+                        <th onclick="sortPosts('title')">Title ↕</th>
+                        <th onclick="sortPosts('subject')">Subject ↕</th>
+                        <th onclick="sortPosts('author')">Author ↕</th>
+                        <th onclick="sortPosts('date')">Date ↕</th>
                     </tr>
+                </thead>
                 </thead>
                 <tbody id="forum-body">
                     <tr class="forum-row" onclick="toggleExpand('doc-1')">
@@ -498,17 +500,41 @@
             setTimeout(() => nedryBox.classList.remove('nedry-show'), 10000);
         }
 
+        // Setup Modal for a BRAND NEW post
         document.getElementById('trigger-new-post').addEventListener('click', () => {
-            // Check for Professor Role
             if (activeClearances.includes("Professor") || activeClearances.includes("Head Admin") || activeClearances.includes("Owner")) {
+                editingPostId = null; // Reset the edit tracker
+                document.querySelector('.post-modal h2').innerText = "SUBMIT NEW ARCHIVE"; // Reset title
+                
+                document.getElementById('post-title').value = '';
+                document.getElementById('post-subject').value = '';
+                document.getElementById('post-content').value = '';
                 document.getElementById('new-post-modal').style.display = 'flex';
             } else {
                 triggerNedry();
             }
         });
 
+        // Setup Modal for EDITING an existing post
+        window.openEditModal = function(postId) {
+            // Find the exact post data in our global memory
+            const postToEdit = globalForumPosts.find(p => p.id === postId);
+            if (!postToEdit) return;
+
+            editingPostId = postId; // Set the tracker so the submit button knows it's an update!
+            document.querySelector('.post-modal h2').innerText = "EDIT ARCHIVE"; 
+            
+            // Pre-fill the inputs with the old data
+            document.getElementById('post-title').value = postToEdit.title;
+            document.getElementById('post-subject').value = postToEdit.subject || '';
+            document.getElementById('post-content').value = postToEdit.content;
+            
+            document.getElementById('new-post-modal').style.display = 'flex';
+        };
+
         function closeModal() {
             document.getElementById('new-post-modal').style.display = 'none';
+            editingPostId = null; // Wipe the tracker when closing
         }
 
        document.querySelectorAll('.restricted-link').forEach(link => {
@@ -674,53 +700,99 @@
 		// ==========================================
         // FORUM & CHAT DATA ENGINE (WEBSOCKET EDITION)
         // ==========================================
-        const CURRENT_ROOM = 'tkb'; // Change this string on other pages (e.g., 'modhub')
+        const CURRENT_ROOM = 'tkb'; 
+        
+        let globalForumPosts = []; // Stores posts locally so we can sort them instantly
+        let currentSortCol = 'date';
+        let currentSortAsc = false; // Default to newest first
+        let editingPostId = null; // Tracks if the user is editing an existing post
 
-        // --- 1. THE FORUM SYSTEM ---
+        function sortPosts(column) {
+            // If clicking the same column, flip the direction. Otherwise, start ascending.
+            if (currentSortCol === column) {
+                currentSortAsc = !currentSortAsc; 
+            } else {
+                currentSortCol = column;
+                currentSortAsc = true;
+            }
+
+            globalForumPosts.sort((a, b) => {
+                let valA, valB;
+                if (column === 'id') { valA = a.id; valB = b.id; }
+                else if (column === 'title') { valA = a.title.toLowerCase(); valB = b.title.toLowerCase(); }
+                else if (column === 'subject') { valA = (a.subject || '').toLowerCase(); valB = (b.subject || '').toLowerCase(); }
+                else if (column === 'author') { valA = a.post_author.toLowerCase(); valB = b.post_author.toLowerCase(); }
+                else if (column === 'date') { valA = new Date(a.created_at).getTime(); valB = new Date(b.created_at).getTime(); }
+
+                if (valA < valB) return currentSortAsc ? -1 : 1;
+                if (valA > valB) return currentSortAsc ? 1 : -1;
+                return 0;
+            });
+            
+            renderForumPosts(globalForumPosts); // Re-draw the table with the new order
+        } // Change this string on other pages (e.g., 'modhub')
+
+       // --- 1. THE FORUM SYSTEM ---
         async function loadForumPosts() {
             try {
                 const res = await fetch(`https://api.radioanarchy.gg:8202/api/forum/${CURRENT_ROOM}`);
-                const posts = await res.json();
-                const tbody = document.getElementById('forum-body');
-                tbody.innerHTML = ''; 
-
-                if (posts.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#888;">No archives found in this node.</td></tr>';
-                    return;
-                }
-
-                posts.forEach((post, index) => {
-                    const date = new Date(post.created_at).toLocaleDateString();
-                    const rowNumber = String(posts.length - index).padStart(3, '0'); 
-                    
-                    const rowHtml = `
-                        <tr class="forum-row" onclick="toggleExpand('doc-${post.id}', ${post.id})">
-                            <td>${rowNumber}</td>
-                            <td>${post.title}</td>
-                            <td>${post.subject || 'N/A'}</td>
-                            <td><span style="color:#00ffcc;">${post.post_author}</span></td>
-                            <td>${date}</td>
-                        </tr>
-                        <tr id="doc-${post.id}" class="forum-expanded">
-                            <td colspan="5">
-                                <div class="document-text">${post.content}</div>
-                                <div class="comment-section" id="comment-section-${post.id}">
-                                    <div id="comments-list-${post.id}" style="margin-bottom: 15px; max-height: 200px; overflow-y: auto;">
-                                        <span style="color: #888; font-size: 0.85rem;">Loading replies...</span>
-                                    </div>
-                                    <textarea id="comment-input-${post.id}" class="comment-box" rows="2" placeholder="Transmit a reply..." onkeypress="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); submitComment(${post.id}); }"></textarea>
-                                    <div class="reply-area">
-                                        <img src="submit.png" alt="Submit Reply" class="btn-graphic btn-graphic-small" onclick="submitComment(${post.id})">
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                    tbody.insertAdjacentHTML('beforeend', rowHtml);
-                });
+                globalForumPosts = await res.json(); // Save to our local memory
+                
+                // Default to newest first
+                currentSortCol = 'date';
+                currentSortAsc = false;
+                renderForumPosts(globalForumPosts);
             } catch (err) {
                 console.error("Failed to load forum archives:", err);
             }
+        }
+
+        function renderForumPosts(posts) {
+            const tbody = document.getElementById('forum-body');
+            tbody.innerHTML = ''; 
+
+            if (posts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#888;">No archives found in this node.</td></tr>';
+                return;
+            }
+
+            // Grab the current user's name to check for editing rights
+            const currentUser = document.getElementById('user-name').innerText || 'Unknown Agent';
+
+            posts.forEach((post, index) => {
+                const date = new Date(post.created_at).toLocaleDateString();
+                const rowNumber = String(posts.length - index).padStart(3, '0'); 
+                
+                // THE VISUAL KEY: Only render the edit button if the author matches the logged-in user
+                const editButton = (post.post_author === currentUser) 
+                    ? `<span style="color:#ffaa00; cursor:pointer; float:right; font-weight:bold; letter-spacing:1px;" onclick="openEditModal(${post.id})">[EDIT ARCHIVE]</span>` 
+                    : '';
+
+                const rowHtml = `
+                    <tr class="forum-row" onclick="toggleExpand('doc-${post.id}', ${post.id})">
+                        <td>${rowNumber}</td>
+                        <td>${post.title}</td>
+                        <td>${post.subject || 'N/A'}</td>
+                        <td><span style="color:#00ffcc;">${post.post_author}</span></td>
+                        <td>${date}</td>
+                    </tr>
+                    <tr id="doc-${post.id}" class="forum-expanded">
+                        <td colspan="5">
+                            <div class="document-text">${editButton}${post.content}</div>
+                            <div class="comment-section" id="comment-section-${post.id}">
+                                <div id="comments-list-${post.id}" style="margin-bottom: 15px; max-height: 200px; overflow-y: auto;">
+                                    <span style="color: #888; font-size: 0.85rem;">Loading replies...</span>
+                                </div>
+                                <textarea id="comment-input-${post.id}" class="comment-box" rows="2" placeholder="Transmit a reply..." onkeypress="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); submitComment(${post.id}); }"></textarea>
+                                <div class="reply-area">
+                                    <img src="submit.png" alt="Submit Reply" class="btn-graphic btn-graphic-small" onclick="submitComment(${post.id})">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', rowHtml);
+            });
         }
 
         // Handle New Post Submission (With FileReader Support)
@@ -731,7 +803,14 @@
             const author = document.getElementById('user-name').innerText || 'Unknown Agent';
             const fileInput = document.getElementById('post-file');
 
-            // The function that actually transmits to the backend
+            // Handle Post Submission (Smart Dual-Action: Creates NEW or Updates EXISTING)
+        document.getElementById('btn-submit-post').addEventListener('click', async () => {
+            const title = document.getElementById('post-title').value;
+            const subject = document.getElementById('post-subject').value;
+            const typedContent = document.getElementById('post-content').value;
+            const author = document.getElementById('user-name').innerText || 'Unknown Agent';
+            const fileInput = document.getElementById('post-file');
+
             const transmitArchive = async (finalContent) => {
                 if (!title || !finalContent.trim()) {
                     alert("Title and Content (or a .TXT file) are required to submit an archive.");
@@ -739,45 +818,47 @@
                 }
 
                 try {
-                    const res = await fetch(`https://api.radioanarchy.gg:8202/api/forum/${CURRENT_ROOM}`, {
-                        method: 'POST',
+                    // Decide if we are hitting the Update route (PUT) or Create route (POST)
+                    const url = editingPostId 
+                        ? `https://api.radioanarchy.gg:8202/api/forum/${editingPostId}` 
+                        : `https://api.radioanarchy.gg:8202/api/forum/${CURRENT_ROOM}`;
+                    
+                    const method = editingPostId ? 'PUT' : 'POST';
+
+                    const res = await fetch(url, {
+                        method: method,
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ title, subject, content: finalContent, author })
+                        body: JSON.stringify({ title, subject, content: finalContent, author, room_id: CURRENT_ROOM })
                     });
 
                     if (res.ok) {
-                        // Clear all inputs on success
                         document.getElementById('post-title').value = '';
                         document.getElementById('post-subject').value = '';
                         document.getElementById('post-content').value = '';
                         if (fileInput) fileInput.value = ''; 
                         closeModal();
+                        // WebSockets will automatically refresh the page, but we can force a local refresh just in case
                         loadForumPosts(); 
+                    } else {
+                        const errData = await res.json();
+                        alert(errData.error || "System rejected the transmission.");
                     }
                 } catch (err) {
                     console.error("Post failed:", err);
                 }
             };
 
-            // Check if a secure file is attached
             if (fileInput && fileInput.files.length > 0) {
                 const file = fileInput.files[0];
                 const reader = new FileReader();
-                
                 reader.onload = function(e) {
                     const fileText = e.target.result;
-                    // If they typed a description AND attached a file, combine them neatly
                     const finalContent = typedContent ? `${typedContent}\n\n--- Attached Document ---\n\n${fileText}` : fileText;
                     transmitArchive(finalContent);
                 };
-                
-                reader.onerror = function() {
-                    alert("Failed to decrypt the secure file. Please try again.");
-                };
-                
-                reader.readAsText(file); // This tells the browser to crack it open!
+                reader.onerror = function() { alert("Failed to decrypt the secure file. Please try again."); };
+                reader.readAsText(file);
             } else {
-                // No file attached, just send the typed text
                 transmitArchive(typedContent);
             }
         });
