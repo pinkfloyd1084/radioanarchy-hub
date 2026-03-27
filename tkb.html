@@ -462,6 +462,17 @@
             if(stats.newComments > 0) { document.getElementById('stat-new-comments').style.display = 'flex'; document.querySelector('#stat-new-comments .stat-number').innerText = stats.newComments; }
             if(stats.newReplies > 0) { document.getElementById('stat-new-replies').style.display = 'flex'; document.querySelector('#stat-new-replies .stat-number').innerText = stats.newReplies; }
         }
+		
+		// Helper to ping the backend and refresh the Box 3 display
+        function refreshMyStats() {
+            const name = document.getElementById('user-name').innerText;
+            if (!name || name === '') return;
+            
+            fetch(`https://api.radioanarchy.gg:8202/api/stats/${CURRENT_ROOM}?author=${encodeURIComponent(name)}`)
+                .then(res => res.json())
+                .then(stats => updateUserStats(stats))
+                .catch(err => console.error("Stats refresh error:", err));
+        }
 
         // Modals & Security
         const nedrySound = new Audio('dennis_nedry_ahahah.mp3'); 
@@ -874,7 +885,8 @@
     </script>
     
     <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
-    <script>
+    
+	<script>
         // Connect to the Live Engine
         const socket = io('https://api.radioanarchy.gg:8202');
 
@@ -888,8 +900,10 @@
 
         // 2. Live Post Updates
         socket.on('update_posts', () => {
-            // Only refresh the forum board if the user DOES NOT have a post currently open.
-            // This prevents the screen from collapsing while they are trying to read or type a reply!
+            // Instant Stats Update for the author
+            refreshMyStats();
+
+            // Refresh post list only if folders are closed to prevent UX flickering
             const anyExpanded = document.querySelector('.forum-expanded[style*="display: table-row"]');
             if (!anyExpanded) {
                 loadForumPosts();
@@ -898,6 +912,9 @@
 
         // 3. Live Comment Updates
         socket.on('update_comments', (postId) => {
+            // Instant Stats Update for the author
+            refreshMyStats();
+
             // Only refresh the comments if the user is actively looking at that exact post
             const expandedRow = document.getElementById(`doc-${postId}`);
             if (expandedRow && expandedRow.style.display === 'table-row') {
