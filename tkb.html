@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radio Anarchy | The Knowledge Base</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        /* Base and Parallax Background */
+        body {
+            margin: 0; padding: 0;
+            background: #050505 url('RadioAnarchyBackground.png') no-repeat center top fixed;
+            background-size: cover; color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center; overflow-x: hidden;
+        }
+
+        .top-banner {
+            width: 100%; display: block; background: #000; 
+            position: relative; z-index: 10; border-bottom: 2px solid #ff0055;
+        }
+
+        /* --- TOP UI BAR (Profile & Nav) --- */
+        .top-ui-row {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            width: 95%; max-width: 1600px; margin: 30px auto 30px auto;
+        }
+
+        #user-profile-box {
+            background: rgba(15, 5, 10, 0.85); border: 2px solid #00ffcc; border-radius: 12px;
+            padding: 20px; box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+            display: flex; flex-direction: column; gap: 15px; width: 320px; box-sizing: border-box;
+        }
+        .profile-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        #user-name { color: #fff; font-size: 1.3rem; font-weight: bold; text-shadow: 0 0 8px #fff; text-align: left; }
+        #user-avatar { width: 65px; height: 65px; border-radius: 50%; border: 2px solid #ff0055; object-fit: cover; }
+        #user-roles-container { display: flex; flex-direction: column; gap: 6px; text-align: left; margin-bottom: 5px; }
+        .role-badge {
+            font-size: 0.85rem; font-weight: bold; background: rgba(0, 0, 0, 0.6);
+            padding: 5px 10px; border-radius: 4px; border-left: 4px solid #00ffcc; 
+            color: #ddd; text-shadow: 0 0 5px rgba(255,255,255,0.3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        /* Hub Nav Dropdown */
+        .hub-nav-wrapper { position: relative; display: inline-block; text-align: right; }
+        .nav-trigger-btn {
+            background: rgba(15, 5, 10, 0.9); border: 2px solid #ff0055; color: #ff0055;
+            padding: 15px 30px; font-size: 1.2rem; font-weight: bold; letter-spacing: 2px;
+            border-radius: 8px; cursor: pointer; text-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.2); transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+        .nav-trigger-btn:hover { background: #ff0055; color: #000; box-shadow: 0 0 25px #ff0055; }
+        
+        .dropdown-content {
+            display: none; position: absolute; right: 0; top: 110%;
+            background: rgba(5, 5, 8, 0.98); border: 2px solid #00ffcc; border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.9), 0 0 20px rgba(0, 255, 204, 0.3);
+            min-width: 280px; z-index: 1000; text-align: left; overflow: hidden;
+        }
+        .hub-nav-wrapper:hover .dropdown-content { display: flex; flex-direction: column; }
+        
+        .drop-link {
+            color: #fff; padding: 12px 20px; text-decoration: none; border-bottom: 1px dashed #333;
+            transition: all 0.2s ease; font-size: 0.95rem; font-weight: bold;
+        }
+        .drop-link:hover { background: rgba(0, 255, 204, 0.15); color: #00ffcc; padding-left: 25px; }
+        .drop-header { background: #00ffcc; color: #000; padding: 8px 20px; font-size: 0.8rem; font-weight: bold; letter-spacing: 2px; }
+
+        .btn-graphic { transition: transform 0.2s, filter 0.2s; cursor: pointer; }
+        .btn-graphic:hover { transform: translateY(-3px); filter: drop-shadow(0 0 12px #00ffcc); }
+        .btn-graphic-small { width: 140px; }
+
+        /* --- HEADER LOGO STACK --- */
+        .tkb-header-container {
+            position: relative; margin: 20px auto 40px auto; width: 100%; max-width: 600px;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .behind-logo {
+            position: absolute; width: 220px; top: -110px;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 204, 0.4)); z-index: 1;
+        }
+        .main-logo {
+            width: 450px; position: relative; z-index: 2;
+            filter: drop-shadow(0 0 20px #ff0055);
+        }
+
+        /* --- THE GRID LAYOUT --- */
+        .tkb-grid {
+            display: grid; 
+            grid-template-columns: 2fr 1fr; /* 2/3 and 1/3 split */
+            gap: 30px;
+            width: 90%; max-width: 1600px; margin: 0 auto 60px auto;
+        }
+
+        .terminal-box {
+            background: rgba(15, 5, 10, 0.85); border: 2px solid #ff0055; border-radius: 12px;
+            padding: 25px; box-shadow: 0 0 20px rgba(255, 0, 85, 0.15); text-align: left;
+            display: flex; flex-direction: column;
+        }
+        
+        .box-title {
+            color: #00ffcc; font-size: 1.4rem; letter-spacing: 2px; text-shadow: 0 0 10px #00ffcc;
+            border-bottom: 1px dashed #555; padding-bottom: 10px; margin-top: 0; margin-bottom: 20px;
+        }
+
+        /* Box 1: The Forum */
+        .box-1 { grid-column: 1 / 2; }
+        .forum-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .search-bar { background: #000; border: 1px solid #00ffcc; color: #fff; padding: 10px; width: 300px; border-radius: 4px; font-family: 'Courier New', monospace; }
+        
+        .forum-table { width: 100%; border-collapse: collapse; }
+        .forum-table th { background: rgba(255, 0, 85, 0.2); color: #ff0055; padding: 12px; text-align: left; cursor: pointer; border-bottom: 2px solid #ff0055; }
+        .forum-table th:hover { background: rgba(255, 0, 85, 0.4); }
+        .forum-table td { padding: 12px; border-bottom: 1px solid #333; cursor: pointer; }
+        .forum-row:hover { background: rgba(0, 255, 204, 0.1); }
+        
+        .forum-expanded { display: none; background: #0a0a0a; padding: 20px; border-bottom: 2px solid #00ffcc; }
+        .document-text { color: #bbb; line-height: 1.6; margin-bottom: 20px; white-space: pre-wrap; }
+        .comment-section { border-top: 1px dashed #555; padding-top: 15px; }
+        .comment-box { width: 100%; box-sizing: border-box; background: #000; border: 1px solid #333; color: #fff; padding: 10px; margin-bottom: 10px; font-family: 'Courier New', monospace; resize: vertical; }
+        .reply-area { display: flex; justify-content: flex-end; }
+        
+        .new-post-container { display: flex; justify-content: flex-end; align-items: center; margin-top: 20px; gap: 15px; }
+        
+        /* Box 2: Live Chat */
+        .box-2 { grid-column: 2 / 3; display: flex; flex-direction: column; height: 600px; }
+        .chat-header { display: flex; justify-content: space-between; align-items: center; color: #888; font-size: 0.9rem; margin-bottom: 10px; }
+        .chat-window { flex-grow: 1; background: #000; border: 1px solid #333; border-radius: 4px; padding: 15px; overflow-y: auto; margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .chat-message { font-size: 0.95rem; }
+        .chat-user { color: #00ffcc; font-weight: bold; }
+        .chat-input-area { display: flex; gap: 10px; }
+        .chat-input { flex-grow: 1; background: #000; border: 1px solid #00ffcc; color: #fff; padding: 10px; border-radius: 4px; font-family: 'Courier New', monospace; }
+
+        /* Box 3: Thin Stat Bar */
+        .box-3 { 
+            grid-column: 1 / 3; 
+            display: flex; justify-content: space-around; align-items: center;
+            padding: 15px 25px;
+        }
+        .stat-item { display: none; flex-direction: column; align-items: center; } /* Hidden by default until JS populates */
+        .stat-number { color: #00ffcc; font-size: 1.8rem; font-weight: bold; text-shadow: 0 0 10px #00ffcc; }
+        .stat-label { color: #ff0055; font-size: 0.8rem; font-weight: bold; letter-spacing: 1px; }
+
+        /* --- MODALS --- */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 20000; justify-content: center; align-items: center;
+        }
+        .post-modal {
+            background: rgba(15, 5, 10, 0.98); border: 2px solid #00ffcc; border-radius: 12px;
+            padding: 30px; box-shadow: 0 0 50px rgba(0, 255, 204, 0.4);
+            width: 90%; max-width: 600px; text-align: left;
+            display: flex; flex-direction: column; gap: 15px;
+        }
+        .modal-input { background: #000; border: 1px solid #333; color: #fff; padding: 10px; font-family: 'Courier New', monospace; width: 100%; box-sizing: border-box; }
+        .modal-close { align-self: flex-end; color: #ff0055; cursor: pointer; font-weight: bold; font-size: 1.2rem; }
+        .modal-close:hover { text-shadow: 0 0 10px #ff0055; }
+
+        /* Nedry Pop-up */
+        #nedry-security-box {
+            position: fixed; bottom: -800px; left: 50%; transform: translateX(-50%);
+            background: rgba(15, 5, 10, 0.98); border: 3px solid #ff0055; border-radius: 12px;
+            padding: 30px; box-shadow: 0 0 50px rgba(255, 0, 85, 0.8); z-index: 30000;
+            text-align: center; transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 90%; max-width: 550px;
+        }
+        #nedry-security-box.nedry-show { bottom: 40px; }
+
+        @media (max-width: 1100px) {
+            .tkb-grid { grid-template-columns: 1fr; }
+            .box-1, .box-2, .box-3 { grid-column: 1 / 2; }
+            .top-ui-row { flex-direction: column; align-items: center; gap: 30px; }
+            .hub-nav-wrapper { text-align: center; }
+            .dropdown-content { right: auto; left: 50%; transform: translateX(-50%); }
+            .forum-controls { flex-direction: column; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <img src="RadioAnarchyBanner.png" class="top-banner" alt="Banner">
+
+    <div class="top-ui-row">
+        <div id="user-profile-box" style="display: none;">
+            <div class="profile-header">
+                <span id="user-name"></span>
+                <img id="user-avatar" src="default-avatar.png" alt="Avatar">
+            </div>
+            <div id="user-roles-container"></div>
+            <a href="profile.html"><img src="playerprofile.png" alt="Profile" class="btn-graphic btn-graphic-small" style="margin-top: 10px;"></a>
+        </div>
+        <div id="nav-spacer"></div>
+        <div class="hub-nav-wrapper">
+            <div id="auth-nav" style="display: none;">
+                <div class="nav-trigger-btn">HUB NAV ▼</div>
+                <div class="dropdown-content">
+                    <div class="drop-header">HOME</div>
+                    <a href="index.html" class="drop-link">Home Terminal</a>
+                    <div class="drop-header" style="margin-top: 5px;">INFORMATION STATION</div>
+                    <a href="news.html" class="drop-link">News Station</a>
+                    <a href="games.html" class="drop-link">Games & Servers</a>
+                    <a href="store.html" class="drop-link">The Shoppe</a>
+                    <a href="discordroles.html" class="drop-link">Discord Roles</a>
+                    <div class="drop-header" style="margin-top: 5px;">COMMUNITY COLLEGE</div>
+                    <a href="tkb.html" class="drop-link">The Knowledge Base</a>
+                    <a href="modhub.html" class="drop-link">Mod Hub</a>
+                    <a href="video.html" class="drop-link">Video Tutorials</a>
+                    <a href="vault.html" class="drop-link">Retro Vault</a>
+                    <div class="drop-header" style="margin-top: 5px;">COMMUNITY HUB</div>
+                    <a href="comnet.html" class="drop-link">Community Network</a>
+                    <a href="combil.html" class="drop-link">Community Billboard</a>
+                    <a href="watch.html" class="drop-link">Stream Schedule</a>
+                    <div class="drop-header" style="margin-top: 5px;">THE LOUNGES</div>
+                    <a href="players.html" class="drop-link">Players Lounge</a>
+                    <a href="owners.html" class="drop-link restricted-link" data-role="Server Owner">Server Owners Lounge</a>
+                    <a href="create.html" class="drop-link restricted-link" data-role="Creator">Creators Lounge</a>
+                    <a href="mod.html" class="drop-link restricted-link" data-role="Modder">Modders Lounge</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tkb-header-container">
+        <img src="book.png" alt="Book Icon" class="behind-logo">
+        <img src="theknowledgebase.png" alt="The Knowledge Base" class="main-logo">
+    </div>
+
+    <div class="tkb-grid">
+        
+        <div class="terminal-box box-1">
+            <h2 class="box-title">ARCHIVES & DOCUMENTS</h2>
+            
+            <div class="forum-controls">
+                <input type="text" class="search-bar" placeholder="Search keywords...">
+            </div>
+
+            <table class="forum-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Subject</th>
+                        <th>Author</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="forum-body">
+                    <tr class="forum-row" onclick="toggleExpand('doc-1')">
+                        <td>001</td><td>How to Survive Day 1</td><td>DayZ Strategy</td><td>SilentGun</td><td>10/24/2025</td>
+                    </tr>
+                    <tr id="doc-1" class="forum-expanded">
+                        <td colspan="5">
+                            <div class="document-text">
+                                Welcome to the apocalypse. Your first priority isn't a gun, it's a knife and warm clothes. 
+                                [Document text will be injected here from the backend]
+                            </div>
+                            <div class="comment-section">
+                                <p style="color: #ff0055; font-size: 0.9rem; margin-top: 0;">Posts: 0</p>
+                                <textarea class="comment-box" rows="3" placeholder="Add a comment..."></textarea>
+                                <div class="reply-area">
+                                    <img src="reply.png" alt="Reply" class="btn-graphic btn-graphic-small">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="new-post-container">
+                <span style="color: #888; font-size: 0.9rem; font-weight: bold;">Make a new post:</span>
+                <img src="newpost.png" alt="New Post" class="btn-graphic btn-graphic-small" id="trigger-new-post">
+            </div>
+        </div>
+
+        <div class="terminal-box box-2">
+            <h2 class="box-title">LIVE COMMS</h2>
+            <div class="chat-header">
+                <span>Network Node 01</span>
+                <span style="color: #00ffcc;">Users Online: <span id="chat-user-count">1</span></span>
+            </div>
+            <div class="chat-window" id="chat-window">
+                <div class="chat-message"><span class="chat-user">System:</span> Welcome to the live comms channel.</div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" class="chat-input" maxlength="250" placeholder="Transmit message...">
+                <img src="reply.png" alt="Send" class="btn-graphic btn-graphic-small">
+            </div>
+        </div>
+
+        <div class="terminal-box box-3" id="user-stats-bar">
+            <div class="stat-item" id="stat-posts">
+                <span class="stat-number">0</span>
+                <span class="stat-label">YOUR POSTS</span>
+            </div>
+            <div class="stat-item" id="stat-comments">
+                <span class="stat-number">0</span>
+                <span class="stat-label">YOUR COMMENTS</span>
+            </div>
+            <div class="stat-item" id="stat-new-comments">
+                <span class="stat-number" style="color:#ff0055;">0</span>
+                <span class="stat-label">NEW COMMENTS</span>
+            </div>
+            <div class="stat-item" id="stat-new-replies">
+                <span class="stat-number" style="color:#ff0055;">0</span>
+                <span class="stat-label">NEW REPLIES</span>
+            </div>
+        </div>
+		
+		<div class="terminal-box box-4" style="grid-column: 1 / 3; display: flex; flex-direction: column; gap: 15px;">
+            <h2 class="box-title" style="margin-bottom: 5px;">LOCAL AUDIO RELAY</h2>
+            <p style="color: #888; font-size: 0.9rem; margin-top: 0;">Input a YouTube transmission link to add it to your local audio queue.</p>
+            
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <input type="text" id="yt-link-input" class="search-bar" placeholder="Paste YouTube Link here..." style="flex-grow: 1;">
+                <img src="submit.png" alt="Queue" class="btn-graphic btn-graphic-small" id="btn-add-queue">
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; background: #000; border: 1px solid #333; padding: 15px; border-radius: 8px;">
+                <div id="yt-player-container" style="position: absolute; width: 0; height: 0; overflow: hidden;"></div>
+                
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <div class="nav-trigger-btn" id="btn-play-pause" style="padding: 10px 20px; font-size: 1rem;">PLAY</div>
+                    <div class="nav-trigger-btn" id="btn-skip" style="padding: 10px 20px; font-size: 1rem;">SKIP</div>
+                    <span id="current-track-label" style="color: #00ffcc; font-weight: bold; margin-left: 15px;">Status: Idle</span>
+                </div>
+
+                <div style="width: 40%; border-left: 1px dashed #555; padding-left: 15px;">
+                    <h4 style="color: #ff0055; margin: 0 0 10px 0; font-size: 0.9rem;">CURRENT QUEUE</h4>
+                    <ul id="audio-queue-list" style="list-style: none; padding: 0; margin: 0; color: #bbb; font-size: 0.85rem; text-align: left; max-height: 80px; overflow-y: auto;">
+                        <li>Queue is empty.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    
+	</div>
+
+    <div class="modal-overlay" id="new-post-modal">
+        <div class="post-modal">
+            <div class="modal-close" onclick="closeModal()">[X] CLOSE</div>
+            <h2 style="color: #00ffcc; margin-top: 0; border-bottom: 1px dashed #555; padding-bottom: 10px;">SUBMIT NEW ARCHIVE</h2>
+            
+            <input type="text" class="modal-input" placeholder="Title">
+            <input type="text" class="modal-input" placeholder="Subject">
+            <textarea class="modal-input" rows="8" placeholder="Enter document text manually..."></textarea>
+            
+            <div style="margin-top: 10px;">
+                <label style="color: #ff0055; font-size: 0.9rem; font-weight: bold; display: block; margin-bottom: 5px;">Or Upload .TXT File:</label>
+                <input type="file" accept=".txt" style="color: #fff; font-family: 'Courier New', monospace;">
+            </div>
+
+            <div style="text-align: right; margin-top: 15px;">
+                <img src="submit.png" alt="Submit" class="btn-graphic btn-graphic-small" onclick="closeModal()">
+            </div>
+        </div>
+    </div>
+
+    <div id="nedry-security-box">
+        <h2 style="color: #ff0055; margin-top: 0; font-size: 1.8rem; text-shadow: 0 0 10px #ff0055;">Ah ah ah! You didn't say the magic word...</h2>
+        <img id="nedry-gif" src="silentsaysno.gif" alt="Access Denied" style="width: 100%; max-width: 400px; border: 2px solid #00ffcc; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);">
+    </div>
+
+    <script>
+        window.addEventListener('scroll', function() {
+            const scrollPosition = window.pageYOffset;
+            document.body.style.backgroundPositionY = -(scrollPosition * 0.3) + 'px';
+        });
+
+        let activeClearances = [];
+
+        // Auth Check & Redirect
+        fetch('https://api.radioanarchy.gg:8202/auth/me', { method: 'GET', credentials: 'include' })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.loggedIn) {
+                    // Strict Kick if not signed in
+                    window.location.href = 'index.html';
+                    return;
+                }
+                
+                if (data.roles) {
+                    activeClearances = data.roles.map(r => r.name);
+                }
+                
+                document.getElementById('nav-spacer').style.display = 'none';
+                document.getElementById('user-profile-box').style.display = 'flex';
+                document.getElementById('user-name').innerText = data.displayUsername;
+                document.getElementById('user-avatar').src = data.displayAvatar || 'default-avatar.png';
+                
+                const rolesContainer = document.getElementById('user-roles-container');
+                if (data.roles && data.roles.length > 0) {
+                    data.roles.slice(0, 5).forEach(role => {
+                        const badge = document.createElement('div');
+                        badge.className = 'role-badge';
+                        badge.style.borderLeftColor = (role.color && role.color !== '#000000') ? role.color : '#00ffcc';
+                        badge.innerText = role.name;
+                        rolesContainer.appendChild(badge);
+                    });
+                } else {
+                    rolesContainer.innerHTML = '<span style="color:#aaa; font-size:0.8rem;">No Clearances</span>';
+                }
+
+                document.getElementById('auth-nav').style.display = 'block';
+
+                // Simulate fetching user stats (Replace with real data in Step 3)
+                const mockStats = { posts: 12, comments: 45, newComments: 2, newReplies: 0 };
+                updateUserStats(mockStats);
+            }).catch(err => {
+                console.error("Auth check failed:", err);
+                window.location.href = 'index.html';
+            });
+
+        // UI Functions
+        function toggleExpand(rowId) {
+            const row = document.getElementById(rowId);
+            if (row.style.display === 'table-row') {
+                row.style.display = 'none';
+            } else {
+                row.style.display = 'table-row';
+            }
+        }
+
+        function updateUserStats(stats) {
+            if(stats.posts > 0) { document.getElementById('stat-posts').style.display = 'flex'; document.querySelector('#stat-posts .stat-number').innerText = stats.posts; }
+            if(stats.comments > 0) { document.getElementById('stat-comments').style.display = 'flex'; document.querySelector('#stat-comments .stat-number').innerText = stats.comments; }
+            if(stats.newComments > 0) { document.getElementById('stat-new-comments').style.display = 'flex'; document.querySelector('#stat-new-comments .stat-number').innerText = stats.newComments; }
+            if(stats.newReplies > 0) { document.getElementById('stat-new-replies').style.display = 'flex'; document.querySelector('#stat-new-replies .stat-number').innerText = stats.newReplies; }
+        }
+
+        // Modals & Security
+        const nedrySound = new Audio('dennis_nedry_ahahah.mp3'); 
+        nedrySound.preload = 'auto';
+
+        function triggerNedry() {
+            const nedryBox = document.getElementById('nedry-security-box');
+            const nedryGif = document.getElementById('nedry-gif');
+            nedryGif.src = 'silentsaysno.gif'; 
+            nedryBox.classList.add('nedry-show');
+            
+            nedrySound.currentTime = 0;
+            let p1 = nedrySound.play();
+            if (p1 !== undefined) p1.catch(e => console.log(e));
+
+            setTimeout(() => {
+                nedrySound.currentTime = 0;
+                let p2 = nedrySound.play();
+                if (p2 !== undefined) p2.catch(e => console.log(e));
+            }, 5000);
+
+            setTimeout(() => nedryBox.classList.remove('nedry-show'), 10000);
+        }
+
+        document.getElementById('trigger-new-post').addEventListener('click', () => {
+            // Check for Professor Role
+            if (activeClearances.includes("Professor") || activeClearances.includes("Head Admin") || activeClearances.includes("Owner")) {
+                document.getElementById('new-post-modal').style.display = 'flex';
+            } else {
+                triggerNedry();
+            }
+        });
+
+        function closeModal() {
+            document.getElementById('new-post-modal').style.display = 'none';
+        }
+
+        document.querySelectorAll('.restricted-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const requiredRole = this.getAttribute('data-role');
+                if (!activeClearances.includes(requiredRole)) {
+                    e.preventDefault(); 
+                    triggerNedry();
+                }
+            });
+        });
+		// --- LOCAL AUDIO RELAY ENGINE (YOUTUBE API) ---
+        let ytPlayer;
+        let audioQueue = [];
+        let isPlaying = false;
+
+        // Load the IFrame Player API code asynchronously
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        window.onYouTubeIframeAPIReady = function() {
+            ytPlayer = new YT.Player('yt-player-container', {
+                height: '10', // Needs to be slightly larger than 0 to prevent browser blocking
+                width: '10',
+                videoId: '',
+                playerVars: { 'playsinline': 1, 'controls': 0, 'disablekb': 1 },
+                events: {
+                    'onReady': () => console.log("[AUDIO RELAY] Engine Online."),
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        };
+
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+                playNextInQueue();
+            } else if (event.data === YT.PlayerState.PLAYING) {
+                isPlaying = true;
+                document.getElementById('btn-play-pause').innerText = "PAUSE";
+                document.getElementById('current-track-label').innerText = "Status: Transmitting...";
+            } else if (event.data === YT.PlayerState.PAUSED) {
+                isPlaying = false;
+                document.getElementById('btn-play-pause').innerText = "PLAY";
+                document.getElementById('current-track-label').innerText = "Status: Paused";
+            }
+        }
+
+        function extractVideoID(url) {
+            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        document.getElementById('btn-add-queue').addEventListener('click', () => {
+            const input = document.getElementById('yt-link-input');
+            const vidId = extractVideoID(input.value);
+            
+            if (vidId) {
+                audioQueue.push(vidId);
+                input.value = '';
+                updateQueueUI();
+                
+                // Auto-play if nothing is currently playing
+                if (audioQueue.length === 1 && !isPlaying && ytPlayer && ytPlayer.loadVideoById) {
+                    playNextInQueue();
+                }
+            } else {
+                alert("Invalid YouTube Link detected. Please verify the URL.");
+            }
+        });
+
+        document.getElementById('btn-play-pause').addEventListener('click', () => {
+            if (!ytPlayer || !ytPlayer.playVideo) return;
+            if (isPlaying) {
+                ytPlayer.pauseVideo();
+            } else {
+                ytPlayer.playVideo();
+            }
+        });
+
+        document.getElementById('btn-skip').addEventListener('click', () => {
+            playNextInQueue();
+        });
+
+        function playNextInQueue() {
+            if (!ytPlayer || !ytPlayer.loadVideoById) return;
+            
+            if (audioQueue.length > 0) {
+                const nextVid = audioQueue.shift();
+                ytPlayer.loadVideoById(nextVid);
+                updateQueueUI();
+            } else {
+                ytPlayer.stopVideo();
+                isPlaying = false;
+                document.getElementById('btn-play-pause').innerText = "PLAY";
+                document.getElementById('current-track-label').innerText = "Status: Idle";
+            }
+        }
+
+        function updateQueueUI() {
+            const list = document.getElementById('audio-queue-list');
+            if(audioQueue.length === 0) {
+                list.innerHTML = "<li>Queue is empty.</li>";
+            } else {
+                list.innerHTML = audioQueue.map((id, index) => `<li>[${index + 1}] Track ID: ${id} <span style="color:#555;">(Queued)</span></li>`).join('');
+            }
+        }
+    </script>
+</body>
+</html>
