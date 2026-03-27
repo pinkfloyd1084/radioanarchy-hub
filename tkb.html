@@ -500,9 +500,7 @@
                 }
             });
         });
-		// --- LOCAL AUDIO RELAY ENGINE (YOUTUBE API) ---
-        const YT_API_KEY = "AIzaSyAcOk8VfqXosDZusVMioca-2pqo0qktRDw"; // <--- PASTE YOUR GOOGLE API KEY HERE
-        
+		// --- LOCAL AUDIO RELAY ENGINE (YOUTUBE API) ---        
         let ytPlayer;
         let audioQueue = [];
         let isPlaying = false;
@@ -547,8 +545,8 @@
             resultsContainer.style.display = 'block';
 
             try {
-                // Fetch top 5 results from YouTube
-                const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&key=${YT_API_KEY}&maxResults=5`);
+                // Fetch top 5 results securely through the Radio Anarchy Engine
+                const res = await fetch(`https://api.radioanarchy.gg:8202/api/youtube?q=${encodeURIComponent(query)}`);
                 const data = await res.json();
                 
                 if (data.items && data.items.length > 0) {
@@ -564,7 +562,7 @@
                 }
             } catch (err) {
                 console.error(err);
-                resultsContainer.innerHTML = '<div style="padding: 15px; color: #ff0055;">API Error. Check console or API Key.</div>';
+                resultsContainer.innerHTML = '<div style="padding: 15px; color: #ff0055;">Relay Error. Check engine connection.</div>';
             }
         });
 
