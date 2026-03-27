@@ -700,7 +700,7 @@
 		// ==========================================
         // FORUM & CHAT DATA ENGINE (WEBSOCKET EDITION)
         // ==========================================
-        const CURRENT_ROOM = 'tkb'; 
+        const CURRENT_ROOM = 'tkb'; // Change this string on other pages (e.g., 'modhub')
         
         let globalForumPosts = []; // Stores posts locally so we can sort them instantly
         let currentSortCol = 'date';
@@ -730,7 +730,7 @@
             });
             
             renderForumPosts(globalForumPosts); // Re-draw the table with the new order
-        } // Change this string on other pages (e.g., 'modhub')
+        }
 
        // --- 1. THE FORUM SYSTEM ---
         async function loadForumPosts() {
