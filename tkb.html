@@ -500,15 +500,17 @@
                 }
             });
         });
-		// --- LOCAL AUDIO RELAY ENGINE (YOUTUBE API) ---        
+		
+		// --- LOCAL AUDIO RELAY ENGINE (YOUTUBE SECURE RELAY) ---
         let ytPlayer;
         let audioQueue = [];
         let isPlaying = false;
 
-        const tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
+        // 1. Inject YouTube API
+        const ytScriptTag = document.createElement('script');
+        ytScriptTag.src = "https://www.youtube.com/iframe_api";
         const firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        firstScriptTag.parentNode.insertBefore(ytScriptTag, firstScriptTag);
 
         window.onYouTubeIframeAPIReady = function() {
             ytPlayer = new YT.Player('yt-player-container', {
@@ -535,8 +537,8 @@
             }
         }
 
-        // --- NEW SEARCH ENGINE LOGIC ---
-        document.getElementById('btn-search-yt').addEventListener('click', async () => {
+        // 2. Search Engine Logic (Hits your secure backend)
+        async function executeSearch() {
             const query = document.getElementById('yt-search-input').value;
             if (!query) return;
 
@@ -545,7 +547,6 @@
             resultsContainer.style.display = 'block';
 
             try {
-                // Fetch top 5 results securely through the Radio Anarchy Engine
                 const res = await fetch(`https://api.radioanarchy.gg:8202/api/youtube?q=${encodeURIComponent(query)}`);
                 const data = await res.json();
                 
@@ -564,16 +565,26 @@
                 console.error(err);
                 resultsContainer.innerHTML = '<div style="padding: 15px; color: #ff0055;">Relay Error. Check engine connection.</div>';
             }
+        }
+
+        // Click to search
+        document.getElementById('btn-search-yt').addEventListener('click', executeSearch);
+
+        // Hit Enter to search
+        document.getElementById('yt-search-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                executeSearch();
+            }
         });
 
-        // Hide search results if clicking somewhere else on the page
+        // Hide search results if clicking somewhere else
         document.addEventListener('click', (e) => {
             if (e.target.id !== 'yt-search-input' && e.target.id !== 'btn-search-yt' && !e.target.closest('#yt-search-results')) {
                 document.getElementById('yt-search-results').style.display = 'none';
             }
         });
 
-        // --- QUEUE MANAGEMENT ---
+        // 3. Queue Management
         window.addSongToQueue = function(vidId, title) {
             audioQueue.push({ id: vidId, title: title });
             document.getElementById('yt-search-results').style.display = 'none';
@@ -622,18 +633,20 @@
                 ).join('');
             }
         }
-		
-        // Load the IFrame Player API code asynchronously
-        const tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
+        });// --- LOCAL AUDIO RELAY ENGINE (YOUTUBE SECURE RELAY) ---
+        let ytPlayer;
+        let audioQueue = [];
+        let isPlaying = false;
+
+        // 1. Inject YouTube API
+        const ytScriptTag = document.createElement('script');
+        ytScriptTag.src = "https://www.youtube.com/iframe_api";
         const firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        firstScriptTag.parentNode.insertBefore(ytScriptTag, firstScriptTag);
 
         window.onYouTubeIframeAPIReady = function() {
             ytPlayer = new YT.Player('yt-player-container', {
-                height: '10', // Needs to be slightly larger than 0 to prevent browser blocking
-                width: '10',
-                videoId: '',
+                height: '10', width: '10', videoId: '',
                 playerVars: { 'playsinline': 1, 'controls': 0, 'disablekb': 1 },
                 events: {
                     'onReady': () => console.log("[AUDIO RELAY] Engine Online."),
@@ -656,37 +669,69 @@
             }
         }
 
-        function extractVideoID(url) {
-            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-            const match = url.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : null;
+        // 2. Search Engine Logic (Hits your secure backend)
+        async function executeSearch() {
+            const query = document.getElementById('yt-search-input').value;
+            if (!query) return;
+
+            const resultsContainer = document.getElementById('yt-search-results');
+            resultsContainer.innerHTML = '<div style="padding: 15px; color: #00ffcc; font-weight: bold;">Searching secure network...</div>';
+            resultsContainer.style.display = 'block';
+
+            try {
+                const res = await fetch(`https://api.radioanarchy.gg:8202/api/youtube?q=${encodeURIComponent(query)}`);
+                const data = await res.json();
+                
+                if (data.items && data.items.length > 0) {
+                    resultsContainer.innerHTML = data.items.map(item => `
+                        <div class="yt-result-item" style="padding: 12px 15px; border-bottom: 1px dashed #333; cursor: pointer; transition: all 0.2s;" 
+                             onclick="addSongToQueue('${item.id.videoId}', '${item.snippet.title.replace(/'/g, "\\'")}')">
+                            <span style="color: #fff; font-size: 0.95rem; font-weight: bold;">${item.snippet.title}</span><br>
+                            <span style="color: #888; font-size: 0.8rem;">Channel: ${item.snippet.channelTitle}</span>
+                        </div>
+                    `).join('');
+                } else {
+                    resultsContainer.innerHTML = '<div style="padding: 15px; color: #ff0055;">No transmissions found.</div>';
+                }
+            } catch (err) {
+                console.error(err);
+                resultsContainer.innerHTML = '<div style="padding: 15px; color: #ff0055;">Relay Error. Check engine connection.</div>';
+            }
         }
 
-        document.getElementById('btn-add-queue').addEventListener('click', () => {
-            const input = document.getElementById('yt-link-input');
-            const vidId = extractVideoID(input.value);
-            
-            if (vidId) {
-                audioQueue.push(vidId);
-                input.value = '';
-                updateQueueUI();
-                
-                // Auto-play if nothing is currently playing
-                if (audioQueue.length === 1 && !isPlaying && ytPlayer && ytPlayer.loadVideoById) {
-                    playNextInQueue();
-                }
-            } else {
-                alert("Invalid YouTube Link detected. Please verify the URL.");
+        // Click to search
+        document.getElementById('btn-search-yt').addEventListener('click', executeSearch);
+
+        // Hit Enter to search
+        document.getElementById('yt-search-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                executeSearch();
             }
         });
 
+        // Hide search results if clicking somewhere else
+        document.addEventListener('click', (e) => {
+            if (e.target.id !== 'yt-search-input' && e.target.id !== 'btn-search-yt' && !e.target.closest('#yt-search-results')) {
+                document.getElementById('yt-search-results').style.display = 'none';
+            }
+        });
+
+        // 3. Queue Management
+        window.addSongToQueue = function(vidId, title) {
+            audioQueue.push({ id: vidId, title: title });
+            document.getElementById('yt-search-results').style.display = 'none';
+            document.getElementById('yt-search-input').value = '';
+            updateQueueUI();
+            
+            if (audioQueue.length === 1 && !isPlaying && ytPlayer && ytPlayer.loadVideoById) {
+                playNextInQueue();
+            }
+        };
+
         document.getElementById('btn-play-pause').addEventListener('click', () => {
             if (!ytPlayer || !ytPlayer.playVideo) return;
-            if (isPlaying) {
-                ytPlayer.pauseVideo();
-            } else {
-                ytPlayer.playVideo();
-            }
+            if (isPlaying) ytPlayer.pauseVideo();
+            else ytPlayer.playVideo();
         });
 
         document.getElementById('btn-skip').addEventListener('click', () => {
@@ -698,7 +743,7 @@
             
             if (audioQueue.length > 0) {
                 const nextVid = audioQueue.shift();
-                ytPlayer.loadVideoById(nextVid);
+                ytPlayer.loadVideoById(nextVid.id);
                 updateQueueUI();
             } else {
                 ytPlayer.stopVideo();
@@ -713,7 +758,11 @@
             if(audioQueue.length === 0) {
                 list.innerHTML = "<li>Queue is empty.</li>";
             } else {
-                list.innerHTML = audioQueue.map((id, index) => `<li>[${index + 1}] Track ID: ${id} <span style="color:#555;">(Queued)</span></li>`).join('');
+                list.innerHTML = audioQueue.map((item, index) => 
+                    `<li style="margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        <span style="color: #ff0055;">[${index + 1}]</span> ${item.title} 
+                    </li>`
+                ).join('');
             }
         }
     </script>
