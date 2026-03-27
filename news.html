@@ -404,6 +404,7 @@
                             </div>
                         `;
                     });
+                    marketHTML += `<p style="font-size: 0.75rem; color: #555; text-align: right; margin-top: 15px; font-style: italic;">Market Data powered by Scryfall, YGOPRODeck, & Pokémon TCG API</p>`;
                     marketContainer.innerHTML = marketHTML;
                 }
             }).catch(err => console.error("Data fetch failed:", err));
