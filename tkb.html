@@ -70,8 +70,8 @@
         .btn-graphic { transition: transform 0.2s, filter 0.2s; cursor: pointer; }
         .btn-graphic:hover { transform: translateY(-3px); filter: drop-shadow(0 0 12px #00ffcc); }
         .btn-graphic-small { width: 140px; }
-		
-		/* --- HEADER LOGO STACK --- */
+        
+        /* --- HEADER LOGO STACK --- */
         .tkb-header-container {
             position: relative; 
             margin: 0 auto 40px auto; /* Pulled up to align with Profile/Nav */
@@ -377,7 +377,7 @@
             
             <div style="margin-top: 10px;">
                 <label style="color: #ff0055; font-size: 0.9rem; font-weight: bold; display: block; margin-bottom: 5px;">Or Upload .TXT File:</label>
-                <input type="file" accept=".txt" style="color: #fff; font-family: 'Courier New', monospace;">
+                <input type="file" id="post-file" accept=".txt" style="color: #fff; font-family: 'Courier New', monospace;">
             </div>
 
             <div style="text-align: right; margin-top: 15px;">
@@ -711,34 +711,62 @@
             }
         }
 
-        // Handle New Post Submission
+        // Handle New Post Submission (With FileReader Support)
         document.getElementById('btn-submit-post').addEventListener('click', async () => {
             const title = document.getElementById('post-title').value;
             const subject = document.getElementById('post-subject').value;
-            const content = document.getElementById('post-content').value;
+            const typedContent = document.getElementById('post-content').value;
             const author = document.getElementById('user-name').innerText || 'Unknown Agent';
+            const fileInput = document.getElementById('post-file');
 
-            if (!title || !content) {
-                alert("Title and Content are required to submit an archive.");
-                return;
-            }
-
-            try {
-                const res = await fetch(`https://api.radioanarchy.gg:8202/api/forum/${CURRENT_ROOM}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title, subject, content, author })
-                });
-
-                if (res.ok) {
-                    document.getElementById('post-title').value = '';
-                    document.getElementById('post-subject').value = '';
-                    document.getElementById('post-content').value = '';
-                    closeModal();
-                    loadForumPosts(); 
+            // The function that actually transmits to the backend
+            const transmitArchive = async (finalContent) => {
+                if (!title || !finalContent.trim()) {
+                    alert("Title and Content (or a .TXT file) are required to submit an archive.");
+                    return;
                 }
-            } catch (err) {
-                console.error("Post failed:", err);
+
+                try {
+                    const res = await fetch(`https://api.radioanarchy.gg:8202/api/forum/${CURRENT_ROOM}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ title, subject, content: finalContent, author })
+                    });
+
+                    if (res.ok) {
+                        // Clear all inputs on success
+                        document.getElementById('post-title').value = '';
+                        document.getElementById('post-subject').value = '';
+                        document.getElementById('post-content').value = '';
+                        if (fileInput) fileInput.value = ''; 
+                        closeModal();
+                        loadForumPosts(); 
+                    }
+                } catch (err) {
+                    console.error("Post failed:", err);
+                }
+            };
+
+            // Check if a secure file is attached
+            if (fileInput && fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const fileText = e.target.result;
+                    // If they typed a description AND attached a file, combine them neatly
+                    const finalContent = typedContent ? `${typedContent}\n\n--- Attached Document ---\n\n${fileText}` : fileText;
+                    transmitArchive(finalContent);
+                };
+                
+                reader.onerror = function() {
+                    alert("Failed to decrypt the secure file. Please try again.");
+                };
+                
+                reader.readAsText(file); // This tells the browser to crack it open!
+            } else {
+                // No file attached, just send the typed text
+                transmitArchive(typedContent);
             }
         });
 		
@@ -776,7 +804,7 @@
                 const res = await fetch(`https://api.radioanarchy.gg:8202/api/comments/${postId}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ author, content })
+                    JSON.stringify({ author, content, room_id: CURRENT_ROOM })
                 });
 
                 if (res.ok) {
@@ -853,10 +881,28 @@
         // Tune into the specific room frequency
         socket.emit('join_room', CURRENT_ROOM);
 
-        // Listen for the broadcast. When it hits, refresh the chat instantly!
+        // 1. Live Chat Updates
         socket.on('update_chat', () => {
-            console.log("[COMMS] Incoming transmission detected. Refreshing feed.");
             loadChat();
+        });
+
+        // 2. Live Post Updates
+        socket.on('update_posts', () => {
+            // Only refresh the forum board if the user DOES NOT have a post currently open.
+            // This prevents the screen from collapsing while they are trying to read or type a reply!
+            const anyExpanded = document.querySelector('.forum-expanded[style*="display: table-row"]');
+            if (!anyExpanded) {
+                loadForumPosts();
+            }
+        });
+
+        // 3. Live Comment Updates
+        socket.on('update_comments', (postId) => {
+            // Only refresh the comments if the user is actively looking at that exact post
+            const expandedRow = document.getElementById(`doc-${postId}`);
+            if (expandedRow && expandedRow.style.display === 'table-row') {
+                loadComments(postId);
+            }
         });
     </script>
 </body>
