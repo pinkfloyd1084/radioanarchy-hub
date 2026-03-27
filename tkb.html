@@ -433,9 +433,13 @@
 
                 document.getElementById('auth-nav').style.display = 'block';
 
-                // Simulate fetching user stats (Replace with real data in Step 3)
-                const mockStats = { posts: 12, comments: 45, newComments: 2, newReplies: 0 };
-                updateUserStats(mockStats);
+                // Fetch real user stats from the database
+                // Note: We hardcode 'tkb' here so it knows which room to check. Change this on other pages!
+                fetch(`https://api.radioanarchy.gg:8202/api/stats/tkb?author=${encodeURIComponent(data.displayUsername)}`)
+                    .then(res => res.json())
+                    .then(stats => updateUserStats(stats))
+                    .catch(err => console.error("Stats engine error:", err));
+
             }).catch(err => {
                 console.error("Auth check failed:", err);
                 window.location.href = 'index.html';
