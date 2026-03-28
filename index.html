@@ -270,11 +270,12 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
-            width: 130%; /* Makes the banner stretch past the button edges */
+            /* Adds the sharp 45 degree angle stamp effect */
+            transform: translate(-50%, -50%) rotate(-35deg) scale(1.15); 
+            width: 100%; 
             z-index: 10;
-            pointer-events: none; /* Allows the button underneath to still be hovered/clicked */
-            filter: drop-shadow(0 0 15px rgba(0, 255, 204, 0.6));
+            pointer-events: none; 
+            filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.8));
         }
 
         /* --- THE INFORMATION STATION --- */
@@ -685,13 +686,6 @@
         }
         #nedry-security-box.nedry-show { bottom: 40px; }
 
-        /* Hub Nav Dropdown Overrides for Nedry Interception */
-        .drop-link {
-            color: #fff; padding: 12px 20px; text-decoration: none; border-bottom: 1px dashed #333;
-            transition: all 0.2s ease; font-size: 0.95rem; font-weight: bold; display: block;
-        }
-        .drop-link:hover { background: rgba(0, 255, 204, 0.15); color: #00ffcc; padding-left: 25px; }
-
     </style>
 </head>
 <body>
@@ -752,37 +746,7 @@
             <div class="auth-box" id="logged-in-auth-section" style="display: none; justify-content: center;">
                 <div class="auth-group">
                     <span class="auth-label">Network Status: Connected</span>
-                    <div class="auth-wrapper">
-                        <div class="hub-nav-wrapper">
-                            <div class="nav-trigger-btn">HUB NAV ▼</div>
-                            <div class="dropdown-content">
-                                <div class="drop-header">HOME</div>
-                                <a href="index.html" class="drop-link">Home Terminal</a>
-                                <div class="drop-header" style="margin-top: 5px;">INFORMATION STATION</div>
-                                <a href="news.html" class="drop-link">News Station</a>
-                                <a href="games.html" class="drop-link">Games & Servers</a>
-                                <a href="store.html" class="drop-link">The Shoppe</a>
-                                <a href="discordroles.html" class="drop-link">Discord Roles</a>
-                                <div class="drop-header" style="margin-top: 5px;">COMMUNITY COLLEGE</div>
-                                <a href="tkb.html" class="drop-link restricted-link" data-role="Player">The Knowledge Base</a>
-                                <a href="modhub.html" class="drop-link restricted-link" data-role="Player">Mod Hub</a>
-                                <a href="video.html" class="drop-link restricted-link" data-role="Player">Video Tutorials</a>
-                                <a href="vault.html" class="drop-link restricted-link" data-role="Player">Retro Vault</a>
-                                <div class="drop-header" style="margin-top: 5px;">COMMUNITY HUB</div>
-                                <a href="comnet.html" class="drop-link restricted-link" data-role="Player">Community Network</a>
-                                <a href="combil.html" class="drop-link restricted-link" data-role="Player">Community Billboard</a>
-                                <a href="watch.html" class="drop-link restricted-link" data-role="Player">Stream Schedule</a>
-                                <div class="drop-header" style="margin-top: 5px;">THE LOUNGES</div>
-                                <a href="players.html" class="drop-link restricted-link" data-role="Player">Players Lounge</a>
-                                <a href="owners.html" class="drop-link restricted-link" data-role="Server Owner">Server Owners Lounge</a>
-                                <a href="create.html" class="drop-link restricted-link" data-role="Creator">Creators Lounge</a>
-                                <a href="mod.html" class="drop-link restricted-link" data-role="Modder">Modders Lounge</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="auth-group" style="margin-top: 15px;">
-                    <div class="auth-wrapper">
+                    <div class="auth-wrapper" style="margin-top: 15px;">
                         <a href="#" id="logout-trigger">
                             <img src="signout.png" alt="Sign Out" class="auth-btn-graphic">
                         </a>
