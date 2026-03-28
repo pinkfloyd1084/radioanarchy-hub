@@ -199,16 +199,6 @@
             filter: drop-shadow(0 0 20px rgba(255, 0, 85, 0.4));
         }
 
-        .coming-soon-img {
-            width: 250px; 
-            filter: drop-shadow(0 0 10px rgba(0, 255, 204, 0.4));
-            transition: transform 0.2s;
-        }
-
-        .coming-soon-img:hover {
-            transform: scale(1.05);
-        }
-
         /* Container for the rest of the page */
         .container {
             max-width: 1200px;
@@ -218,20 +208,6 @@
         }
 
         /* Advisory & Mission Statement */
-        .construction-warning {
-            border: 2px dashed #ff0055;
-            background: rgba(10, 10, 15, 0.85);
-            padding: 15px;
-            margin: 0 auto 20px auto;
-            max-width: 800px;
-            border-radius: 8px;
-            color: #ff0055;
-            font-size: 1.2rem;
-            font-weight: bold;
-            text-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
-            letter-spacing: 1px;
-        }
-
         .mission-statement {
             background: rgba(0, 0, 0, 0.7);
             border: 1px solid #00ffcc;
@@ -282,6 +258,23 @@
             transform: scale(0.95);
             filter: brightness(2) hue-rotate(90deg) drop-shadow(0 0 20px #fff);
             transition: all 0.1s;
+        }
+
+        /* COMING SOON OVERLAY STYLES */
+        .btn-wrapper-relative {
+            position: relative;
+            display: inline-block;
+        }
+
+        .coming-soon-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 130%; /* Makes the banner stretch past the button edges */
+            z-index: 10;
+            pointer-events: none; /* Allows the button underneath to still be hovered/clicked */
+            filter: drop-shadow(0 0 15px rgba(0, 255, 204, 0.6));
         }
 
         /* --- THE INFORMATION STATION --- */
@@ -681,6 +674,24 @@
             font-size: 0.85rem;
             line-height: 1.3;
         }
+
+        /* Nedry Pop-up */
+        #nedry-security-box {
+            position: fixed; bottom: -800px; left: 50%; transform: translateX(-50%);
+            background: rgba(15, 5, 10, 0.98); border: 3px solid #ff0055; border-radius: 12px;
+            padding: 30px; box-shadow: 0 0 50px rgba(255, 0, 85, 0.8); z-index: 30000;
+            text-align: center; transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 90%; max-width: 550px;
+        }
+        #nedry-security-box.nedry-show { bottom: 40px; }
+
+        /* Hub Nav Dropdown Overrides for Nedry Interception */
+        .drop-link {
+            color: #fff; padding: 12px 20px; text-decoration: none; border-bottom: 1px dashed #333;
+            transition: all 0.2s ease; font-size: 0.95rem; font-weight: bold; display: block;
+        }
+        .drop-link:hover { background: rgba(0, 255, 204, 0.15); color: #00ffcc; padding-left: 25px; }
+
     </style>
 </head>
 <body>
@@ -713,7 +724,6 @@
         <div class="command-col center-col">
             <div class="logo-container">
                 <img src="radioanarchylogo.png" alt="Radio Anarchy Logo" class="main-logo-top">
-                <img src="commingsoon.png" alt="Coming Soon" class="coming-soon-img">
             </div>
         </div>
 
@@ -743,6 +753,36 @@
                 <div class="auth-group">
                     <span class="auth-label">Network Status: Connected</span>
                     <div class="auth-wrapper">
+                        <div class="hub-nav-wrapper">
+                            <div class="nav-trigger-btn">HUB NAV ▼</div>
+                            <div class="dropdown-content">
+                                <div class="drop-header">HOME</div>
+                                <a href="index.html" class="drop-link">Home Terminal</a>
+                                <div class="drop-header" style="margin-top: 5px;">INFORMATION STATION</div>
+                                <a href="news.html" class="drop-link">News Station</a>
+                                <a href="games.html" class="drop-link">Games & Servers</a>
+                                <a href="store.html" class="drop-link">The Shoppe</a>
+                                <a href="discordroles.html" class="drop-link">Discord Roles</a>
+                                <div class="drop-header" style="margin-top: 5px;">COMMUNITY COLLEGE</div>
+                                <a href="tkb.html" class="drop-link restricted-link" data-role="Player">The Knowledge Base</a>
+                                <a href="modhub.html" class="drop-link restricted-link" data-role="Player">Mod Hub</a>
+                                <a href="video.html" class="drop-link restricted-link" data-role="Player">Video Tutorials</a>
+                                <a href="vault.html" class="drop-link restricted-link" data-role="Player">Retro Vault</a>
+                                <div class="drop-header" style="margin-top: 5px;">COMMUNITY HUB</div>
+                                <a href="comnet.html" class="drop-link restricted-link" data-role="Player">Community Network</a>
+                                <a href="combil.html" class="drop-link restricted-link" data-role="Player">Community Billboard</a>
+                                <a href="watch.html" class="drop-link restricted-link" data-role="Player">Stream Schedule</a>
+                                <div class="drop-header" style="margin-top: 5px;">THE LOUNGES</div>
+                                <a href="players.html" class="drop-link restricted-link" data-role="Player">Players Lounge</a>
+                                <a href="owners.html" class="drop-link restricted-link" data-role="Server Owner">Server Owners Lounge</a>
+                                <a href="create.html" class="drop-link restricted-link" data-role="Creator">Creators Lounge</a>
+                                <a href="mod.html" class="drop-link restricted-link" data-role="Modder">Modders Lounge</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="auth-group" style="margin-top: 15px;">
+                    <div class="auth-wrapper">
                         <a href="#" id="logout-trigger">
                             <img src="signout.png" alt="Sign Out" class="auth-btn-graphic">
                         </a>
@@ -755,10 +795,6 @@
     </div>
 
     <div class="container">
-        
-        <div class="construction-warning">
-            ⚠️ UNDER CONSTRUCTION: Many features and links are not working atm. ⚠️
-        </div>
 
         <div class="mission-statement">
             <p class="mission-highlight">TRANSMISSION INCOMING: OUR MISSION</p>
@@ -795,7 +831,10 @@
 
                 <div class="nav-wrapper with-logo">
                     <img src="storelogo.png" alt="Store Logo" class="behind-logo">
-                    <img src="store.png" alt="Store" class="btn-graphic">
+                    <a href="store.html" class="btn-wrapper-relative">
+                        <img src="store.png" alt="Store" class="btn-graphic">
+                        <img src="commingsoon.png" class="coming-soon-overlay" alt="Coming Soon">
+                    </a>
                     <div class="info-panel">Love your in-game attire? Bring it into the real world. Secure official apparel, server perks, and physical base flags at the Anarchy Shoppe.</div>
                 </div>
 
@@ -829,7 +868,7 @@
                 
                 <div class="nav-wrapper with-logo">
                     <img src="book.png" alt="Book" class="behind-logo col-book">
-					<a href="tkb.html">
+					<a href="tkb.html" class="restricted-link" data-role="Player">
 						<img src="theknowledgebase.png" alt="The Knowledge Base" class="btn-graphic">
                     </a>
 					<div class="info-panel">Courses and planned Guides on a plethora of subjects. Think of this as the Radio Anarchy server building library. Subjects include but are not limited to: How to start a server, Port forwarding 101, Admin training guide, DayZ Tools intro, and Blender for Dummies.</div>
@@ -837,7 +876,7 @@
 
                 <div class="nav-wrapper with-logo">
                     <img src="Githublogo.png" alt="GitHub" class="behind-logo col-git">
-                    <a href="modhub.html">
+                    <a href="modhub.html" class="restricted-link" data-role="Player">
 						<img src="modhub.png" alt="Mod Hub" class="btn-graphic">
                     </a>
 					<div class="info-panel">A list of do-it-yourself mod repositories.</div>
@@ -845,7 +884,7 @@
 
                 <div class="nav-wrapper with-logo">
                     <img src="youtubelogo.png" alt="YouTube" class="behind-logo wide-logo">
-                    <a href="video.html">
+                    <a href="video.html" class="restricted-link" data-role="Player">
 						<img src="videotutorials.png" alt="Video Tutorials" class="btn-graphic">
                     </a>
 					<div class="info-panel">A video bank of Pink and others walking you through many of the subjects in the knowledge base and the mod hub.</div>
@@ -853,8 +892,9 @@
 
                 <div class="nav-wrapper with-logo">
                     <img src="retroarchlogo.png" alt="RetroArch" class="behind-logo xl-logo">
-                    <a href="vault.html">
+                    <a href="vault.html" class="restricted-link btn-wrapper-relative" data-role="Player">
 						<img src="retrovault.png" alt="Retro Vault" class="btn-graphic">
+                        <img src="commingsoon.png" class="coming-soon-overlay" alt="Coming Soon">
                     </a>
 					<div class="info-panel">A list of online retro repositories for all your RetroArch needs. There is something for all the classic gamers here. Feel free to look up what you need. Don't be shy, there's plenty to go around.</div>
                 </div>
@@ -866,7 +906,7 @@
                 
                 <div class="nav-wrapper with-logo">
                     <img src="radioanarchylogo.png" alt="Radio Anarchy Mini" class="behind-logo main-mini">
-                    <a href="comnet.html">
+                    <a href="comnet.html" class="restricted-link" data-role="Player">
 						<img src="communitynetwork.png" alt="Community Network" class="btn-graphic">
                     </a>
 					<div class="info-panel">Discover allied servers and affiliated gaming networks.</div>
@@ -874,7 +914,7 @@
 
                 <div class="nav-wrapper with-logo">
                     <img src="communitybillboardlogo.png" alt="Billboard Logo" class="behind-logo col-bill">
-                    <a href="combil.html">
+                    <a href="combil.html" class="restricted-link" data-role="Player">
 						<img src="communitybillboard.png" alt="Community Billboard" class="btn-graphic">
                     </a>
 					<div class="info-panel">Check out member advertisements, looking-for-group posts, and community events.</div>
@@ -882,8 +922,9 @@
 
                 <div class="nav-wrapper with-logo">
                     <img src="streamschedulelogo.png" alt="Stream Logo" class="behind-logo col-stream">
-                    <a href="watch.html">
+                    <a href="watch.html" class="restricted-link btn-wrapper-relative" data-role="Player">
 						<img src="streamschedule.png" alt="Stream Schedule" class="btn-graphic">
+                        <img src="commingsoon.png" class="coming-soon-overlay" alt="Coming Soon">
                     </a>
 					<div class="info-panel">The Creator TV Guide. See who is live across the network right now.</div>
                 </div>
@@ -894,7 +935,7 @@
                 
                 <div class="nav-wrapper with-logo">
                     <img src="playersloungelogo.png" alt="Player Lounge Logo" class="behind-logo col-player-l">
-					<a href="players.html">
+					<a href="players.html" class="restricted-link" data-role="Player">
 						<img src="playerslounge.png" alt="Player Lounge" class="btn-graphic">
 					</a>
                     <div class="info-panel">The main hangout for all registered survivors and gamers.</div>
@@ -902,7 +943,7 @@
 
                 <div class="nav-wrapper with-logo">
                     <img src="serverownersloungelogo.png" alt="Server Owner Lounge Logo" class="behind-logo col-server-l">
-                    <a href="owners.html">
+                    <a href="owners.html" class="restricted-link" data-role="Server Owner">
 						<img src="serverownerslounge.png" alt="Server Owner Lounge" class="btn-graphic">
                     </a>
 					<div class="info-panel">A secured sector to discuss hosting, moderation, and community management.</div>
@@ -910,7 +951,7 @@
 
                 <div class="nav-wrapper with-logo">
                     <img src="creatorsloungelogo.png" alt="Creator Lounge Logo" class="behind-logo col-creator-l">
-                    <a href="create.html">
+                    <a href="create.html" class="restricted-link" data-role="Creator">
 						<img src="creatorslounge.png" alt="Creator Lounge" class="btn-graphic">
                     </a>
 					<div class="info-panel">Network with streamers, YouTubers, and digital artists.</div>
@@ -918,7 +959,7 @@
 
                 <div class="nav-wrapper with-logo">
                     <img src="moddersloungelogo.png" alt="Modders Lounge Logo" class="behind-logo col-modder-l">
-                    <a href="mod.html">
+                    <a href="mod.html" class="restricted-link" data-role="Modder">
 						<img src="modderlounge.png" alt="Modder Lounge" class="btn-graphic">
                     </a>
 					<div class="info-panel">The garage. Share scripts, troubleshoot code, and collaborate on mods.</div>
@@ -964,6 +1005,12 @@
             <p id="ra-notif-message">Message goes here.</p>
         </div>
     </div>
+
+    <div id="nedry-security-box">
+        <h2 style="color: #ff0055; margin-top: 0; font-size: 1.8rem; text-shadow: 0 0 10px #ff0055;">Ah ah ah! You didn't say the magic word...</h2>
+        <img id="nedry-gif" src="silentsaysno.gif" alt="Access Denied" style="width: 100%; max-width: 400px; border: 2px solid #00ffcc; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);">
+    </div>
+
     <div id="system-auth-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 5, 5, 0.95); z-index: 20000; flex-direction: column; justify-content: center; align-items: center; cursor: pointer;">
 		<img src="radioanarchylogo.png" style="width: 300px; margin-bottom: 40px; filter: drop-shadow(0 0 20px #ff0055);">
 		<div style="border: 2px solid #00ffcc; padding: 20px 40px; border-radius: 8px; box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);">
@@ -971,6 +1018,7 @@
 			<p style="color: #fff; margin-top: 15px; font-size: 0.9rem; letter-spacing: 2px;">CLICK TO SYNCHRONIZE SECURE FEED</p>
 		</div>
 	</div>
+
     <script>
         // --- MASTER NOTIFICATION FUNCTION (Dormant until you call it) ---
         function showNotification(title, message, gifName, audioName) {
@@ -1000,6 +1048,68 @@
                 notifBox.classList.remove('show-notif');
             }, 5000); 
         }
+
+        // --- NEDRY SECURITY PROTOCOL ---
+        const nedrySound = new Audio('dennis_nedry_ahahah.mp3'); 
+        nedrySound.preload = 'auto';
+
+        function triggerNedry() {
+            const nedryBox = document.getElementById('nedry-security-box');
+            const nedryGif = document.getElementById('nedry-gif');
+            nedryGif.src = 'silentsaysno.gif'; 
+            nedryBox.classList.add('nedry-show');
+            
+            nedrySound.currentTime = 0;
+            let p1 = nedrySound.play();
+            if (p1 !== undefined) p1.catch(e => console.log(e));
+
+            setTimeout(() => {
+                nedrySound.currentTime = 0;
+                let p2 = nedrySound.play();
+                if (p2 !== undefined) p2.catch(e => console.log(e));
+            }, 5000);
+
+            setTimeout(() => nedryBox.classList.remove('nedry-show'), 10000);
+        }
+
+        let activeClearances = [];
+        let isUserLoggedIn = false;
+
+        // --- SECURITY INTERCEPTOR ---
+        document.querySelectorAll('.restricted-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const requiredRole = this.getAttribute('data-role');
+                
+                // If they aren't even logged in, block immediately
+                if (!isUserLoggedIn) {
+                    e.preventDefault();
+                    triggerNedry();
+                    return;
+                }
+
+                // Give Master Keys to top staff so they never get locked out
+                let isAuthorized = activeClearances.includes("Admin") ||
+                                   activeClearances.includes("Head Admin") || 
+                                   activeClearances.includes("Owner");
+
+                // Check specific room clearances
+                if (!isAuthorized) {
+                    if (requiredRole === "Server Owner") {
+                        isAuthorized = activeClearances.includes("Server Owner") || activeClearances.includes("Cert. Game Admin");
+                    } else if (requiredRole === "Player") {
+                        isAuthorized = activeClearances.includes("Player");
+                    } else {
+                        isAuthorized = activeClearances.includes(requiredRole);
+                    }
+                }
+
+                // Trigger Nedry if they failed the checks
+                if (!isAuthorized) {
+                    e.preventDefault(); 
+                    triggerNedry();
+                }
+            });
+        });
 
         // --- PAGE INITIALIZATION ---
         window.addEventListener('DOMContentLoaded', () => {
@@ -1034,6 +1144,7 @@
             .then(res => res.json())
             .then(data => {
                 if (data.loggedIn) {
+                    isUserLoggedIn = true;
                     document.getElementById('guest-auth-section').style.display = 'none';
                     document.getElementById('logged-in-auth-section').style.display = 'flex';
                     
@@ -1046,6 +1157,8 @@
                     rolesContainer.innerHTML = ''; 
                     
                     if (data.roles && data.roles.length > 0) {
+                        activeClearances = data.roles.map(r => r.name);
+                        
                         const topRoles = data.roles.slice(0, 5);
                         topRoles.forEach(role => {
                             const badge = document.createElement('div');
