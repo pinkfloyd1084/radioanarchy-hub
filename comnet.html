@@ -121,36 +121,58 @@
             gap: 20px;
         }
 
-        /* Discord Specific Card */
+        /* DISCORD RICH EMBED STYLING (2 PER ROW) */
+        #discord-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Forces exactly 2 columns */
+            gap: 30px;
+        }
+
         .discord-card {
             background: #2b2d31; /* Discord Dark Theme Color */
-            border-radius: 8px;
-            padding: 20px;
+            border-radius: 12px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.7);
             transition: transform 0.2s;
             border: 1px solid #1e1f22;
+            overflow: hidden; /* Clips the banner image inside the rounded corners */
+            min-height: 280px;
+            position: relative;
         }
         .discord-card:hover { transform: translateY(-5px); border-color: #5865F2; }
         
-        .discord-header { display: flex; align-items: center; gap: 15px; }
-        .discord-icon { width: 50px; height: 50px; border-radius: 12px; object-fit: cover; background: #313338; }
-        .discord-info { display: flex; flex-direction: column; text-align: left; }
-        .discord-title { color: #f2f3f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: bold; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
-        .discord-counts { display: flex; gap: 15px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 0.85rem; color: #b5bac1; margin-top: 5px; }
-        .count-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; }
+        .discord-banner {
+            width: 100%;
+            height: 110px;
+            background: linear-gradient(45deg, #1e1f22, #313338);
+            object-fit: cover;
+            border-bottom: 2px solid #232428;
+        }
+        
+        .discord-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            gap: 15px;
+        }
+
+        .discord-header { display: flex; align-items: flex-start; gap: 15px; margin-top: -50px; }
+        .discord-icon { width: 80px; height: 80px; border-radius: 16px; object-fit: cover; background: #313338; border: 5px solid #2b2d31; }
+        .discord-info { display: flex; flex-direction: column; text-align: left; margin-top: 45px; }
+        
+        .discord-title { color: #f2f3f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: bold; font-size: 1.3rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px; }
+        .discord-channel { color: #b5bac1; font-size: 0.9rem; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-bottom: 5px; font-style: italic; }
+        
+        .discord-counts { display: flex; gap: 15px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 0.95rem; color: #b5bac1; font-weight: bold; }
+        .count-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
         .dot-online { background-color: #23a559; }
         .dot-offline { background-color: #80848e; }
-        .discord-desc { font-size: 0.85rem; color: #b5bac1; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        .discord-btn {
-            background: #248046; color: white; border: none; border-radius: 4px; padding: 10px; font-weight: bold;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; cursor: pointer; text-decoration: none; text-align: center; transition: background 0.2s;
-            margin-top: auto;
-        }
-        .discord-btn:hover { background: #1a6334; }
+        .discord-desc { font-size: 0.95rem; color: #dbdee1; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; flex-grow: 1; text-align: left; }
+        
+        .discord-btn-wrapper { text-align: right; margin-top: 10px; }
 
         /* General Social Card (YT/Twitch static fallback) */
         .social-card {
@@ -187,6 +209,7 @@
             .top-ui-row { flex-direction: column; align-items: center; gap: 30px; }
             .hub-nav-wrapper { text-align: center; }
             .dropdown-content { right: auto; left: 50%; transform: translateX(-50%); }
+            #discord-container { grid-template-columns: 1fr; } /* Stacks to 1 column on smaller screens */
         }
     </style>
 </head>
@@ -243,7 +266,7 @@
         
         <div class="terminal-box">
             <h2 class="box-title">PARTNERED FREQUENCIES (DISCORD)</h2>
-            <div id="discord-container" class="card-container">
+            <div id="discord-container">
                 <span style="color: #888;">Establishing connection to Discord API...</span>
             </div>
         </div>
@@ -368,7 +391,7 @@
         // SOCIAL NETWORK DATA ENGINE
         // ==========================================
 
-        // 1. DISCORD API FETCH ENGINE
+        // 1. DISCORD API FETCH ENGINE (RICH EMBEDS)
         const discordCodes = [
             'AJESWXrzft', 'B6V6TJkcGg', '9AV7U4t8Xf', 'aUJBBy2NJQ', 
             '8kdKbZJ6vs', 'kzXCBTVJ5', 'ANupXuMHPy', 'xTcExErQdB'
@@ -386,29 +409,48 @@
                     
                     const data = await res.json();
                     
-                    // Build the Icon URL. If no custom icon, fallback to a default grey Discord logo
+                    // Build the Icon URL.
                     const iconUrl = data.guild.icon 
                         ? `https://cdn.discordapp.com/icons/${data.guild.id}/${data.guild.icon}.png`
                         : 'https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/636e0a6ca814282eca7172c6_icon_clyde_white_RGB.svg';
 
-                    // Use explicit description or generic fallback
+                    // Build the Splash/Banner URL. If none exists, draw a cyberpunk gradient.
+                    let bannerHtml = '';
+                    if (data.guild.splash) {
+                        bannerHtml = `<img src="https://cdn.discordapp.com/splashes/${data.guild.id}/${data.guild.splash}.jpg?size=600" class="discord-banner" alt="Server Banner">`;
+                    } else if (data.guild.banner) {
+                        bannerHtml = `<img src="https://cdn.discordapp.com/banners/${data.guild.id}/${data.guild.banner}.jpg?size=600" class="discord-banner" alt="Server Banner">`;
+                    } else {
+                        bannerHtml = `<div class="discord-banner" style="background: linear-gradient(45deg, #1e1f22, rgba(255, 0, 85, 0.15));"></div>`;
+                    }
+
+                    // Get specific channel name if available
+                    const channelName = data.channel ? `Invited to #${data.channel.name}` : 'Server Invite';
                     const description = data.guild.description || "A verified Radio Anarchy community partner.";
 
-                    // Create the Discord widget HTML
+                    // Create the rich Discord widget HTML
                     const widgetHtml = `
                         <div class="discord-card">
-                            <div class="discord-header">
-                                <img src="${iconUrl}" class="discord-icon" alt="Server Icon">
-                                <div class="discord-info">
-                                    <div class="discord-title">${data.guild.name}</div>
-                                    <div class="discord-counts">
-                                        <span><span class="count-dot dot-online"></span>${data.approximate_presence_count} Online</span>
-                                        <span><span class="count-dot dot-offline"></span>${data.approximate_member_count} Members</span>
+                            ${bannerHtml}
+                            <div class="discord-content">
+                                <div class="discord-header">
+                                    <img src="${iconUrl}" class="discord-icon" alt="Server Icon">
+                                    <div class="discord-info">
+                                        <div class="discord-title">${data.guild.name}</div>
+                                        <div class="discord-channel">${channelName}</div>
+                                        <div class="discord-counts">
+                                            <span><span class="count-dot dot-online"></span>${data.approximate_presence_count} Online</span>
+                                            <span><span class="count-dot dot-offline"></span>${data.approximate_member_count} Members</span>
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="discord-desc">${description}</div>
+                                <div class="discord-btn-wrapper">
+                                    <a href="https://discord.gg/${code}" target="_blank">
+                                        <img src="joinserver.png" alt="Join Server" class="btn-graphic btn-graphic-small">
+                                    </a>
+                                </div>
                             </div>
-                            <div class="discord-desc">${description}</div>
-                            <a href="https://discord.gg/${code}" target="_blank" class="discord-btn">Join Server</a>
                         </div>
                     `;
                     container.insertAdjacentHTML('beforeend', widgetHtml);
