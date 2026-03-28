@@ -143,14 +143,16 @@
         .count-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; }
         .dot-online { background-color: #23a559; }
         .dot-offline { background-color: #80848e; }
+        .discord-desc { font-size: 0.85rem; color: #b5bac1; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
         .discord-btn {
             background: #248046; color: white; border: none; border-radius: 4px; padding: 10px; font-weight: bold;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; cursor: pointer; text-decoration: none; text-align: center; transition: background 0.2s;
+            margin-top: auto;
         }
         .discord-btn:hover { background: #1a6334; }
 
-        /* General Social Card (YT/Twitch) */
+        /* General Social Card (YT/Twitch static fallback) */
         .social-card {
             background: #0a0a0a; border: 1px solid #333; border-radius: 8px;
             padding: 20px; display: flex; align-items: center; gap: 20px;
@@ -159,6 +161,17 @@
         .social-card:hover { border-color: #00ffcc; background: rgba(0, 255, 204, 0.05); box-shadow: 0 0 15px rgba(0,255,204,0.2); transform: translateY(-3px); }
         .social-logo { width: 50px; height: 50px; object-fit: contain; }
         .social-name { font-size: 1.2rem; font-weight: bold; letter-spacing: 1px; }
+
+        /* Dynamic YouTube Video Card */
+        .yt-dynamic-card {
+            background: #0a0a0a; border: 1px solid #333; border-radius: 8px;
+            display: flex; flex-direction: column; overflow: hidden;
+            transition: all 0.2s; text-decoration: none; color: #fff;
+        }
+        .yt-dynamic-card:hover { border-color: #ff0055; transform: translateY(-3px); box-shadow: 0 0 15px rgba(255,0,85,0.2); }
+        .yt-thumb { width: 100%; height: 160px; object-fit: cover; border-bottom: 2px solid #ff0055; }
+        .yt-info { padding: 15px; text-align: left; }
+        .yt-title { font-size: 0.9rem; color: #bbb; margin-top: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
         /* Nedry Pop-up */
         #nedry-security-box {
@@ -222,7 +235,7 @@
     </div>
 
     <div class="tkb-header-container">
-        <img src="communitynetworklogo.png" alt="Network Icon" class="behind-logo">
+        <img src="radioanarchylogo.png" alt="Radio Anarchy" class="behind-logo">
         <img src="communitynetwork.png" alt="Community Network" class="main-logo">
     </div>
 
@@ -238,7 +251,8 @@
         <div class="terminal-box">
             <h2 class="box-title">CONTENT CREATORS (YOUTUBE)</h2>
             <div id="youtube-container" class="card-container">
-                </div>
+                <span style="color: #888;">Establishing connection to YouTube Relays...</span>
+            </div>
         </div>
 
         <div class="terminal-box">
@@ -377,6 +391,9 @@
                         ? `https://cdn.discordapp.com/icons/${data.guild.id}/${data.guild.icon}.png`
                         : 'https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/636e0a6ca814282eca7172c6_icon_clyde_white_RGB.svg';
 
+                    // Use explicit description or generic fallback
+                    const description = data.guild.description || "A verified Radio Anarchy community partner.";
+
                     // Create the Discord widget HTML
                     const widgetHtml = `
                         <div class="discord-card">
@@ -390,6 +407,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="discord-desc">${description}</div>
                             <a href="https://discord.gg/${code}" target="_blank" class="discord-btn">Join Server</a>
                         </div>
                     `;
@@ -404,24 +422,56 @@
             }
         }
 
-        // 2. YOUTUBE STATIC GENERATOR
+        // 2. YOUTUBE DYNAMIC ENGINE
         const youtubeChannels = [
-            { handle: '@radioanarchygg', name: 'Radio Anarchy GG' },
-            { handle: '@theflakykakes', name: 'The Flaky Kakes' },
-            { handle: '@TheOfficialTotalVeg', name: 'The Official Total Veg' }
+            { handle: '@radioanarchygg', name: 'Radio Anarchy GG', fallbackUrl: 'https://www.youtube.com/@radioanarchygg' },
+            { handle: '@theflakykakes', name: 'The Flaky Kakes', fallbackUrl: 'https://www.youtube.com/@theflakykakes' },
+            { handle: '@TheOfficialTotalVeg', name: 'The Official Total Veg', fallbackUrl: 'https://www.youtube.com/@TheOfficialTotalVeg' }
         ];
 
-        function loadYouTubeChannels() {
+        async function loadYouTubeChannels() {
             const container = document.getElementById('youtube-container');
-            youtubeChannels.forEach(yt => {
-                const card = `
-                    <a href="https://www.youtube.com/${yt.handle}" target="_blank" class="social-card">
-                        <img src="youtubelogo.png" class="social-logo" alt="YouTube">
-                        <div class="social-name">${yt.name}</div>
-                    </a>
-                `;
-                container.insertAdjacentHTML('beforeend', card);
-            });
+            container.innerHTML = '';
+
+            for (const yt of youtubeChannels) {
+                try {
+                    // Pings your secure backend to pull the latest public video for the handle
+                    const res = await fetch(`https://api.radioanarchy.gg:8202/api/youtube?q=${encodeURIComponent(yt.handle)}`);
+                    if (!res.ok) throw new Error("API Offline");
+                    
+                    const data = await res.json();
+                    
+                    if (data.items && data.items.length > 0) {
+                        const item = data.items[0]; // Grabs their latest relevant transmission
+                        const title = item.snippet.title;
+                        const thumb = item.snippet.thumbnails?.medium?.url || item.snippet.thumbnails?.default?.url || 'youtubelogo.png';
+                        const link = item.id.videoId ? `https://www.youtube.com/watch?v=${item.id.videoId}` : yt.fallbackUrl;
+
+                        const card = `
+                            <a href="${link}" target="_blank" class="yt-dynamic-card">
+                                <img src="${thumb}" class="yt-thumb" alt="Thumbnail">
+                                <div class="yt-info">
+                                    <div class="social-name" style="color:#ff0055; font-size:1.1rem;">${yt.name}</div>
+                                    <div class="yt-title">${title}</div>
+                                </div>
+                            </a>
+                        `;
+                        container.insertAdjacentHTML('beforeend', card);
+                    } else {
+                        throw new Error("No transmissions found.");
+                    }
+                } catch (err) {
+                    // FAIL-SAFE: If YouTube API glitches, draw the standard backup button so the page doesn't break
+                    console.error(`YouTube fetch failed for ${yt.handle}. Engaging fallback.`);
+                    const card = `
+                        <a href="${yt.fallbackUrl}" target="_blank" class="social-card">
+                            <img src="youtubelogo.png" class="social-logo" alt="YouTube">
+                            <div class="social-name">${yt.name}</div>
+                        </a>
+                    `;
+                    container.insertAdjacentHTML('beforeend', card);
+                }
+            }
         }
 
         // 3. TWITCH STATIC GENERATOR
