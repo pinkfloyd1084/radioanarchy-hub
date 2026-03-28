@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radio Anarchy | Community Billboard</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        /* Base and Parallax Background */
+        body {
+            margin: 0; padding: 0;
+            background: #050505 url('RadioAnarchyBackground.png') no-repeat center top fixed;
+            background-size: cover; color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center; overflow-x: hidden;
+            opacity: 0; /* START INVISIBLE FOR SECURITY */
+            transition: opacity 0.4s ease-in;
+        }
+
+        .top-banner {
+            width: 100%; display: block; background: #000; 
+            position: relative; z-index: 10; border-bottom: 2px solid #ff0055;
+        }
+
+        /* --- TOP UI BAR (Profile & Nav) --- */
+        .top-ui-row {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            width: 95%; max-width: 1600px; margin: 30px auto 30px auto;
+        }
+
+        #user-profile-box {
+            background: rgba(15, 5, 10, 0.85); border: 2px solid #00ffcc; border-radius: 12px;
+            padding: 20px; box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+            display: flex; flex-direction: column; gap: 15px; width: 320px; box-sizing: border-box;
+        }
+        .profile-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        #user-name { color: #fff; font-size: 1.3rem; font-weight: bold; text-shadow: 0 0 8px #fff; text-align: left; }
+        #user-avatar { width: 65px; height: 65px; border-radius: 50%; border: 2px solid #ff0055; object-fit: cover; }
+        #user-roles-container { display: flex; flex-direction: column; gap: 6px; text-align: left; margin-bottom: 5px; }
+        .role-badge {
+            font-size: 0.85rem; font-weight: bold; background: rgba(0, 0, 0, 0.6);
+            padding: 5px 10px; border-radius: 4px; border-left: 4px solid #00ffcc; 
+            color: #ddd; text-shadow: 0 0 5px rgba(255,255,255,0.3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        /* Hub Nav Dropdown */
+        .hub-nav-wrapper { position: relative; display: inline-block; text-align: right; }
+        .nav-trigger-btn {
+            background: rgba(15, 5, 10, 0.9); border: 2px solid #ff0055; color: #ff0055;
+            padding: 15px 30px; font-size: 1.2rem; font-weight: bold; letter-spacing: 2px;
+            border-radius: 8px; cursor: pointer; text-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.2); transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+        .nav-trigger-btn:hover { background: #ff0055; color: #000; box-shadow: 0 0 25px #ff0055; }
+        
+        .dropdown-content {
+            display: none; position: absolute; right: 0; top: 110%;
+            background: rgba(5, 5, 8, 0.98); border: 2px solid #00ffcc; border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.9), 0 0 20px rgba(0, 255, 204, 0.3);
+            min-width: 280px; z-index: 1000; text-align: left; overflow: hidden;
+        }
+        .hub-nav-wrapper:hover .dropdown-content { display: flex; flex-direction: column; }
+        
+        .drop-link {
+            color: #fff; padding: 12px 20px; text-decoration: none; border-bottom: 1px dashed #333;
+            transition: all 0.2s ease; font-size: 0.95rem; font-weight: bold;
+        }
+        .drop-link:hover { background: rgba(0, 255, 204, 0.15); color: #00ffcc; padding-left: 25px; }
+        .drop-header { background: #00ffcc; color: #000; padding: 8px 20px; font-size: 0.8rem; font-weight: bold; letter-spacing: 2px; }
+
+        .btn-graphic { transition: transform 0.2s, filter 0.2s; cursor: pointer; }
+        .btn-graphic:hover { transform: translateY(-3px); filter: drop-shadow(0 0 12px #00ffcc); }
+        .btn-graphic-small { width: 140px; }
+        
+        /* --- HEADER LOGO STACK --- */
+        .tkb-header-container {
+            position: relative; 
+            margin: 0 auto 40px auto; 
+            width: 100%; max-width: 600px;
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; align-items: center;
+        }
+        .behind-logo {
+            width: 180px; 
+            position: relative; 
+            z-index: 2; 
+            filter: drop-shadow(0 0 10px rgba(0, 255, 204, 0.4));
+            margin-bottom: -20px; 
+        }
+        .main-logo {
+            width: 250px; 
+            position: relative; z-index: 1;
+            filter: drop-shadow(0 0 20px #ff0055);
+        }
+
+        /* --- THE GRID LAYOUT --- */
+        .tkb-grid {
+            display: grid; 
+            grid-template-columns: 2fr 1fr; 
+            gap: 30px;
+            width: 90%; max-width: 1600px; margin: 0 auto 60px auto;
+        }
+
+        .terminal-box {
+            background: rgba(15, 5, 10, 0.85); border: 2px solid #ff0055; border-radius: 12px;
+            padding: 25px; box-shadow: 0 0 20px rgba(255, 0, 85, 0.15); text-align: left;
+            display: flex; flex-direction: column;
+        }
+        
+        .box-title {
+            color: #00ffcc; font-size: 1.4rem; letter-spacing: 2px; text-shadow: 0 0 10px #00ffcc;
+            border-bottom: 1px dashed #555; padding-bottom: 10px; margin-top: 0; margin-bottom: 20px;
+        }
+
+        /* Box 1: The Forum */
+        .box-1 { grid-column: 1 / 2; }
+        .forum-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .search-bar { background: #000; border: 1px solid #00ffcc; color: #fff; padding: 10px; width: 300px; border-radius: 4px; font-family: 'Courier New', monospace; }
+        
+        .forum-table { width: 100%; border-collapse: collapse; }
+        .forum-table th { background: rgba(255, 0, 85, 0.2); color: #ff0055; padding: 12px; text-align: left; cursor: pointer; border-bottom: 2px solid #ff0055; }
+        .forum-table th:hover { background: rgba(255, 0, 85, 0.4); }
+        .forum-table td { padding: 12px; border-bottom: 1px solid #333; cursor: pointer; }
+        .forum-row:hover { background: rgba(0, 255, 204, 0.1); }
+        
+        .forum-expanded { display: none; background: #0a0a0a; padding: 20px; border-bottom: 2px solid #00ffcc; }
+        .document-text { color: #bbb; line-height: 1.6; margin-bottom: 20px; white-space: pre-wrap; }
+        .comment-section { border-top: 1px dashed #555; padding-top: 15px; }
+        .comment-box { width: 100%; box-sizing: border-box; background: #000; border: 1px solid #333; color: #fff; padding: 10px; margin-bottom: 10px; font-family: 'Courier New', monospace; resize: vertical; }
+        .reply-area { display: flex; justify-content: flex-end; }
+        
+        .new-post-container { display: flex; justify-content: flex-end; align-items: center; margin-top: 20px; gap: 15px; }
+        
+        /* Box 2: Live Chat */
+        .box-2 { grid-column: 2 / 3; display: flex; flex-direction: column; height: 600px; }
+        .chat-header { display: flex; justify-content: space-between; align-items: center; color: #888; font-size: 0.9rem; margin-bottom: 10px; }
+        .chat-window { flex-grow: 1; background: #000; border: 1px solid #333; border-radius: 4px; padding: 15px; overflow-y: auto; margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .chat-message { font-size: 0.95rem; }
+        .chat-user { color: #00ffcc; font-weight: bold; }
+        .chat-input-area { display: flex; gap: 10px; }
+        .chat-input { 
+            flex-grow: 1; background: #000; border: 1px solid #00ffcc; color: #fff; 
+            padding: 5px 10px; 
+            border-radius: 4px; font-family: 'Courier New', monospace; 
+            height: 22px; 
+        }
+        /* Box 3: Thin Stat Bar */
+        .box-3 { 
+            grid-column: 1 / 3; 
+            display: flex; 
+            flex-direction: row; 
+            justify-content: space-around; 
+            align-items: center;
+            padding: 15px 25px;
+        }
+        .stat-item { 
+            display: none; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 5px; 
+        }
+        .stat-number { color: #00ffcc; font-size: 1.8rem; font-weight: bold; text-shadow: 0 0 10px #00ffcc; }
+        .stat-label { color: #ff0055; font-size: 0.8rem; font-weight: bold; letter-spacing: 1px; }
+
+        /* --- MODALS --- */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 20000; justify-content: center; align-items: center;
+        }
+        .post-modal {
+            background: rgba(15, 5, 10, 0.98); border: 2px solid #00ffcc; border-radius: 12px;
+            padding: 30px; box-shadow: 0 0 50px rgba(0, 255, 204, 0.4);
+            width: 90%; max-width: 600px; text-align: left;
+            display: flex; flex-direction: column; gap: 15px;
+        }
+        .modal-input { background: #000; border: 1px solid #333; color: #fff; padding: 10px; font-family: 'Courier New', monospace; width: 100%; box-sizing: border-box; }
+        .modal-close { align-self: flex-end; color: #ff0055; cursor: pointer; font-weight: bold; font-size: 1.2rem; }
+        .modal-close:hover { text-shadow: 0 0 10px #ff0055; }
+
+        /* Nedry Pop-up */
+        #nedry-security-box {
+            position: fixed; bottom: -800px; left: 50%; transform: translateX(-50%);
+            background: rgba(15, 5, 10, 0.98); border: 3px solid #ff0055; border-radius: 12px;
+            padding: 30px; box-shadow: 0 0 50px rgba(255, 0, 85, 0.8); z-index: 30000;
+            text-align: center; transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 90%; max-width: 550px;
+        }
+        #nedry-security-box.nedry-show { bottom: 40px; }
+
+        @media (max-width: 1100px) {
+            .tkb-grid { grid-template-columns: 1fr; }
+            .box-1, .box-2, .box-3 { grid-column: 1 / 2; }
+            .top-ui-row { flex-direction: column; align-items: center; gap: 30px; }
+            .hub-nav-wrapper { text-align: center; }
+            .dropdown-content { right: auto; left: 50%; transform: translateX(-50%); }
+            .forum-controls { flex-direction: column; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <img src="RadioAnarchyBanner.png" class="top-banner" alt="Banner">
+
+    <div class="top-ui-row">
+        <div id="user-profile-box" style="display: none;">
+            <div class="profile-header">
+                <span id="user-name"></span>
+                <img id="user-avatar" src="default-avatar.png" alt="Avatar">
+            </div>
+            <div id="user-roles-container"></div>
+            <a href="profile.html"><img src="playerprofile.png" alt="Profile" class="btn-graphic btn-graphic-small" style="margin-top: 10px;"></a>
+        </div>
+        <div id="nav-spacer"></div>
+        <div class="hub-nav-wrapper">
+            <div id="auth-nav" style="display: none;">
+                <div class="nav-trigger-btn">HUB NAV ▼</div>
+                <div class="dropdown-content">
+                    <div class="drop-header">HOME</div>
+                    <a href="index.html" class="drop-link">Home Terminal</a>
+                    <div class="drop-header" style="margin-top: 5px;">INFORMATION STATION</div>
+                    <a href="news.html" class="drop-link">News Station</a>
+                    <a href="games.html" class="drop-link">Games & Servers</a>
+                    <a href="store.html" class="drop-link">The Shoppe</a>
+                    <a href="discordroles.html" class="drop-link">Discord Roles</a>
+                    <div class="drop-header" style="margin-top: 5px;">COMMUNITY COLLEGE</div>
+                    <a href="tkb.html" class="drop-link">The Knowledge Base</a>
+                    <a href="modhub.html" class="drop-link">Mod Hub</a>
+                    <a href="video.html" class="drop-link">Video Tutorials</a>
+                    <a href="vault.html" class="drop-link">Retro Vault</a>
+                    <div class="drop-header" style="margin-top: 5px;">COMMUNITY HUB</div>
+                    <a href="comnet.html" class="drop-link">Community Network</a>
+                    <a href="combil.html" class="drop-link">Community Billboard</a>
+                    <a href="watch.html" class="drop-link">Stream Schedule</a>
+                    <div class="drop-header" style="margin-top: 5px;">THE LOUNGES</div>
+                    <a href="players.html" class="drop-link">Players Lounge</a>
+                    <a href="owners.html" class="drop-link restricted-link" data-role="Server Owner">Server Owners Lounge</a>
+                    <a href="create.html" class="drop-link restricted-link" data-role="Creator">Creators Lounge</a>
+                    <a href="mod.html" class="drop-link restricted-link" data-role="Modder">Modders Lounge</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tkb-header-container">
+        <img src="communitybillboardlogo.png" alt="Billboard Icon" class="behind-logo">
+        <img src="communitybillboard.png" alt="Community Billboard" class="main-logo">
+    </div>
+
+    <div class="tkb-grid">
+        
+        <div class="terminal-box box-1">
+            <h2 class="box-title">ARCHIVES & RELEASES</h2>
+            
+            <div class="forum-controls">
+                <input type="text" class="search-bar" placeholder="Search keywords...">
+            </div>
+
+            <table class="forum-table">
+                <thead>
+                    <tr>
+                        <th onclick="sortPosts('id')"># ↕</th>
+                        <th onclick="sortPosts('title')">Title ↕</th>
+                        <th onclick="sortPosts('author')">Author ↕</th>
+                        <th onclick="sortPosts('date')">Date ↕</th>
+                    </tr>
+                </thead>
+                <tbody id="forum-body">
+                    </tbody>
+            </table>
+
+            <div class="new-post-container">
+                <span style="color: #888; font-size: 0.9rem; font-weight: bold;">Make a new post:</span>
+                <img src="newspost.png" alt="New Post" class="btn-graphic btn-graphic-small" id="trigger-new-post">
+            </div>
+        </div>
+
+        <div class="terminal-box box-2">
+            <h2 class="box-title">LIVE COMMS</h2>
+            <div class="chat-header">
+                <span>Community Billboard Chat</span>
+                <span style="color: #00ffcc;">Users Online: <span id="chat-user-count">1</span></span>
+            </div>
+            <div class="chat-window" id="chat-window">
+                <div class="chat-message"><span class="chat-user">System:</span> Welcome to the live comms channel.</div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-msg-input" class="chat-input" maxlength="250" placeholder="Transmit message...">
+                <img src="reply.png" alt="Send" class="btn-graphic btn-graphic-small" id="btn-send-chat">
+            </div>
+        </div>
+
+        <div class="terminal-box box-3" id="user-stats-bar">
+            <div class="stat-item" id="stat-posts">
+                <span class="stat-number">0</span>
+                <span class="stat-label">YOUR POSTS</span>
+            </div>
+            <div class="stat-item" id="stat-comments">
+                <span class="stat-number">0</span>
+                <span class="stat-label">YOUR COMMENTS</span>
+            </div>
+            <div class="stat-item" id="stat-new-comments">
+                <span class="stat-number" style="color:#ff0055;">0</span>
+                <span class="stat-label">NEW COMMENTS</span>
+            </div>
+            <div class="stat-item" id="stat-new-replies">
+                <span class="stat-number" style="color:#ff0055;">0</span>
+                <span class="stat-label">NEW REPLIES</span>
+            </div>
+        </div>
+        
+        <div class="terminal-box box-4" style="grid-column: 1 / 3; display: flex; flex-direction: column; gap: 15px; position: relative;">
+            <img src="youtubelogo.png" alt="YouTube" style="position: absolute; top: 20px; right: 25px; height: 35px; filter: drop-shadow(0 0 5px #ff0055);">
+            <h2 class="box-title" style="margin-bottom: 5px; width: 80%;">JUKEBOX</h2>
+            <p style="color: #888; font-size: 0.9rem; margin-top: 0;">Search the network for an audio track to add to your local queue.</p>
+            
+            <div style="display: flex; flex-direction: column; position: relative;">
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <input type="text" id="yt-search-input" class="search-bar" placeholder="Search for a song..." style="flex-grow: 1;">
+                    <img src="submit.png" alt="Search" class="btn-graphic btn-graphic-small" id="btn-search-yt">
+                </div>
+                
+                <div id="yt-search-results" style="display: none; position: absolute; top: 100%; left: 0; width: calc(100% - 155px); background: rgba(5, 5, 8, 0.98); border: 2px solid #00ffcc; border-radius: 4px; z-index: 100; max-height: 250px; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.9);">
+                    </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; background: #000; border: 1px solid #333; padding: 15px; border-radius: 8px;">
+                <div id="yt-player-container" style="position: absolute; width: 0; height: 0; overflow: hidden;"></div>
+                
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <div class="nav-trigger-btn" id="btn-play-pause" style="padding: 10px 20px; font-size: 1rem;">PLAY</div>
+                    <div class="nav-trigger-btn" id="btn-skip" style="padding: 10px 20px; font-size: 1rem;">SKIP</div>
+                    <span id="current-track-label" style="color: #00ffcc; font-weight: bold; margin-left: 15px;">Status: Idle</span>
+                </div>
+
+                <div style="width: 40%; border-left: 1px dashed #555; padding-left: 15px;">
+                    <h4 style="color: #ff0055; margin: 0 0 10px 0; font-size: 0.9rem;">CURRENT QUEUE</h4>
+                    <ul id="audio-queue-list" style="list-style: none; padding: 0; margin: 0; color: #bbb; font-size: 0.85rem; text-align: left; max-height: 80px; overflow-y: auto;">
+                        <li>Queue is empty.</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <style>
+                .yt-result-item:hover { background: rgba(0, 255, 204, 0.15); border-left: 3px solid #00ffcc; }
+            </style>
+        </div>
+    
+    </div>
+
+    <div class="modal-overlay" id="new-post-modal">
+        <div class="post-modal">
+            <div class="modal-close" onclick="closeModal()">[X] CLOSE</div>
+            <h2 style="color: #00ffcc; margin-top: 0; border-bottom: 1px dashed #555; padding-bottom: 10px;">SUBMIT NEW ARCHIVE</h2>
+            
+            <input type="text" id="post-title" class="modal-input" placeholder="Title">
+            <textarea id="post-content" class="modal-input" rows="8" placeholder="Enter document text manually..."></textarea>
+            
+            <div style="margin-top: 10px;">
+                <label style="color: #ff0055; font-size: 0.9rem; font-weight: bold; display: block; margin-bottom: 5px;">Or Upload .TXT File:</label>
+                <input type="file" id="post-file" accept=".txt" style="color: #fff; font-family: 'Courier New', monospace;">
+            </div>
+
+            <div style="text-align: right; margin-top: 15px;">
+                <img src="submit.png" alt="Submit" class="btn-graphic btn-graphic-small" id="btn-submit-post">
+            </div>
+        </div>
+    </div>
+
+    <div id="nedry-security-box">
+        <h2 style="color: #ff0055; margin-top: 0; font-size: 1.8rem; text-shadow: 0 0 10px #ff0055;">Ah ah ah! You didn't say the magic word...</h2>
+        <img id="nedry-gif" src="silentsaysno.gif" alt="Access Denied" style="width: 100%; max-width: 400px; border: 2px solid #00ffcc; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);">
+    </div>
+
+    <script>
+        window.addEventListener('scroll', function() {
+            const scrollPosition = window.pageYOffset;
+            document.body.style.backgroundPositionY = -(scrollPosition * 0.3) + 'px';
+        });
+
+        let activeClearances = [];
+
+        // Auth Check & Redirect
+        fetch('https://api.radioanarchy.gg:8202/auth/me', { method: 'GET', credentials: 'include' })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.loggedIn) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+                
+                // IF APPROVED, TURN THE LIGHTS ON
+                document.body.style.opacity = '1';
+                
+                if (data.roles) {
+                    activeClearances = data.roles.map(r => r.name);
+                }
+                
+                document.getElementById('nav-spacer').style.display = 'none';
+                document.getElementById('user-profile-box').style.display = 'flex';
+                document.getElementById('user-name').innerText = data.displayUsername;
+                document.getElementById('user-avatar').src = data.displayAvatar || 'default-avatar.png';
+                
+                const rolesContainer = document.getElementById('user-roles-container');
+                if (data.roles && data.roles.length > 0) {
+                    data.roles.slice(0, 5).forEach(role => {
+                        const badge = document.createElement('div');
+                        badge.className = 'role-badge';
+                        badge.style.borderLeftColor = (role.color && role.color !== '#000000') ? role.color : '#00ffcc';
+                        badge.innerText = role.name;
+                        rolesContainer.appendChild(badge);
+                    });
+                } else {
+                    rolesContainer.innerHTML = '<span style="color:#aaa; font-size:0.8rem;">No Clearances</span>';
+                }
+
+                document.getElementById('auth-nav').style.display = 'block';
+
+                fetch(`https://api.radioanarchy.gg:8202/api/stats/combil?author=${encodeURIComponent(data.displayUsername)}`)
+                    .then(res => res.json())
+                    .then(stats => updateUserStats(stats))
+                    .catch(err => console.error("Stats engine error:", err));
+
+            }).catch(err => {
+                console.error("Auth check failed:", err);
+                window.location.href = 'index.html';
+            });
+
+        // UI Functions
+        function toggleExpand(rowId, postId) {
+            const row = document.getElementById(rowId);
+            if (row.style.display === 'table-row') {
+                row.style.display = 'none';
+            } else {
+                row.style.display = 'table-row';
+                if (postId) loadComments(postId); // Fetch comments when opened!
+            }
+        }
+
+        function updateUserStats(stats) {
+            if(stats.posts > 0) { document.getElementById('stat-posts').style.display = 'flex'; document.querySelector('#stat-posts .stat-number').innerText = stats.posts; }
+            if(stats.comments > 0) { document.getElementById('stat-comments').style.display = 'flex'; document.querySelector('#stat-comments .stat-number').innerText = stats.comments; }
+            if(stats.newComments > 0) { document.getElementById('stat-new-comments').style.display = 'flex'; document.querySelector('#stat-new-comments .stat-number').innerText = stats.newComments; }
+            if(stats.newReplies > 0) { document.getElementById('stat-new-replies').style.display = 'flex'; document.querySelector('#stat-new-replies .stat-number').innerText = stats.newReplies; }
+        }
+        
+        function refreshMyStats() {
+            const nameEl = document.getElementById('user-name');
+            if (!nameEl || nameEl.innerText === '' || nameEl.innerText === 'Unknown Agent') return;
+            
+            const name = nameEl.innerText;
+            fetch(`https://api.radioanarchy.gg:8202/api/stats/${CURRENT_ROOM}?author=${encodeURIComponent(name)}`)
+                .then(res => res.json())
+                .then(stats => updateUserStats(stats))
+                .catch(err => console.error("Stats refresh error:", err));
+        }
+
+        // Modals & Security
+        const nedrySound = new Audio('dennis_nedry_ahahah.mp3'); 
+        nedrySound.preload = 'auto';
+
+        function triggerNedry() {
+            const nedryBox = document.getElementById('nedry-security-box');
+            const nedryGif = document.getElementById('nedry-gif');
+            nedryGif.src = 'silentsaysno.gif'; 
+            nedryBox.classList.add('nedry-show');
+            
+            nedrySound.currentTime = 0;
+            let p1 = nedrySound.play();
+            if (p1 !== undefined) p1.catch(e => console.log(e));
+
+            setTimeout(() => {
+                nedrySound.currentTime = 0;
+                let p2 = nedrySound.play();
+                if (p2 !== undefined) p2.catch(e => console.log(e));
+            }, 5000);
+
+            setTimeout(() => nedryBox.classList.remove('nedry-show'), 10000);
+        }
+
+        // Setup Modal for a BRAND NEW post
+        document.getElementById('trigger-new-post').addEventListener('click', () => {
+            // Unrestricted: Anyone logged in can post
+            editingPostId = null; 
+            document.querySelector('.post-modal h2').innerText = "SUBMIT NEW ARCHIVE"; 
+            
+            document.getElementById('post-title').value = '';
+            document.getElementById('post-content').value = '';
+            document.getElementById('new-post-modal').style.display = 'flex';
+        });
+
+        // Setup Modal for EDITING an existing post
+        window.openEditModal = function(postId) {
+            const postToEdit = globalForumPosts.find(p => p.id === postId);
+            if (!postToEdit) return;
+
+            editingPostId = postId; 
+            document.querySelector('.post-modal h2').innerText = "EDIT ARCHIVE"; 
+            
+            document.getElementById('post-title').value = postToEdit.title;
+            document.getElementById('post-content').value = postToEdit.content;
+            
+            document.getElementById('new-post-modal').style.display = 'flex';
+        };
+
+        function closeModal() {
+            document.getElementById('new-post-modal').style.display = 'none';
+            editingPostId = null; 
+        }
+
+       document.querySelectorAll('.restricted-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const requiredRole = this.getAttribute('data-role');
+                
+                // 1. Give Master Keys to top staff so they never get locked out
+                let isAuthorized = activeClearances.includes("Admin") ||
+                                   activeClearances.includes("Head Admin") || 
+                                   activeClearances.includes("Owner");
+
+                // 2. If not a Master Admin, check specific room clearances
+                if (!isAuthorized) {
+                    if (requiredRole === "Server Owner") {
+                        isAuthorized = activeClearances.includes("Server Owner") || activeClearances.includes("Cert. Game Admin");
+                    } else {
+                        isAuthorized = activeClearances.includes(requiredRole);
+                    }
+                }
+
+                // 3. Trigger Nedry if they failed the checks
+                if (!isAuthorized) {
+                    e.preventDefault(); 
+                    triggerNedry();
+                }
+            });
+        });
+
+        // --- LOCAL AUDIO RELAY ENGINE (YOUTUBE SECURE RELAY) ---
+        let ytPlayer;
+        let audioQueue = [];
+        let isPlaying = false;
+
+        // 1. Inject YouTube API
+        const ytScriptTag = document.createElement('script');
+        ytScriptTag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(ytScriptTag, firstScriptTag);
+
+        window.onYouTubeIframeAPIReady = function() {
+            ytPlayer = new YT.Player('yt-player-container', {
+                height: '10', width: '10', videoId: '',
+                playerVars: { 'playsinline': 1, 'controls': 0, 'disablekb': 1 },
+                events: {
+                    'onReady': () => console.log("[AUDIO RELAY] Engine Online."),
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        };
+
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+                playNextInQueue();
+            } else if (event.data === YT.PlayerState.PLAYING) {
+                isPlaying = true;
+                document.getElementById('btn-play-pause').innerText = "PAUSE";
+                document.getElementById('current-track-label').innerText = "Status: Transmitting...";
+            } else if (event.data === YT.PlayerState.PAUSED) {
+                isPlaying = false;
+                document.getElementById('btn-play-pause').innerText = "PLAY";
+                document.getElementById('current-track-label').innerText = "Status: Paused";
+            }
+        }
+
+        // 2. Search Engine Logic (Hits your secure backend)
+        async function executeSearch() {
+            const query = document.getElementById('yt-search-input').value;
+            if (!query) return;
+
+            const resultsContainer = document.getElementById('yt-search-results');
+            resultsContainer.innerHTML = '<div style="padding: 15px; color: #00ffcc; font-weight: bold;">Searching secure network...</div>';
+            resultsContainer.style.display = 'block';
+
+            try {
+                const res = await fetch(`https://api.radioanarchy.gg:8202/api/youtube?q=${encodeURIComponent(query)}`);
+                const data = await res.json();
+                
+                if (data.items && data.items.length > 0) {
+                    resultsContainer.innerHTML = data.items.map(item => `
+                        <div class="yt-result-item" style="padding: 12px 15px; border-bottom: 1px dashed #333; cursor: pointer; transition: all 0.2s;" 
+                             onclick="addSongToQueue('${item.id.videoId}', '${item.snippet.title.replace(/'/g, "\\'")}')">
+                            <span style="color: #fff; font-size: 0.95rem; font-weight: bold;">${item.snippet.title}</span><br>
+                            <span style="color: #888; font-size: 0.8rem;">Channel: ${item.snippet.channelTitle}</span>
+                        </div>
+                    `).join('');
+                } else {
+                    resultsContainer.innerHTML = '<div style="padding: 15px; color: #ff0055;">No transmissions found.</div>';
+                }
+            } catch (err) {
+                console.error(err);
+                resultsContainer.innerHTML = '<div style="padding: 15px; color: #ff0055;">Relay Error. Check engine connection.</div>';
+            }
+        }
+
+        // Click to search
+        document.getElementById('btn-search-yt').addEventListener('click', executeSearch);
+
+        // Hit Enter to search
+        document.getElementById('yt-search-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                executeSearch();
+            }
+        });
+
+        // Hide search results if clicking somewhere else
+        document.addEventListener('click', (e) => {
+            if (e.target.id !== 'yt-search-input' && e.target.id !== 'btn-search-yt' && !e.target.closest('#yt-search-results')) {
+                document.getElementById('yt-search-results').style.display = 'none';
+            }
+        });
+
+        // 3. Queue Management
+        window.addSongToQueue = function(vidId, title) {
+            audioQueue.push({ id: vidId, title: title });
+            document.getElementById('yt-search-results').style.display = 'none';
+            document.getElementById('yt-search-input').value = '';
+            updateQueueUI();
+            
+            if (audioQueue.length === 1 && !isPlaying && ytPlayer && ytPlayer.loadVideoById) {
+                playNextInQueue();
+            }
+        };
+
+        document.getElementById('btn-play-pause').addEventListener('click', () => {
+            if (!ytPlayer || !ytPlayer.playVideo) return;
+            if (isPlaying) ytPlayer.pauseVideo();
+            else ytPlayer.playVideo();
+        });
+
+        document.getElementById('btn-skip').addEventListener('click', () => {
+            playNextInQueue();
+        });
+
+        function playNextInQueue() {
+            if (!ytPlayer || !ytPlayer.loadVideoById) return;
+            
+            if (audioQueue.length > 0) {
+                const nextVid = audioQueue.shift();
+                ytPlayer.loadVideoById(nextVid.id);
+                updateQueueUI();
+            } else {
+                ytPlayer.stopVideo();
+                isPlaying = false;
+                document.getElementById('btn-play-pause').innerText = "PLAY";
+                document.getElementById('current-track-label').innerText = "Status: Idle";
+            }
+        }
+
+        function updateQueueUI() {
+            const list = document.getElementById('audio-queue-list');
+            if(audioQueue.length === 0) {
+                list.innerHTML = "<li>Queue is empty.</li>";
+            } else {
+                list.innerHTML = audioQueue.map((item, index) => 
+                    `<li style="margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        <span style="color: #ff0055;">[${index + 1}]</span> ${item.title} 
+                    </li>`
+                ).join('');
+            }
+        }
+        
+        // ==========================================
+        // FORUM & CHAT DATA ENGINE (WEBSOCKET EDITION)
+        // ==========================================
+        const CURRENT_ROOM = 'combil'; // UPDATED CONSTANT FOR COMBIL
+        
+        let globalForumPosts = []; 
+        let currentSortCol = 'date';
+        let currentSortAsc = false; 
+        let editingPostId = null; 
+
+        function sortPosts(column) {
+            if (currentSortCol === column) {
+                currentSortAsc = !currentSortAsc; 
+            } else {
+                currentSortCol = column;
+                currentSortAsc = true;
+            }
+
+            globalForumPosts.sort((a, b) => {
+                let valA, valB;
+                if (column === 'id') { valA = a.id; valB = b.id; }
+                else if (column === 'title') { valA = a.title.toLowerCase(); valB = b.title.toLowerCase(); }
+                else if (column === 'author') { valA = a.post_author.toLowerCase(); valB = b.post_author.toLowerCase(); }
+                else if (column === 'date') { valA = new Date(a.created_at).getTime(); valB = new Date(b.created_at).getTime(); }
+
+                if (valA < valB) return currentSortAsc ? -1 : 1;
+                if (valA > valB) return currentSortAsc ? 1 : -1;
+                return 0;
+            });
+            
+            renderForumPosts(globalForumPosts); 
+        }
+
+       // --- 1. THE FORUM SYSTEM ---
+        async function loadForumPosts() {
+            try {
+                const res = await fetch(`https://api.radioanarchy.gg:8202/api/forum/${CURRENT_ROOM}`);
+                globalForumPosts = await res.json(); 
+                
+                currentSortCol = 'date';
+                currentSortAsc = false;
+                renderForumPosts(globalForumPosts);
+            } catch (err) {
+                console.error("Failed to load forum archives:", err);
+            }
+        }
+
+        function renderForumPosts(posts) {
+            const tbody = document.getElementById('forum-body');
+            tbody.innerHTML = ''; 
+
+            if (posts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#888;">No archives found in this node.</td></tr>';
+                return;
+            }
+
+            const currentUser = document.getElementById('user-name').innerText || 'Unknown Agent';
+
+            posts.forEach((post, index) => {
+                const date = new Date(post.created_at).toLocaleDateString();
+                const rowNumber = String(posts.length - index).padStart(3, '0'); 
+                
+                const editButton = (post.post_author === currentUser) 
+                    ? `<span style="color:#ffaa00; cursor:pointer; float:right; font-weight:bold; letter-spacing:1px;" onclick="openEditModal(${post.id})">[EDIT ARCHIVE]</span>` 
+                    : '';
+
+                const rowHtml = `
+                    <tr class="forum-row" onclick="toggleExpand('doc-${post.id}', ${post.id})">
+                        <td>${rowNumber}</td>
+                        <td>${post.title}</td>
+                        <td><span style="color:#00ffcc;">${post.post_author}</span></td>
+                        <td>${date}</td>
+                    </tr>
+                    <tr id="doc-${post.id}" class="forum-expanded">
+                        <td colspan="4">
+                            <div class="document-text">${editButton}${post.content}</div>
+                            <div class="comment-section" id="comment-section-${post.id}">
+                                <div id="comments-list-${post.id}" style="margin-bottom: 15px; max-height: 200px; overflow-y: auto;">
+                                    <span style="color: #888; font-size: 0.85rem;">Loading replies...</span>
+                                </div>
+                                <textarea id="comment-input-${post.id}" class="comment-box" rows="2" placeholder="Transmit a reply..." onkeypress="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); submitComment(${post.id}); }"></textarea>
+                                <div class="reply-area">
+                                    <img src="submit.png" alt="Submit Reply" class="btn-graphic btn-graphic-small" onclick="submitComment(${post.id})">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', rowHtml);
+            });
+        }
+
+        // Handle Post Submission (Smart Dual-Action: Creates NEW or Updates EXISTING)
+        document.getElementById('btn-submit-post').addEventListener('click', async () => {
+            const title = document.getElementById('post-title').value;
+            const typedContent = document.getElementById('post-content').value;
+            const author = document.getElementById('user-name').innerText || 'Unknown Agent';
+            const fileInput = document.getElementById('post-file');
+
+            const transmitArchive = async (finalContent) => {
+                if (!title || !finalContent.trim()) {
+                    alert("Title and Content (or a .TXT file) are required to submit an archive.");
+                    return;
+                }
+
+                try {
+                    const url = editingPostId 
+                        ? `https://api.radioanarchy.gg:8202/api/forum/${editingPostId}` 
+                        : `https://api.radioanarchy.gg:8202/api/forum/${CURRENT_ROOM}`;
+                    
+                    const method = editingPostId ? 'PUT' : 'POST';
+
+                    // Passing subject: null
+                    const res = await fetch(url, {
+                        method: method,
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ title, subject: null, content: finalContent, author, room_id: CURRENT_ROOM })
+                    });
+
+                    if (res.ok) {
+                        document.getElementById('post-title').value = '';
+                        document.getElementById('post-content').value = '';
+                        if (fileInput) fileInput.value = ''; 
+                        closeModal();
+                        loadForumPosts(); 
+                    } else {
+                        const errData = await res.json();
+                        alert(errData.error || "System rejected the transmission.");
+                    }
+                } catch (err) {
+                    console.error("Post failed:", err);
+                }
+            };
+
+            if (fileInput && fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const fileText = e.target.result;
+                    const finalContent = typedContent ? `${typedContent}\n\n--- Attached Document ---\n\n${fileText}` : fileText;
+                    transmitArchive(finalContent);
+                };
+                reader.onerror = function() { alert("Failed to decrypt the secure file. Please try again."); };
+                reader.readAsText(file);
+            } else {
+                transmitArchive(typedContent);
+            }
+        });
+        
+        // --- COMMENT ENGINE LOGIC ---
+        async function loadComments(postId) {
+            try {
+                const res = await fetch(`https://api.radioanarchy.gg:8202/api/comments/${postId}`);
+                const comments = await res.json();
+                const list = document.getElementById(`comments-list-${postId}`);
+                
+                if (comments.length === 0) {
+                    list.innerHTML = '<span style="color: #888; font-size: 0.85rem;">No replies yet. Be the first to transmit.</span>';
+                    return;
+                }
+                
+                list.innerHTML = comments.map(c => 
+                    `<div style="border-bottom: 1px dashed #333; padding-bottom: 8px; margin-bottom: 8px;">
+                        <span style="color: #00ffcc; font-weight: bold; font-size: 0.9rem;">${c.comment_author}:</span> 
+                        <span style="color: #ccc; font-size: 0.9rem;">${c.content}</span>
+                    </div>`
+                ).join('');
+            } catch (err) {
+                console.error("Failed to load comments:", err);
+            }
+        }
+
+        async function submitComment(postId) {
+            // Unrestricted: Anyone can comment
+            const inputEl = document.getElementById(`comment-input-${postId}`);
+            const content = inputEl.value;
+            const author = document.getElementById('user-name').innerText || 'Unknown Agent';
+
+            if (!content.trim()) return;
+
+            try {
+                const res = await fetch(`https://api.radioanarchy.gg:8202/api/comments/${postId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ author, content, room_id: CURRENT_ROOM })
+                });
+
+                if (res.ok) {
+                    inputEl.value = ''; 
+                    loadComments(postId); // Refresh comment list instantly
+                }
+            } catch (err) {
+                console.error("Failed to post comment:", err);
+            }
+        }
+        
+        // --- 2. THE LIVE CHAT SYSTEM ---
+        async function loadChat() {
+            try {
+                const res = await fetch(`https://api.radioanarchy.gg:8202/api/chat/${CURRENT_ROOM}`);
+                const messages = await res.json();
+                const chatWindow = document.getElementById('chat-window');
+                
+                if (messages.length > 0) {
+                    chatWindow.innerHTML = ''; 
+                    messages.forEach(msg => {
+                        chatWindow.innerHTML += `<div class="chat-message"><span class="chat-user">${msg.author}:</span> ${msg.message}</div>`;
+                    });
+                    chatWindow.scrollTop = chatWindow.scrollHeight; 
+                }
+            } catch (err) {
+                console.error("Chat load failed:", err);
+            }
+        }
+
+        async function sendChat() {
+            // Unrestricted: Anyone can chat
+            const inputEl = document.getElementById('chat-msg-input');
+            const message = inputEl.value;
+            const author = document.getElementById('user-name').innerText || 'Unknown Agent';
+            
+            if (!message) return;
+
+            try {
+                // We don't call loadChat() here anymore! The WebSocket will tell us when to update.
+                const res = await fetch(`https://api.radioanarchy.gg:8202/api/chat/${CURRENT_ROOM}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ author, message })
+                });
+
+                if (res.ok) {
+                    inputEl.value = ''; 
+                }
+            } catch (err) {
+                console.error("Chat send failed:", err);
+            }
+        }
+
+        document.getElementById('btn-send-chat').addEventListener('click', sendChat);
+        document.getElementById('chat-msg-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                sendChat();
+            }
+        });
+
+        // --- 3. BOOT SEQUENCE & WEBSOCKET LISTENER ---
+        
+        // Load initial data
+        setTimeout(() => {
+            loadForumPosts();
+            loadChat();
+        }, 1000); 
+
+    </script>
+    
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+    <script>
+        // Connect to the Live Engine
+        const socket = io('https://api.radioanarchy.gg:8202');
+
+        // Tune into the specific room frequency
+        socket.emit('join_room', CURRENT_ROOM);
+
+        // 1. Live Chat Updates
+        socket.on('update_chat', () => {
+            loadChat();
+        });
+
+        // 2. Live Post Updates
+        socket.on('update_posts', () => {
+            // Instant Stats Update for the author
+            refreshMyStats();
+
+            // Refresh post list only if folders are closed to prevent UX flickering
+            const anyExpanded = document.querySelector('.forum-expanded[style*="display: table-row"]');
+            if (!anyExpanded) {
+                loadForumPosts();
+            }
+        });
+
+        // 3. Live Comment Updates
+        socket.on('update_comments', (postId) => {
+            // Instant Stats Update for the author
+            refreshMyStats();
+
+            // Only refresh the comments if the user is actively looking at that exact post
+            const expandedRow = document.getElementById(`doc-${postId}`);
+            if (expandedRow && expandedRow.style.display === 'table-row') {
+                loadComments(postId);
+            }
+        });
+    </script>
+</body>
+</html>
