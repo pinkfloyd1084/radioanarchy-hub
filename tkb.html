@@ -266,7 +266,7 @@
                         <th onclick="sortPosts('date')">Date ↕</th>
                     </tr>
                 </thead>
-                </thead>
+ 
                 <tbody id="forum-body">
                     <tr class="forum-row" onclick="toggleExpand('doc-1')">
                         <td>001</td><td>How to Survive Day 1</td><td>DayZ Strategy</td><td>SilentGun</td><td>10/24/2025</td>
@@ -794,14 +794,6 @@
                 tbody.insertAdjacentHTML('beforeend', rowHtml);
             });
         }
-
-        // Handle New Post Submission (With FileReader Support)
-        document.getElementById('btn-submit-post').addEventListener('click', async () => {
-            const title = document.getElementById('post-title').value;
-            const subject = document.getElementById('post-subject').value;
-            const typedContent = document.getElementById('post-content').value;
-            const author = document.getElementById('user-name').innerText || 'Unknown Agent';
-            const fileInput = document.getElementById('post-file');
 
             // Handle Post Submission (Smart Dual-Action: Creates NEW or Updates EXISTING)
         document.getElementById('btn-submit-post').addEventListener('click', async () => {
