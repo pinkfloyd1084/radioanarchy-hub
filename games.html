@@ -278,6 +278,46 @@
             </div>
         </div>
 
+		<div class="terminal-box" id="box-7dtd">
+            <div class="box-header">
+                <img src="7dtd.png" alt="7 Days to Die" class="game-logo-mini">
+                <div class="game-info-top">
+                    <h2>7 DAYS TO DIE</h2>
+                    <p class="game-desc">An unforgiving open-world survival horde crafting game. Scavenge, build, and survive the blood moon.</p>
+                </div>
+            </div>
+            <div class="telemetry-row">
+                <div class="stat-block">
+                    <a href="https://store.steampowered.com/app/251570/" target="_blank">
+                        <img src="buyonsteam.png" class="steam-buy-btn" alt="Buy on Steam">
+                    </a>
+                    <span class="stat-value" id="price-7dtd">Scanning...</span>
+                </div>
+                <div class="stat-block">
+                    <img src="globalplayercount.png" class="stat-label-img" alt="Global">
+                    <span class="stat-value" id="global-7dtd">Scanning...</span>
+                </div>
+                <div class="stat-block">
+                    <img src="radioanarchyplayercount.png" class="stat-label-img" alt="RA Network">
+                    <span class="stat-value" id="ra-7dtd">Scanning...</span>
+                </div>
+            </div>
+            <div class="server-list">
+                <div class="server-item">
+                    <div class="server-name">KHG | 7 Days to Die</div>
+                    <img src="serveroffline.png" class="status-icon" id="status-7dtd">
+                </div>
+            </div>
+            
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #555; display: flex; align-items: center; justify-content: center; gap: 15px;">
+                <img src="khglogo.png" alt="Kold Hard Gaming" style="height: 40px; object-fit: contain; filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));">
+                <p style="margin: 0; font-size: 0.8rem; color: #00ffcc; text-align: center; text-transform: uppercase; letter-spacing: 1px;">
+                    It is a Kold Hard Gaming server<br>hosted by Radio Anarchy
+                </p>
+                <img src="radioanarchylogo.png" alt="Radio Anarchy" style="height: 40px; object-fit: contain; filter: drop-shadow(0 0 5px #ff0055);">
+            </div>
+        </div>
+
         <div class="terminal-box" id="box-beamng">
             <div class="box-header">
                 <img src="beamnglogo.png" alt="BeamNG" class="game-logo-mini">
@@ -513,7 +553,7 @@
             .then(res => res.json())
             .then(data => {
                 // A. Update Steam Prices & Global Player Counts
-                const games = ['dayz', 'gta', 'beamng', 'vein', 'valheim'];
+                const games = ['dayz', 'gta', '7dtd', 'beamng', 'vein', 'valheim'];
                 games.forEach(game => {
                     if (data.stats && data.stats[game]) {
                         const priceEl = document.getElementById(`price-${game}`);
@@ -524,7 +564,7 @@
                 });
 
                 // B. Update Radio Anarchy Role Counts
-                const raGames = ['dayz', 'gta', 'beamng', 'vein', 'valheim', 'mtg', 'yugioh', 'pokemon', 'dnd'];
+                const raGames = ['dayz', 'gta', '7dtd', 'beamng', 'vein', 'valheim', 'mtg', 'yugioh', 'pokemon', 'dnd'];
                 raGames.forEach(game => {
                     if (data.ra_counts && data.ra_counts[game] !== undefined) {
                         const raEl = document.getElementById(`ra-${game}`);
