@@ -270,7 +270,6 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            /* Adds the sharp 45 degree angle stamp effect */
             transform: translate(-50%, -50%) rotate(-35deg) scale(1.15); 
             width: 100%; 
             z-index: 10;
@@ -563,15 +562,54 @@
             transform: scale(1.02);
         }
 
-        /* Footer Elements */
-        .bottom-image {
+        /* --- DISCORD INVITE OVERLAY SECTION --- */
+        .discord-invite-section {
             width: 100%;
-            display: block;
-            border-top: 2px solid #00ffcc;
             position: relative;
             z-index: 1;
+            border-top: 2px solid #00ffcc;
+            background: url('DiscordInviteBG.png') no-repeat center center;
+            background-size: cover;
+            padding: 80px 20px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
         }
 
+        .rules-box {
+            background: rgba(15, 5, 10, 0.95);
+            border: 2px solid #ff0055;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 0 30px rgba(255, 0, 85, 0.6), inset 0 0 20px rgba(0, 0, 0, 0.8);
+            max-width: 900px;
+            width: 100%;
+            text-align: left;
+            position: relative;
+            z-index: 2;
+        }
+
+        .rules-box-header {
+            text-align: center;
+            border-bottom: 1px dashed #555;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .rules-box-header img {
+            width: 100%;
+            max-width: 500px;
+            filter: drop-shadow(0 0 15px rgba(255, 0, 85, 0.5));
+        }
+
+        .rules-text {
+            color: #ddd;
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        /* Footer Elements */
         .footer {
             background: #020202;
             padding: 20px 20px 50px 20px;
@@ -618,6 +656,7 @@
             .news-ticker-container { border-width: 1px; padding: 10px 0; }
             .auth-btn-graphic { width: 220px; } 
             .auth-wrapper .info-panel { width: 220px; }
+            .rules-box { padding: 20px; }
         }
         
         /* --- CUSTOM NOTIFICATION ENGINE --- */
@@ -816,10 +855,10 @@
         </div>
 
         <div class="news-ticker-container">
-            <div class="news-ticker-text">
-                [DAYZ NEWS] Survivors, gear up! Bohemia has confirmed that DayZ Update 1.30 is officially focusing on a "Total Medical Overhaul"—rumors suggest broken limbs will now require actual splinting time and infection rates are being cranked to "Brutal" mode... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [5M] Massive milestone! FiveM has officially shattered its concurrent player record, surpassing 300,000 users as Rockstar Games integrates the new Cfx Marketplace, allowing modders to officially monetize high-quality scripts for the first time... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [AD] 📢 Escape the chaos and find your squad at the Radio Anarchy Gaming Hub! Whether you're a builder or a bandit, our Discord is the heartbeat of the community—Join us now! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [TECH] Silicon wars heat up! AMD has just announced the Ryzen 7 9750X, boasting a massive 5.6 GHz boost clock to counter Intel’s Core Ultra 200S Plus—hope you have a beefy cooler for that 120W TDP! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [AD] Looking for high-octane survival? Check out Southern Cross Gaming and The Pumpkin Dynasty—join their Discords today for unique events and a non-toxic grind! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [VALHEIM] The Deep North teaser is finally here! Iron Gate has revealed the "Frost-Bound Gate," a massive endgame structure that requires a "Star-Core" to activate—Vikings, start hoarding your silver! ❄️ &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [BEAMNG] Update 0.35.4 is live! Featuring a full remaster of the Gavril T-Series braking physics and a new "Sport Mode" for CVT transmissions... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [AD] Hardcore fans, listen up: DayZLost and Collapsed Society are currently recruiting—hit their Discords to experience DayZ the way it was meant to be played! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [VEIN] Patch 0.023 has landed! You can now finally hitch vehicles together for massive loot hauls... 🤿 &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; 🃏 THE MID-TICKER MARKET WATCH: WAVE 2 🃏 MTG: Black Lotus (Alpha PSA 10) $3,000,000 | YGO: Radiant Typhoon Yummy (Starlight) $412.50 (+45.10) | MTG: Mox Diamond (FtV: Relics) $1,041.57 (+59.71) | YGO: Thunderclap Monk (Super) $6.50 (+5.80) | MTG: Jeweled Lotus (Textured Foil) $451.85 (+90.62) | YGO: Forbidden Droplet (Common) $2.10 (-1.50) | MTG: Mana Crypt (Special Guest) $215.00 (+12.40) | YGO: Fallen of the White Dragon $72.15 (+8.30) &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [WHAT THE F... MOMENT] A DayZ player on a high-pop server reportedly "tamed" a pack of wolves by playing Pink Floyd through VOIP for six hours straight; the wolves now allegedly follow him and only attack players wearing red... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [TECH] NVIDIA is reportedly prepping a $5,000 RTX 5090 specifically for the "Pro-sumer" AI market, leaving gamers wondering if they'll need to sell a kidney for the 600W power draw... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [EVENT] 🎸 THE LEGENDARY ADVENTURE: Mark your calendars for 4/3/2026! The Radio Anarchy crew are hitting Deerisle from 7PM to 7AM. Catch the 12-hour marathon on Twitch, Discord, and YouTube! 🎸 &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; 🏁 THE MEGA-TICKER 2.0: THE ULTIMATE SURVIVAL & TECH UPDATE 🏁 [BREAKING] DayZ Experimental 1.29 is officially back! After a period of silence, Bohemia has pushed the update to PC Experimental... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [TECH] Intel just unveiled the Core Ultra 200S Plus series (270K/250K), claiming up to 2x creator performance and reduced latency for gamers—available March 26, 2026! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; 🃏 THE MID-TICKER MARKET WATCH: WAVE 3 (RARE HITS) 🃏 MTG: Alpha Black Lotus (PSA 10) $3,000,000 | YGO: Radiant Typhoon Yummy (Starlight) $412.50 (+45.10) | YGO: Berserkion the Electromagna Warrior $28.40 (+25.00) | MTG: Biorhythm (Onslaught) $38.75 (+31.12) &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [WHAT THE F... MOMENT] A player in a high-stakes FiveM RP server reportedly spent 48 hours straight digging a "secret tunnel" under the city bank using only a spoon emoji script, only to realize they were digging toward the police station's breakroom... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [VEIN] In a weird twist, drinking cold water now grants a higher stress reduction bonus than warm soda—because realism matters when you're fighting for your life! 🥤 &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; 📺 SATURDAY STREAM ALERT! See me live on Twitch & YouTube! We’re going deep into the Radio Anarchy backend, site updates, and some brutal modding sessions. Bring your questions! 📺
-            </div>
-        </div>
+			<div class="news-ticker-text">
+				[BREAKING NEWS] KHG (KoldHardGaming) IS COMING BACK! Get ready to punch trees and run from raptors because KHG is bringing a brand new 7 Days to Die server and Ark: Survival Ascended to the lineup! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [DAYZ SURVIVAL TIP] Remember, teamwork is absolutely essential in DayZ! Always travel with a friend who runs slightly slower than you do when the wolf pack shows up... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [AD] Ready to hit the streets? Mid-Missouri RP is open for business. Join the FiveM city where the cops are fast, but the getaway cars are faster! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [AD] Looking for a non-toxic grind? Check out Southern Cross Gaming and Collapsed Society—hit their Discords to experience survival the way it was meant to be played! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [DAYZ LIFE HACK] Running low on food? Just remember that other survivors are just walking loot piñatas made of meat. Stay upbeat, and happy hunting! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [TECH] Silicon wars heat up! AMD has just announced the Ryzen 7 9750X, boasting a massive 5.6 GHz boost clock to counter Intel’s Core Ultra 200S Plus—hope you have a beefy cooler for that 120W TDP! &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [AD] Step into the madness at Ward 404! If you're looking for a server that tests your sanity as much as your survival skills, you've found your new home. &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; 🃏 THE MID-TICKER MARKET WATCH: WAVE 2 🃏 MTG: Black Lotus (Alpha PSA 10) $3,100,000 | YGO: Radiant Typhoon Yummy (Starlight) $425.00 (+12.50) | MTG: Mox Diamond (FtV: Relics) $1,050.25 (+8.68) | YGO: Thunderclap Monk (Super) $7.10 (+0.60) | MTG: Jeweled Lotus (Textured Foil) $410.00 (-41.85) | YGO: Forbidden Droplet (Common) $2.50 (+0.40) | MTG: Mana Crypt (Special Guest) $205.00 (-10.00) | YGO: Fallen of the White Dragon $75.00 (+2.85) &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [AD] Pledge your allegiance! Join The Pumpkin Dynasty community, get the gear, and dominate the wasteland with style. &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [AD] Welcome to the future of survival. DayZLost Rebirth is recruiting! Jump into the discord and experience the ultimate futuristic hardcore DayZ overhaul. &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; [WHAT THE F... MOMENT] A player in a high-stakes FiveM RP server reportedly spent 48 hours straight digging a "secret tunnel" under the city bank using only a spoon emoji script, only to realize they were digging toward the police station's breakroom... &nbsp;&nbsp;&nbsp;&nbsp;//&nbsp;&nbsp;&nbsp;&nbsp; 📺 STREAM ALERT! See me live on Twitch & YouTube! We’re going deep into the Radio Anarchy backend, site updates, and some brutal modding sessions. Bring your questions! 📺
+			</div>
+		</div>
 
         <div class="community-header">
             <h2>COMMUNITY MEMBERS AREA</h2>
@@ -888,7 +927,6 @@
                     <img src="streamschedulelogo.png" alt="Stream Logo" class="behind-logo col-stream">
                     <a href="watch.html" class="restricted-link btn-wrapper-relative" data-role="Player">
 						<img src="streamschedule.png" alt="Stream Schedule" class="btn-graphic">
-                        <img src="commingsoon.png" class="coming-soon-overlay" alt="Coming Soon">
                     </a>
 					<div class="info-panel">The Creator TV Guide. See who is live across the network right now.</div>
                 </div>
@@ -943,7 +981,29 @@
 
     </div>
 
-    <img src="DiscordInviteBG.png" class="bottom-image" alt="Discord Artwork">
+    <div class="discord-invite-section">
+        <div class="rules-box">
+            <div class="rules-box-header">
+                <img src="ruleswipeinfo.png" alt="Rules & Wipe Info">
+            </div>
+            <div class="rules-text">
+                <p style="color: #00ffcc; font-size: 1.2rem; font-weight: bold; text-align: center; margin-top: 0;">SERVER WIPE PROTOCOLS</p>
+                <p>At Radio Anarchy, our primary servers undergo a full wipe every <strong>4 months</strong> (3 times a year) to keep the economy fresh and performance optimal for all players.</p>
+                <p>Other affiliated sister servers on the network maintain their own independent wipe schedules. Whenever they provide that intelligence, we will broadcast it directly to this terminal so you are always prepared.</p>
+                
+                <p style="color: #00ffcc; font-size: 1.2rem; font-weight: bold; text-align: center; margin-top: 40px; border-top: 1px dashed #555; padding-top: 25px;">NETWORK REGULATIONS</p>
+                <p style="text-align: center; color: #888; font-size: 0.9rem; margin-bottom: 20px;">Below are the standard Discord regulations required to keep the comms clean and the gameplay fair:</p>
+                
+                <ul style="list-style-type: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 15px;">
+                    <li><strong style="color: #ff0055;">[1]</strong> <strong>RESPECT THE COMM:</strong> Keep it civil. No racism, sexism, homophobia, or extreme toxicity. Banter is fine; being a menace is not.</li>
+                    <li><strong style="color: #ff0055;">[2]</strong> <strong>NO UNAUTHORIZED BROADCASTS:</strong> Do not advertise other servers, discords, or self-promote without clearance from High Command.</li>
+                    <li><strong style="color: #ff0055;">[3]</strong> <strong>NEUTRAL ZONES:</strong> Keep politics and real-world controversies out of the general channels. We are here to survive the apocalypse, not debate it.</li>
+                    <li><strong style="color: #ff0055;">[4]</strong> <strong>CHAIN OF COMMAND:</strong> Admin decisions are final. If you have a dispute, do not argue in global chat—open a private ticket.</li>
+                </ul>
+                <p style="text-align: center; color: #ffaa00; font-weight: bold; margin-top: 35px; font-size: 1.3rem;">Thanks for joining us. Survive, thrive, and cause a little anarchy.</p>
+            </div>
+        </div>
+    </div>
 
     <div class="footer">
         <img src="supportcontact.png" alt="Support Contact" class="footer-support-img">

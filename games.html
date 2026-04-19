@@ -317,6 +317,46 @@
                 <img src="radioanarchylogo.png" alt="Radio Anarchy" style="height: 40px; object-fit: contain; filter: drop-shadow(0 0 5px #ff0055);">
             </div>
         </div>
+		
+		<div class="terminal-box" id="box-ark">
+            <div class="box-header">
+                <img src="arklogo.png" alt="Ark Survival Ascended" class="game-logo-mini">
+                <div class="game-info-top">
+                    <h2>ARK: SURVIVAL ASCENDED</h2>
+                    <p class="game-desc">Form a tribe, tame and breed hundreds of unique dinosaurs and primeval creatures, explore, craft, build, and fight your way to the top of the food-chain.</p>
+                </div>
+            </div>
+            <div class="telemetry-row">
+                <div class="stat-block">
+                    <a href="https://store.steampowered.com/app/2399830/" target="_blank">
+                        <img src="buyonsteam.png" class="steam-buy-btn" alt="Buy on Steam">
+                    </a>
+                    <span class="stat-value" id="price-ark">Scanning...</span>
+                </div>
+                <div class="stat-block">
+                    <img src="globalplayercount.png" class="stat-label-img" alt="Global">
+                    <span class="stat-value" id="global-ark">Scanning...</span>
+                </div>
+                <div class="stat-block">
+                    <img src="radioanarchyplayercount.png" class="stat-label-img" alt="RA Network">
+                    <span class="stat-value" id="ra-ark">Scanning...</span>
+                </div>
+            </div>
+            <div class="server-list">
+                <div class="server-item">
+                    <div class="server-name">KHG | Ark Survival Ascended</div>
+                    <img src="serveroffline.png" class="status-icon" id="status-ark">
+                </div>
+            </div>
+            
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #555; display: flex; align-items: center; justify-content: center; gap: 15px;">
+                <img src="khglogo.png" alt="Kold Hard Gaming" style="height: 40px; object-fit: contain; filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));">
+                <p style="margin: 0; font-size: 0.8rem; color: #00ffcc; text-align: center; text-transform: uppercase; letter-spacing: 1px;">
+                    It is a Kold Hard Gaming server<br>hosted by Radio Anarchy
+                </p>
+                <img src="radioanarchylogo.png" alt="Radio Anarchy" style="height: 40px; object-fit: contain; filter: drop-shadow(0 0 5px #ff0055);">
+            </div>
+        </div>
 
         <div class="terminal-box" id="box-beamng">
             <div class="box-header">
@@ -553,7 +593,7 @@
             .then(res => res.json())
             .then(data => {
                 // A. Update Steam Prices & Global Player Counts
-                const games = ['dayz', 'gta', '7dtd', 'beamng', 'vein', 'valheim'];
+                const games = ['dayz', 'gta', '7dtd', 'ark', 'beamng', 'vein', 'valheim'];
                 games.forEach(game => {
                     if (data.stats && data.stats[game]) {
                         const priceEl = document.getElementById(`price-${game}`);
@@ -564,7 +604,7 @@
                 });
 
                 // B. Update Radio Anarchy Role Counts
-                const raGames = ['dayz', 'gta', '7dtd', 'beamng', 'vein', 'valheim', 'mtg', 'yugioh', 'pokemon', 'dnd'];
+                const raGames = ['dayz', 'gta', '7dtd', 'ark', 'beamng', 'vein', 'valheim', 'mtg', 'yugioh', 'pokemon', 'dnd'];
                 raGames.forEach(game => {
                     if (data.ra_counts && data.ra_counts[game] !== undefined) {
                         const raEl = document.getElementById(`ra-${game}`);
