@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radio Anarchy | Stream Schedule</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        /* Base and Parallax Background */
+        body {
+            margin: 0; padding: 0;
+            background: #050505 url('RadioAnarchyBackground.png') no-repeat center top fixed;
+            background-size: cover; color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center; overflow-x: hidden;
+            opacity: 0; /* START INVISIBLE FOR SECURITY */
+            transition: opacity 0.4s ease-in;
+            padding-bottom: 50px;
+        }
+
+        .top-banner {
+            width: 100%; display: block; background: #000; 
+            position: relative; z-index: 10; border-bottom: 2px solid #ff0055;
+        }
+
+        /* --- TOP UI BAR (Profile & Nav) --- */
+        .top-ui-row {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            width: 95%; max-width: 1600px; margin: 30px auto 30px auto;
+        }
+
+        #user-profile-box {
+            background: rgba(15, 5, 10, 0.85); border: 2px solid #00ffcc; border-radius: 12px;
+            padding: 20px; box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+            display: flex; flex-direction: column; gap: 15px; width: 320px; box-sizing: border-box;
+        }
+        .profile-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        #user-name { color: #fff; font-size: 1.3rem; font-weight: bold; text-shadow: 0 0 8px #fff; text-align: left; margin-top: 5px;}
+        #user-avatar { width: 65px; height: 65px; border-radius: 50%; border: 2px solid #ff0055; object-fit: cover; }
+        #user-roles-container { display: flex; flex-direction: column; gap: 6px; text-align: left; margin-bottom: 5px; }
+        .role-badge {
+            font-size: 0.85rem; font-weight: bold; background: rgba(0, 0, 0, 0.6);
+            padding: 5px 10px; border-radius: 4px; border-left: 4px solid #00ffcc; 
+            color: #ddd; text-shadow: 0 0 5px rgba(255,255,255,0.3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+
+        /* Hub Nav Dropdown */
+        .hub-nav-wrapper { position: relative; display: inline-block; text-align: right; }
+        .nav-trigger-btn {
+            background: rgba(15, 5, 10, 0.9); border: 2px solid #ff0055; color: #ff0055;
+            padding: 15px 30px; font-size: 1.2rem; font-weight: bold; letter-spacing: 2px;
+            border-radius: 8px; cursor: pointer; text-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.2); transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+        }
+        .nav-trigger-btn:hover { background: #ff0055; color: #000; box-shadow: 0 0 25px #ff0055; }
+        
+        .dropdown-content {
+            display: none; position: absolute; right: 0; top: 110%;
+            background: rgba(5, 5, 8, 0.98); border: 2px solid #00ffcc; border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.9), 0 0 20px rgba(0, 255, 204, 0.3);
+            min-width: 280px; z-index: 1000; text-align: left; overflow: hidden;
+        }
+        .hub-nav-wrapper:hover .dropdown-content { display: flex; flex-direction: column; }
+        
+        .drop-link {
+            color: #fff; padding: 12px 20px; text-decoration: none; border-bottom: 1px dashed #333;
+            transition: all 0.2s ease; font-size: 0.95rem; font-weight: bold;
+        }
+        .drop-link:hover { background: rgba(0, 255, 204, 0.15); color: #00ffcc; padding-left: 25px; }
+        .drop-header { background: #00ffcc; color: #000; padding: 8px 20px; font-size: 0.8rem; font-weight: bold; letter-spacing: 2px; }
+
+        .btn-graphic { transition: transform 0.2s, filter 0.2s; cursor: pointer; }
+        .btn-graphic:hover { transform: translateY(-3px); filter: drop-shadow(0 0 12px #00ffcc); }
+        .btn-graphic-small { width: 140px; }
+        
+        /* --- HEADER LOGO STACK --- */
+        .tkb-header-container {
+            position: relative; 
+            margin: 0 auto 40px auto; 
+            width: 100%; max-width: 600px;
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; align-items: center;
+        }
+        .behind-logo {
+            width: 180px; 
+            position: relative; 
+            z-index: 2; 
+            filter: drop-shadow(0 0 10px rgba(0, 255, 204, 0.4));
+            margin-bottom: -20px; 
+        }
+        .main-logo {
+            width: 350px; 
+            position: relative; z-index: 1;
+            filter: drop-shadow(0 0 20px #ff0055);
+        }
+
+        /* --- THE GRID LAYOUT --- */
+        .tkb-grid {
+            display: grid; 
+            grid-template-columns: 2fr 1fr; 
+            gap: 30px;
+            width: 90%; max-width: 1400px; margin: 0 auto 60px auto;
+        }
+
+        .terminal-box {
+            background: rgba(15, 5, 10, 0.85); border: 2px solid #ff0055; border-radius: 12px;
+            padding: 25px; box-shadow: 0 0 20px rgba(255, 0, 85, 0.15); text-align: left;
+            display: flex; flex-direction: column;
+        }
+        
+        .box-title {
+            color: #00ffcc; font-size: 1.4rem; letter-spacing: 2px; text-shadow: 0 0 10px #00ffcc;
+            border-bottom: 1px dashed #555; padding-bottom: 10px; margin-top: 0; margin-bottom: 20px;
+        }
+
+        /* --- STREAM BOARD STYLES --- */
+        .stream-board-container {
+            max-height: 600px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding-right: 10px;
+        }
+
+        /* Custom Scrollbar */
+        .stream-board-container::-webkit-scrollbar { width: 8px; }
+        .stream-board-container::-webkit-scrollbar-track { background: rgba(0,0,0,0.5); border-radius: 4px; }
+        .stream-board-container::-webkit-scrollbar-thumb { background: #ff0055; border-radius: 4px; }
+
+        .stream-entry {
+            background: rgba(20, 20, 25, 0.8);
+            border-left: 4px solid #00ffcc;
+            padding: 20px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+        .stream-entry:hover {
+            transform: scale(1.01);
+            background: rgba(30, 30, 35, 0.9);
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.1);
+        }
+
+        .stream-entry-details { display: flex; flex-direction: column; gap: 5px; }
+        .stream-entry-title { color: #fff; font-size: 1.3rem; font-weight: bold; text-shadow: 0 0 5px rgba(255,255,255,0.3); }
+        .stream-entry-author { color: #ffaa00; font-size: 0.9rem; font-weight: bold; letter-spacing: 1px;}
+        
+        .stream-entry-timebox { text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
+        .stream-entry-time { color: #00ffcc; font-weight: bold; font-size: 1.5rem; text-shadow: 0 0 8px rgba(0,255,204,0.5); }
+        .stream-entry-date { color: #bbb; font-size: 0.85rem; }
+
+        /* --- FORM STYLES --- */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            color: #00ffcc;
+            font-size: 0.9rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .form-input {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px dashed #555;
+            color: #fff;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+        .form-input:focus {
+            border-color: #00ffcc;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+        }
+        /* Custom date picker icon tint */
+        ::-webkit-calendar-picker-indicator { filter: invert(1) hue-rotate(180deg); cursor: pointer; }
+
+        .btn-right-align {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        /* Nedry Pop-up */
+        #nedry-security-box {
+            position: fixed; bottom: -800px; left: 50%; transform: translateX(-50%);
+            background: rgba(15, 5, 10, 0.98); border: 3px solid #ff0055; border-radius: 12px;
+            padding: 30px; box-shadow: 0 0 50px rgba(255, 0, 85, 0.8); z-index: 30000;
+            text-align: center; transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 90%; max-width: 550px;
+        }
+        #nedry-security-box.nedry-show { bottom: 40px; }
+
+        /* Custom Notifications */
+        #ra-notification {
+            position: fixed; bottom: -150px; right: 20px; width: 350px;
+            background: rgba(15, 5, 10, 0.95); border: 2px solid #ff0055; border-radius: 8px;
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.4); display: flex; align-items: center; gap: 15px;
+            padding: 15px; z-index: 9999; transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+        #ra-notification.show-notif { bottom: 20px; }
+        #ra-notif-gif { width: 60px; height: 60px; border-radius: 4px; object-fit: cover; border: 1px solid #00ffcc; }
+        .ra-notif-content { display: flex; flex-direction: column; gap: 5px; text-align: left; }
+        #ra-notif-title { margin: 0; color: #00ffcc; font-size: 1.1rem; letter-spacing: 1px; text-shadow: 0 0 5px #00ffcc; }
+        #ra-notif-message { margin: 0; color: #ddd; font-size: 0.85rem; line-height: 1.3; }
+
+        @media (max-width: 1100px) {
+            .tkb-grid { grid-template-columns: 1fr; }
+            .top-ui-row { flex-direction: column; align-items: center; gap: 30px; }
+            .hub-nav-wrapper { text-align: center; }
+            .dropdown-content { right: auto; left: 50%; transform: translateX(-50%); }
+        }
+    </style>
+</head>
+<body>
+
+    <img src="RadioAnarchyBanner.png" class="top-banner" alt="Banner">
+
+    <div class="top-ui-row">
+        <div id="user-profile-box" style="display: none;">
+            <div class="profile-header">
+                <span id="user-name"></span>
+                <img id="user-avatar" src="default-avatar.png" alt="Avatar">
+            </div>
+            <div id="user-roles-container"></div>
+            <a href="profile.html"><img src="playerprofile.png" alt="Profile" class="btn-graphic btn-graphic-small" style="margin-top: 10px;"></a>
+        </div>
+        <div id="nav-spacer"></div>
+        <div class="hub-nav-wrapper">
+            <div id="auth-nav" style="display: none;">
+                <div class="nav-trigger-btn">HUB NAV ▼</div>
+                <div class="dropdown-content">
+                    <div class="drop-header">HOME</div>
+                    <a href="index.html" class="drop-link">Home Terminal</a>
+                    <div class="drop-header" style="margin-top: 5px;">INFORMATION STATION</div>
+                    <a href="news.html" class="drop-link">News Station</a>
+                    <a href="games.html" class="drop-link">Games & Servers</a>
+                    <a href="store.html" class="drop-link">The Shoppe</a>
+                    <a href="discordroles.html" class="drop-link">Discord Roles</a>
+                    <div class="drop-header" style="margin-top: 5px;">COMMUNITY COLLEGE</div>
+                    <a href="tkb.html" class="drop-link">The Knowledge Base</a>
+                    <a href="modhub.html" class="drop-link">Mod Hub</a>
+                    <a href="video.html" class="drop-link">Video Tutorials</a>
+                    <a href="vault.html" class="drop-link">Retro Vault</a>
+                    <div class="drop-header" style="margin-top: 5px;">COMMUNITY HUB</div>
+                    <a href="comnet.html" class="drop-link">Community Network</a>
+                    <a href="combil.html" class="drop-link">Community Billboard</a>
+                    <a href="watch.html" class="drop-link">Stream Schedule</a>
+                    <div class="drop-header" style="margin-top: 5px;">THE LOUNGES</div>
+                    <a href="players.html" class="drop-link">Players Lounge</a>
+                    <a href="owners.html" class="drop-link restricted-link" data-role="Server Owner">Server Owners Lounge</a>
+                    <a href="create.html" class="drop-link restricted-link" data-role="Creator">Creators Lounge</a>
+                    <a href="mod.html" class="drop-link restricted-link" data-role="Modder">Modders Lounge</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tkb-header-container">
+        <img src="streamschedulelogo.png" alt="Stream Schedule Icon" class="behind-logo">
+        <img src="streamschedule.png" alt="Stream Schedule" class="main-logo">
+    </div>
+
+    <div class="tkb-grid">
+        
+        <div class="terminal-box">
+            <h2 class="box-title">NETWORK BROADCAST SCHEDULE</h2>
+            <div id="stream-board" class="stream-board-container">
+                <div style="color: #888; text-align: center; padding: 20px;">Establishing secure connection to network schedule...</div>
+            </div>
+        </div>
+
+        <div class="terminal-box">
+            <h2 class="box-title">TRANSMIT TO BOARD</h2>
+            <p style="color: #888; font-size: 0.85rem; margin-top: 0;">Authorized creators only. Enter stream parameters below to notify the network.</p>
+
+            <div class="form-group">
+                <label>Stream Name & Platform</label>
+                <input type="text" id="stream-name" class="form-input" placeholder="e.g. DayZ Deerisle Wipe (Twitch)" maxlength="200">
+            </div>
+            
+            <div class="form-group">
+                <label>Date of Broadcast</label>
+                <input type="text" id="stream-date" class="form-input" placeholder="MM/DD/YYYY">
+            </div>
+
+            <div class="form-group">
+                <label>Time (Local Time)</label>
+                <input type="time" id="stream-time" class="form-input">
+            </div>
+
+            <div class="btn-right-align">
+                <img src="submit.png" alt="Submit" class="btn-graphic" id="btn-submit-stream" style="width: 160px;">
+            </div>
+        </div>
+
+    </div>
+
+    <div id="nedry-security-box">
+        <h2 style="color: #ff0055; margin-top: 0; font-size: 1.8rem; text-shadow: 0 0 10px #ff0055;">Ah ah ah! You didn't say the magic word...</h2>
+        <img id="nedry-gif" src="silentsaysno.gif" alt="Access Denied" style="width: 100%; max-width: 400px; border: 2px solid #00ffcc; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);">
+    </div>
+
+    <div id="ra-notification" class="ra-notification-hidden">
+        <img id="ra-notif-gif" src="" alt="Notification Icon">
+        <div class="ra-notif-content">
+            <h3 id="ra-notif-title">SYSTEM ALERT</h3>
+            <p id="ra-notif-message">Message goes here.</p>
+        </div>
+    </div>
+
+    <script>
+        // Background Scroll
+        window.addEventListener('scroll', function() {
+            const scrollPosition = window.pageYOffset;
+            document.body.style.backgroundPositionY = -(scrollPosition * 0.3) + 'px';
+        });
+
+        // Notifications
+        function showNotification(title, message, gifName, audioName) {
+            const notifBox = document.getElementById('ra-notification');
+            const notifTitle = document.getElementById('ra-notif-title');
+            const notifMessage = document.getElementById('ra-notif-message');
+            const notifGif = document.getElementById('ra-notif-gif');
+
+            notifTitle.innerText = title;
+            notifMessage.innerText = message;
+            
+            if (gifName) {
+                notifGif.src = gifName;
+                notifGif.style.display = 'block';
+            } else {
+                notifGif.style.display = 'none';
+            }
+
+            if (audioName) {
+                const sound = new Audio(audioName);
+                sound.play().catch(err => console.log("Audio playback failed:", err));
+            }
+
+            notifBox.classList.add('show-notif');
+            setTimeout(() => notifBox.classList.remove('show-notif'), 5000); 
+        }
+
+        // Nedry Protocol
+        const nedrySound = new Audio('dennis_nedry_ahahah.mp3'); 
+        nedrySound.preload = 'auto';
+
+        function triggerNedry() {
+            const nedryBox = document.getElementById('nedry-security-box');
+            nedryBox.classList.add('nedry-show');
+            
+            nedrySound.currentTime = 0;
+            let p1 = nedrySound.play();
+            if (p1 !== undefined) p1.catch(e => console.log(e));
+
+            setTimeout(() => {
+                nedrySound.currentTime = 0;
+                let p2 = nedrySound.play();
+                if (p2 !== undefined) p2.catch(e => console.log(e));
+            }, 5000);
+
+            setTimeout(() => nedryBox.classList.remove('nedry-show'), 10000);
+        }
+
+        let activeClearances = [];
+
+        // Auth Check & Setup
+        fetch('https://api.radioanarchy.gg:8202/auth/me', { method: 'GET', credentials: 'include' })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.loggedIn) {
+                    window.location.href = 'index.html';
+                    return;
+                }
+                
+                document.body.style.opacity = '1';
+                
+                if (data.roles) {
+                    activeClearances = data.roles.map(r => r.name);
+                }
+                
+                document.getElementById('nav-spacer').style.display = 'none';
+                document.getElementById('user-profile-box').style.display = 'flex';
+                document.getElementById('user-name').innerText = data.displayUsername;
+                document.getElementById('user-avatar').src = data.displayAvatar || 'default-avatar.png';
+                
+                const rolesContainer = document.getElementById('user-roles-container');
+                if (data.roles && data.roles.length > 0) {
+                    data.roles.slice(0, 5).forEach(role => {
+                        const badge = document.createElement('div');
+                        badge.className = 'role-badge';
+                        badge.style.borderLeftColor = (role.color && role.color !== '#000000') ? role.color : '#00ffcc';
+                        badge.innerText = role.name;
+                        rolesContainer.appendChild(badge);
+                    });
+                } else {
+                    rolesContainer.innerHTML = '<span style="color:#aaa; font-size:0.8rem;">No Clearances</span>';
+                }
+
+                document.getElementById('auth-nav').style.display = 'block';
+                
+                // Once logged in, fetch the board!
+                loadStreamBoard();
+            }).catch(err => {
+                console.error("Auth check failed:", err);
+                window.location.href = 'index.html';
+            });
+
+        // Restricted Link Protection
+        document.querySelectorAll('.restricted-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const requiredRole = this.getAttribute('data-role');
+                let isAuthorized = activeClearances.includes("Admin") || activeClearances.includes("Head Admin") || activeClearances.includes("Owner");
+
+                if (!isAuthorized) {
+                    if (requiredRole === "Server Owner") {
+                        isAuthorized = activeClearances.includes("Server Owner") || activeClearances.includes("Cert. Game Admin");
+                    } else {
+                        isAuthorized = activeClearances.includes(requiredRole);
+                    }
+                }
+
+                if (!isAuthorized) {
+                    e.preventDefault(); 
+                    triggerNedry();
+                }
+            });
+        });
+
+        // --- FETCH & RENDER THE STREAM BOARD ---
+        async function loadStreamBoard() {
+            try {
+                const res = await fetch('https://api.radioanarchy.gg:8202/api/stream-board', { method: 'GET' });
+                const streams = await res.json();
+                
+                const boardContainer = document.getElementById('stream-board');
+                boardContainer.innerHTML = ''; // Clear loading text
+                
+                if (streams.length === 0) {
+                    boardContainer.innerHTML = '<div style="color: #888; text-align: center; padding: 20px;">No incoming broadcasts detected.</div>';
+                    return;
+                }
+
+                streams.forEach(stream => {
+                    boardContainer.innerHTML += `
+                        <div class="stream-entry">
+                            <div class="stream-entry-details">
+                                <span class="stream-entry-title">${stream.stream_name}</span>
+                                <span class="stream-entry-author">Host: ${stream.author_name}</span>
+                            </div>
+                            <div class="stream-entry-timebox">
+                                <span class="stream-entry-time">${stream.formatted_time}</span>
+                                <span class="stream-entry-date">${stream.formatted_date}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                console.error("Failed to load stream board:", err);
+                document.getElementById('stream-board').innerHTML = '<div style="color: #ff0055; text-align: center; padding: 20px;">Failed to connect to the broadcast network.</div>';
+            }
+        }
+
+        // --- TRANSMIT TO THE BOARD ---
+        document.getElementById('btn-submit-stream').addEventListener('click', async () => {
+            // THE NEDRY PROTOCOL: Check for Creator, Admin, Head Admin, or Owner clearance
+            let isAuthorized = activeClearances.includes("Creator") || activeClearances.includes("Admin") || activeClearances.includes("Head Admin") || activeClearances.includes("Owner");
+
+            if (!isAuthorized) {
+                triggerNedry();
+                return;
+            }
+
+            const streamName = document.getElementById('stream-name').value;
+            const streamDate = document.getElementById('stream-date').value;
+            const streamTime = document.getElementById('stream-time').value;
+
+            if (!streamName || !streamDate || !streamTime) {
+                showNotification("TRANSMISSION FAILED", "All fields must be filled to broadcast.", "silentsaysno.gif", "dennis_nerdy_ahahah.mp3");
+                return;
+            }
+
+            try {
+                const res = await fetch('https://api.radioanarchy.gg:8202/api/stream-board', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ streamName, streamDate, streamTime })
+                });
+
+                if (res.ok) {
+                    showNotification("SCHEDULE UPDATED", "Your transmission has been added to the network board.", "emailsent.gif", "type.mp3");
+                    // Clear the form
+                    document.getElementById('stream-name').value = '';
+                    document.getElementById('stream-date').value = '';
+                    document.getElementById('stream-time').value = '';
+                    // Refresh the board to show the new addition
+                    loadStreamBoard();
+                } else {
+                    const errData = await res.json();
+                    showNotification("TRANSMISSION FAILED", errData.error || "Network rejected the schedule.", "silentsaysno.gif", "");
+                }
+            } catch (err) {
+                console.error("Submission error:", err);
+                showNotification("CRITICAL ERROR", "Connection to the Secure Engine failed.", "silentsaysno.gif", "");
+            }
+        });
+    </script>
+</body>
+</html>
