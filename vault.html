@@ -85,8 +85,20 @@
         .offset-large { margin-top: -10px !important; } /* GBC, Gameboy, MasterSystem */
         .offset-medium { margin-top: -18px !important; } /* PS5, PS2, NeoGeo, Atari800, 3DS */
         .offset-standard { margin-top: -28px; } /* Everything Else */
+
+        /* Nedry Pop-up */
+        #nedry-security-box {
+            position: fixed; bottom: -800px; left: 50%; transform: translateX(-50%);
+            background: rgba(15, 5, 10, 0.98); border: 3px solid #ff0055; border-radius: 12px;
+            padding: 30px; box-shadow: 0 0 50px rgba(255, 0, 85, 0.8); z-index: 30000;
+            text-align: center; transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 90%; max-width: 550px;
+        }
+        #nedry-security-box.nedry-show { bottom: 40px; }
     </style>
     <script>
+        let activeClearances = [];
+
         document.addEventListener("DOMContentLoaded", () => {
             // Parallax Engine
             window.addEventListener('scroll', () => {
@@ -94,36 +106,103 @@
             });
 
             // Security & Auth Engine - Verifying Credentials
-            fetch('[link removed]
-```auth/me', { credentials: 'include' })
+            fetch('https://api.radioanarchy.gg:8202/auth/me', { method: 'GET', credentials: 'include' })
                 .then(res => res.json())
                 .then(data => {
                     if (!data.loggedIn) {
                         window.location.href = 'index.html'; 
+                        return;
+                    } 
+                    
+                    // IF APPROVED, TURN THE LIGHTS ON
+                    document.body.style.opacity = '1';
+                    
+                    // Display Profile and Nav
+                    document.getElementById('user-profile-box').style.display = 'flex';
+                    document.getElementById('auth-nav').style.display = 'block';
+
+                    document.getElementById('user-name').innerText = data.displayUsername;
+                    document.getElementById('user-avatar').src = data.displayAvatar || 'default-avatar.png';
+                    
+                    if (data.roles) {
+                        activeClearances = data.roles.map(r => r.name);
+                    }
+
+                    const container = document.getElementById('user-roles-container');
+                    if (data.roles && data.roles.length > 0) {
+                        // TOP 5 ROLES LIMIT
+                        data.roles.slice(0, 5).forEach(role => {
+                            const b = document.createElement('div');
+                            b.className = 'role-badge';
+                            b.style.borderLeftColor = (role.color && role.color !== '#000000') ? role.color : '#00ffcc';
+                            b.innerText = role.name;
+                            container.appendChild(b);
+                        });
                     } else {
-                        document.body.style.opacity = '1';
-                        document.getElementById('user-name').innerText = data.displayUsername;
-                        document.getElementById('user-avatar').src = data.displayAvatar || 'default-avatar.png';
-                        const container = document.getElementById('user-roles-container');
-                        if (data.roles) {
-                            // TOP 5 ROLES LIMIT
-                            data.roles.slice(0, 5).forEach(role => {
-                                const b = document.createElement('div');
-                                b.className = 'role-badge';
-                                b.style.borderLeftColor = role.color || '#00ffcc';
-                                b.innerText = role.name;
-                                container.appendChild(b);
-                            });
+                        container.innerHTML = '<span style="color:#aaa; font-size:0.8rem;">No Clearances</span>';
+                    }
+                }).catch(err => { 
+                    console.error("Auth check failed:", err);
+                    window.location.href = 'index.html'; 
+                });
+
+            // Security Modals & Restricted Links Check
+            const nedrySound = new Audio('dennis_nedry_ahahah.mp3'); 
+            nedrySound.preload = 'auto';
+
+            function triggerNedry() {
+                const nedryBox = document.getElementById('nedry-security-box');
+                const nedryGif = document.getElementById('nedry-gif');
+                nedryGif.src = 'silentsaysno.gif'; 
+                nedryBox.classList.add('nedry-show');
+                
+                nedrySound.currentTime = 0;
+                let p1 = nedrySound.play();
+                if (p1 !== undefined) p1.catch(e => console.log(e));
+
+                setTimeout(() => {
+                    nedrySound.currentTime = 0;
+                    let p2 = nedrySound.play();
+                    if (p2 !== undefined) p2.catch(e => console.log(e));
+                }, 5000);
+
+                setTimeout(() => nedryBox.classList.remove('nedry-show'), 10000);
+            }
+
+            document.querySelectorAll('.restricted-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const requiredRole = this.getAttribute('data-role');
+                    
+                    // 1. Give Master Keys to top staff so they never get locked out
+                    let isAuthorized = activeClearances.includes("Admin") ||
+                                       activeClearances.includes("Head Admin") || 
+                                       activeClearances.includes("Owner");
+
+                    // 2. If not a Master Admin, check specific room clearances
+                    if (!isAuthorized) {
+                        if (requiredRole === "Server Owner") {
+                            // Server Owners Lounge allows "Server Owner" OR "Cert. Game Admin"
+                            isAuthorized = activeClearances.includes("Server Owner") || activeClearances.includes("Cert. Game Admin");
+                        } else {
+                            // Modders and Creators require their exact badge
+                            isAuthorized = activeClearances.includes(requiredRole);
                         }
                     }
-                }).catch(() => { window.location.href = 'index.html'; });
+
+                    // 3. Trigger Nedry if they failed the checks
+                    if (!isAuthorized) {
+                        e.preventDefault(); 
+                        triggerNedry();
+                    }
+                });
+            });
         });
     </script>
 </head>
 <body>
 
     <div class="top-ui-row">
-        <div id="user-profile-box">
+        <div id="user-profile-box" style="display: none;">
             <div class="profile-header">
                 <div id="user-name">CONNECTING...</div>
                 <img src="default-avatar.png" id="user-avatar">
@@ -133,25 +212,31 @@
         </div>
 
         <div class="hub-nav-wrapper">
-            <button class="nav-trigger-btn">HUB_MENU ▼</button>
-            <div class="dropdown-content">
-                <div class="drop-header">HOME</div>
-                <a href="index.html" class="drop-link">Home Terminal</a>
-                <div class="drop-header">INFORMATION STATION</div>
-                <a href="news.html" class="drop-link">News Station</a>
-                <a href="games.html" class="drop-link">Games & Servers</a>
-                <a href="store.html" class="drop-link">The Shoppe</a>
-                <a href="discordroles.html" class="drop-link">Discord Roles</a>
-                <div class="drop-header">COMMUNITY COLLEGE</div>
-                <a href="tkb.html" class="drop-link">The Knowledge Base</a>
-                <a href="modhub.html" class="drop-link">Mod Hub</a>
-                <a href="video.html" class="drop-link">Video Tutorials</a>
-                <a href="vault.html" class="drop-link">Retro Vault</a>
-                <div class="drop-header">THE LOUNGES</div>
-                <a href="players.html" class="drop-link">Players Lounge</a>
-                <a href="owners.html" class="drop-link">Owners Lounge</a>
-                <a href="create.html" class="drop-link">Creators Lounge</a>
-                <a href="mod.html" class="drop-link">Modders Lounge</a>
+            <div id="auth-nav" style="display: none;">
+                <button class="nav-trigger-btn">HUB_MENU ▼</button>
+                <div class="dropdown-content">
+                    <div class="drop-header">HOME</div>
+                    <a href="index.html" class="drop-link">Home Terminal</a>
+                    <div class="drop-header" style="margin-top: 5px;">INFORMATION STATION</div>
+                    <a href="news.html" class="drop-link">News Station</a>
+                    <a href="games.html" class="drop-link">Games & Servers</a>
+                    <a href="store.html" class="drop-link">The Shoppe</a>
+                    <a href="discordroles.html" class="drop-link">Discord Roles</a>
+                    <div class="drop-header" style="margin-top: 5px;">COMMUNITY COLLEGE</div>
+                    <a href="tkb.html" class="drop-link">The Knowledge Base</a>
+                    <a href="modhub.html" class="drop-link">Mod Hub</a>
+                    <a href="video.html" class="drop-link">Video Tutorials</a>
+                    <a href="vault.html" class="drop-link">Retro Vault</a>
+                    <div class="drop-header" style="margin-top: 5px;">COMMUNITY HUB</div>
+                    <a href="comnet.html" class="drop-link">Community Network</a>
+                    <a href="combil.html" class="drop-link">Community Billboard</a>
+                    <a href="watch.html" class="drop-link">Stream Schedule</a>
+                    <div class="drop-header" style="margin-top: 5px;">THE LOUNGES</div>
+                    <a href="players.html" class="drop-link">Players Lounge</a>
+                    <a href="owners.html" class="drop-link restricted-link" data-role="Server Owner">Server Owners Lounge</a>
+                    <a href="create.html" class="drop-link restricted-link" data-role="Creator">Creators Lounge</a>
+                    <a href="mod.html" class="drop-link restricted-link" data-role="Modder">Modders Lounge</a>
+                </div>
             </div>
         </div>
     </div>
@@ -195,5 +280,11 @@
             <a href="vault26.html" class="system-slot"><img src="xboxxlogo.png" class="system-logo"><img src="xboxxs.png" class="system-console offset-standard"></a>
         </div>
     </div>
+
+    <div id="nedry-security-box">
+        <h2 style="color: #ff0055; margin-top: 0; font-size: 1.8rem; text-shadow: 0 0 10px #ff0055;">Ah ah ah! You didn't say the magic word...</h2>
+        <img id="nedry-gif" src="silentsaysno.gif" alt="Access Denied" style="width: 100%; max-width: 400px; border: 2px solid #00ffcc; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);">
+    </div>
+
 </body>
-</html> 
+</html>
