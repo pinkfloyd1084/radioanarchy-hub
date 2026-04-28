@@ -17,7 +17,7 @@
             transition: opacity 0.4s ease-in;
         }
 
-        /* Top UI Row */
+        /* --- TOP UI BAR (Profile & Nav) --- */
         .top-ui-row {
             display: flex; justify-content: space-between; align-items: flex-start;
             width: 95%; max-width: 1600px; margin: 30px auto 30px auto;
@@ -27,15 +27,16 @@
             background: rgba(15, 5, 10, 0.85); border: 2px solid #00ffcc; border-radius: 12px;
             padding: 20px; box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
             display: flex; flex-direction: column; gap: 15px; width: 320px; box-sizing: border-box;
+            text-align: left;
         }
         .profile-header { display: flex; justify-content: space-between; align-items: flex-start; }
-        #user-name { color: #fff; font-size: 1.3rem; font-weight: bold; text-shadow: 0 0 8px #fff; text-align: left; }
-        #user-avatar { width: 65px; height: 65px; border-radius: 50%; border: 2px solid #ff0055; object-fit: cover; }
-        #user-roles-container { display: flex; flex-direction: column; gap: 6px; text-align: left; }
+        #user-name { color: #fff; font-size: 1.3rem; font-weight: bold; text-shadow: 0 0 8px #fff; word-break: break-all; }
+        #user-avatar { width: 65px; height: 65px; border-radius: 50%; border: 2px solid #ff0055; object-fit: cover; flex-shrink: 0; }
+        #user-roles-container { display: flex; flex-direction: column; gap: 6px; margin-bottom: 5px; }
         .role-badge {
             font-size: 0.85rem; font-weight: bold; background: rgba(0, 0, 0, 0.6);
             padding: 5px 10px; border-radius: 4px; border-left: 4px solid #00ffcc; 
-            color: #ddd; text-shadow: 0 0 5px rgba(255,255,255,0.3);
+            color: #ddd; text-shadow: 0 0 5px rgba(255,255,255,0.3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
 
         /* Hub Nav Dropdown */
@@ -44,29 +45,37 @@
             background: rgba(15, 5, 10, 0.9); border: 2px solid #ff0055; color: #ff0055;
             padding: 15px 30px; font-size: 1.2rem; font-weight: bold; letter-spacing: 2px;
             border-radius: 8px; cursor: pointer; text-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
-            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.2); transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
         }
         .nav-trigger-btn:hover { background: #ff0055; color: #000; box-shadow: 0 0 25px #ff0055; }
         .dropdown-content {
             display: none; position: absolute; right: 0; top: 110%;
             background: rgba(5, 5, 8, 0.98); border: 2px solid #00ffcc; border-radius: 8px;
-            min-width: 280px; z-index: 1000; text-align: left; flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.9), 0 0 20px rgba(0, 255, 204, 0.3);
+            min-width: 280px; z-index: 1000; text-align: left; overflow: hidden;
         }
-        .hub-nav-wrapper:hover .dropdown-content { display: flex; }
-        .drop-link { color: #fff; padding: 12px 20px; text-decoration: none; border-bottom: 1px dashed #333; }
-        .drop-link:hover { background: rgba(0, 255, 204, 0.15); color: #00ffcc; }
+        .hub-nav-wrapper:hover .dropdown-content { display: flex; flex-direction: column; }
+        .drop-header { background: #00ffcc; color: #000; padding: 8px 20px; font-size: 0.8rem; font-weight: bold; letter-spacing: 2px; }
+        .drop-link { color: #fff; padding: 12px 20px; text-decoration: none; border-bottom: 1px dashed #333; transition: all 0.2s ease; font-size: 0.95rem; font-weight: bold; }
+        .drop-link:hover { background: rgba(0, 255, 204, 0.15); color: #00ffcc; padding-left: 25px; }
 
-        /* Vault Header Stack */
+        /* Vault Header */
         .vault-header { display: flex; flex-direction: column; align-items: center; margin-bottom: 60px; }
         .header-main { width: 550px; z-index: 2; filter: drop-shadow(0 0 15px #ff0055); }
         .header-sub { width: 480px; margin-top: -35px; z-index: 1; filter: drop-shadow(0 0 10px #00ffcc); }
 
-        /* The Grid */
+        /* --- THE TINTED GRID --- */
         .vault-grid {
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px;
             width: 90%; max-width: 1550px; margin: 0 auto 80px auto;
         }
-        .column { border: 2px solid red; padding: 30px; display: flex; flex-direction: column; gap: 45px; border-radius: 12px; }
+        .column { 
+            background: rgba(15, 5, 10, 0.85); /* TINTED BACKDROP */
+            border: 2px solid #ff0055; /* Changed to Red-Pink to match Theme Boxes */
+            padding: 30px; display: flex; flex-direction: column; gap: 45px; 
+            border-radius: 12px; box-shadow: 0 0 20px rgba(255, 0, 85, 0.15);
+        }
 
         /* Slot Styling */
         .system-slot { display: flex; flex-direction: column; align-items: center; text-decoration: none; transition: transform 0.2s ease; }
@@ -81,22 +90,28 @@
                 document.body.style.backgroundPositionY = -(window.pageYOffset * 0.3) + 'px';
             });
 
-            // Security & Auth Check
-            fetch('https://api.radioanarchy.gg:8202/auth/me', { credentials: 'include' })
+            // Security & Auth Engine
+            fetch('[link removed]
+```auth/me', { credentials: 'include' })
                 .then(res => res.json())
                 .then(data => {
                     if (!data.loggedIn) {
-                        window.location.href = 'index.html';
+                        window.location.href = 'index.html'; // BOOT TO INDEX
                     } else {
                         document.body.style.opacity = '1';
                         document.getElementById('user-name').innerText = data.displayUsername;
                         document.getElementById('user-avatar').src = data.displayAvatar || 'default-avatar.png';
+                        
                         const container = document.getElementById('user-roles-container');
-                        if (data.roles) {
-                            data.roles.forEach(role => {
+                        container.innerHTML = '';
+                        
+                        // TOP 5 ROLES LIMIT
+                        if (data.roles && data.roles.length > 0) {
+                            const topRoles = data.roles.slice(0, 5); 
+                            topRoles.forEach(role => {
                                 const b = document.createElement('div');
                                 b.className = 'role-badge';
-                                b.style.borderLeftColor = role.color || '#00ffcc';
+                                b.style.borderLeftColor = (role.color && role.color !== '#000000') ? role.color : '#00ffcc';
                                 b.innerText = role.name;
                                 container.appendChild(b);
                             });
@@ -109,6 +124,7 @@
 <body>
 
     <div class="top-ui-row">
+        <!-- Secure Profile Box -->
         <div id="user-profile-box">
             <div class="profile-header">
                 <div id="user-name">LOADING...</div>
@@ -118,14 +134,20 @@
             <a href="profile.html"><img src="playerprofile.png" style="width:140px; margin-top:10px;" class="system-slot"></a>
         </div>
 
+        <!-- Standardized Hub Nav -->
         <div class="hub-nav-wrapper">
             <button class="nav-trigger-btn">HUB_MENU ▼</button>
             <div class="dropdown-content">
+                <div class="drop-header">MAIN TERMINALS</div>
                 <a href="index.html" class="drop-link">Main Dashboard</a>
                 <a href="games.html" class="drop-link">Games & Servers</a>
                 <a href="modhub.html" class="drop-link">Mod Hub</a>
                 <a href="tkb.html" class="drop-link">Knowledge Base</a>
-                <a href="video.html" class="drop-link">Video Tutorials</a>
+                <div class="drop-header">USER LOUNGES</div>
+                <a href="players.html" class="drop-link">Players Lounge</a>
+                <a href="mod.html" class="drop-link">Modders Lounge</a>
+                <a href="create.html" class="drop-link">Creators Lounge</a>
+                <a href="owners.html" class="drop-link">Owners Lounge</a>
             </div>
         </div>
     </div>
@@ -171,4 +193,3 @@
     </div>
 </body>
 </html>
-
