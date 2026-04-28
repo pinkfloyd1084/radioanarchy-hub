@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radio Anarchy | Retro Vault</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        /* Base and Parallax Background */
+        body {
+            margin: 0; padding: 0;
+            background: #050505 url('RadioAnarchyBackground.png') no-repeat center top fixed;
+            background-size: cover; color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center; overflow-x: hidden;
+            opacity: 0; /* SECURE START */
+            transition: opacity 0.4s ease-in;
+        }
+
+        /* Top UI Row */
+        .top-ui-row {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            width: 95%; max-width: 1600px; margin: 30px auto 30px auto;
+        }
+
+        #user-profile-box {
+            background: rgba(15, 5, 10, 0.85); border: 2px solid #00ffcc; border-radius: 12px;
+            padding: 20px; box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+            display: flex; flex-direction: column; gap: 15px; width: 320px; box-sizing: border-box;
+        }
+        .profile-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        #user-name { color: #fff; font-size: 1.3rem; font-weight: bold; text-shadow: 0 0 8px #fff; text-align: left; }
+        #user-avatar { width: 65px; height: 65px; border-radius: 50%; border: 2px solid #ff0055; object-fit: cover; }
+        #user-roles-container { display: flex; flex-direction: column; gap: 6px; text-align: left; }
+        .role-badge {
+            font-size: 0.85rem; font-weight: bold; background: rgba(0, 0, 0, 0.6);
+            padding: 5px 10px; border-radius: 4px; border-left: 4px solid #00ffcc; 
+            color: #ddd; text-shadow: 0 0 5px rgba(255,255,255,0.3);
+        }
+
+        /* Hub Nav Dropdown */
+        .hub-nav-wrapper { position: relative; display: inline-block; text-align: right; }
+        .nav-trigger-btn {
+            background: rgba(15, 5, 10, 0.9); border: 2px solid #ff0055; color: #ff0055;
+            padding: 15px 30px; font-size: 1.2rem; font-weight: bold; letter-spacing: 2px;
+            border-radius: 8px; cursor: pointer; text-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
+            transition: all 0.3s ease;
+        }
+        .nav-trigger-btn:hover { background: #ff0055; color: #000; box-shadow: 0 0 25px #ff0055; }
+        .dropdown-content {
+            display: none; position: absolute; right: 0; top: 110%;
+            background: rgba(5, 5, 8, 0.98); border: 2px solid #00ffcc; border-radius: 8px;
+            min-width: 280px; z-index: 1000; text-align: left; flex-direction: column;
+        }
+        .hub-nav-wrapper:hover .dropdown-content { display: flex; }
+        .drop-link { color: #fff; padding: 12px 20px; text-decoration: none; border-bottom: 1px dashed #333; }
+        .drop-link:hover { background: rgba(0, 255, 204, 0.15); color: #00ffcc; }
+
+        /* Vault Header Stack */
+        .vault-header { display: flex; flex-direction: column; align-items: center; margin-bottom: 60px; }
+        .header-main { width: 550px; z-index: 2; filter: drop-shadow(0 0 15px #ff0055); }
+        .header-sub { width: 480px; margin-top: -35px; z-index: 1; filter: drop-shadow(0 0 10px #00ffcc); }
+
+        /* The Grid */
+        .vault-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px;
+            width: 90%; max-width: 1550px; margin: 0 auto 80px auto;
+        }
+        .column { border: 2px solid red; padding: 30px; display: flex; flex-direction: column; gap: 45px; border-radius: 12px; }
+
+        /* Slot Styling */
+        .system-slot { display: flex; flex-direction: column; align-items: center; text-decoration: none; transition: transform 0.2s ease; }
+        .system-slot:hover { transform: scale(1.1); }
+        .system-logo { width: 190px; z-index: 2; }
+        .system-console { width: 170px; margin-top: -28px; z-index: 1; }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Parallax Engine
+            window.addEventListener('scroll', () => {
+                document.body.style.backgroundPositionY = -(window.pageYOffset * 0.3) + 'px';
+            });
+
+            // Security & Auth Check
+            fetch('https://api.radioanarchy.gg:8202/auth/me', { credentials: 'include' })
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.loggedIn) {
+                        window.location.href = 'index.html';
+                    } else {
+                        document.body.style.opacity = '1';
+                        document.getElementById('user-name').innerText = data.displayUsername;
+                        document.getElementById('user-avatar').src = data.displayAvatar || 'default-avatar.png';
+                        const container = document.getElementById('user-roles-container');
+                        if (data.roles) {
+                            data.roles.forEach(role => {
+                                const b = document.createElement('div');
+                                b.className = 'role-badge';
+                                b.style.borderLeftColor = role.color || '#00ffcc';
+                                b.innerText = role.name;
+                                container.appendChild(b);
+                            });
+                        }
+                    }
+                }).catch(() => { window.location.href = 'index.html'; });
+        });
+    </script>
+</head>
+<body>
+
+    <div class="top-ui-row">
+        <div id="user-profile-box">
+            <div class="profile-header">
+                <div id="user-name">LOADING...</div>
+                <img src="default-avatar.png" id="user-avatar">
+            </div>
+            <div id="user-roles-container"></div>
+            <a href="profile.html"><img src="playerprofile.png" style="width:140px; margin-top:10px;" class="system-slot"></a>
+        </div>
+
+        <div class="hub-nav-wrapper">
+            <button class="nav-trigger-btn">HUB_MENU ▼</button>
+            <div class="dropdown-content">
+                <a href="index.html" class="drop-link">Main Dashboard</a>
+                <a href="games.html" class="drop-link">Games & Servers</a>
+                <a href="modhub.html" class="drop-link">Mod Hub</a>
+                <a href="tkb.html" class="drop-link">Knowledge Base</a>
+                <a href="video.html" class="drop-link">Video Tutorials</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="vault-header">
+        <img src="retroarchlogo.png" class="header-main">
+        <img src="retrovault.png" class="header-sub">
+    </div>
+
+    <div class="vault-grid">
+        <div class="column">
+            <a href="vault1.html" class="system-slot"><img src="3dslogo.png" class="system-logo"><img src="3ds.png" class="system-console"></a>
+            <a href="vault2.html" class="system-slot"><img src="atari800logo.png" class="system-logo"><img src="atari800.png" class="system-console"></a>
+            <a href="vault3.html" class="system-slot"><img src="dreamcastlogo.png" class="system-logo"><img src="dreamcast.png" class="system-console"></a>
+            <a href="vault4.html" class="system-slot"><img src="gameboylogo.png" class="system-logo"><img src="gameboy.png" class="system-console"></a>
+            <a href="vault5.html" class="system-slot"><img src="gameboyadvancelogo.png" class="system-logo"><img src="gameboyadvance.png" class="system-console"></a>
+            <a href="vault6.html" class="system-slot"><img src="gameboycolorlogo.png" class="system-logo"><img src="gameboycolor.png" class="system-console"></a>
+            <a href="vault7.html" class="system-slot"><img src="gamecubelogo.png" class="system-logo"><img src="gamecube.png" class="system-console"></a>
+            <a href="vault8.html" class="system-slot"><img src="mamelogo.png" class="system-logo"><img src="mame.png" class="system-console"></a>
+            <a href="vault9.html" class="system-slot"><img src="mastersystemlogo.png" class="system-logo"><img src="mastersystem.png" class="system-console"></a>
+        </div>
+        <div class="column">
+            <a href="vault10.html" class="system-slot"><img src="n64logo.png" class="system-logo"><img src="n64.png" class="system-console"></a>
+            <a href="vault11.html" class="system-slot"><img src="neogeologo.png" class="system-logo"><img src="neogeo.png" class="system-console"></a>
+            <a href="vault12.html" class="system-slot"><img src="neslogo.png" class="system-logo"><img src="nes.png" class="system-console"></a>
+            <a href="vault13.html" class="system-slot"><img src="ps1logo.png" class="system-logo"><img src="ps1.png" class="system-console"></a>
+            <a href="vault14.html" class="system-slot"><img src="ps2logo.png" class="system-logo"><img src="ps2.png" class="system-console"></a>
+            <a href="vault15.html" class="system-slot"><img src="ps3logo.png" class="system-logo"><img src="ps3.png" class="system-console"></a>
+            <a href="vault16.html" class="system-slot"><img src="ps5logo.png" class="system-logo"><img src="ps4ps5.png" class="system-console"></a>
+            <a href="vault17.html" class="system-slot"><img src="segacdlogo.png" class="system-logo"><img src="segacd.png" class="system-console"></a>
+            <a href="vault18.html" class="system-slot"><img src="segagenesislogo.png" class="system-logo"><img src="segagenesis.png" class="system-console"></a>
+        </div>
+        <div class="column">
+            <a href="vault19.html" class="system-slot"><img src="segasaturnlogo.png" class="system-logo"><img src="segasaturn.png" class="system-console"></a>
+            <a href="vault20.html" class="system-slot"><img src="sneslogo.png" class="system-logo"><img src="snes.png" class="system-console"></a>
+            <a href="vault21.html" class="system-slot"><img src="switchlogo.png" class="system-logo"><img src="switch.png" class="system-console"></a>
+            <a href="vault22.html" class="system-slot"><img src="turbografx16logo.png" class="system-logo"><img src="turbografx16.png" class="system-console"></a>
+            <a href="vault23.html" class="system-slot"><img src="xboxlogo.png" class="system-logo"><img src="xbox.png" class="system-console"></a>
+            <a href="vault24.html" class="system-slot"><img src="xbox360logo.png" class="system-logo"><img src="xbox360.png" class="system-console"></a>
+            <a href="vault25.html" class="system-slot"><img src="xboxonelogo.png" class="system-logo"><img src="xboxone.png" class="system-console"></a>
+            <a href="vault26.html" class="system-slot"><img src="xboxxlogo.png" class="system-logo"><img src="xboxxs.png" class="system-console"></a>
+        </div>
+    </div>
+</body>
+</html>
+
