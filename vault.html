@@ -17,7 +17,7 @@
             transition: opacity 0.4s ease-in;
         }
 
-        /* --- TOP UI BAR (Profile & Nav) --- */
+        /* --- TOP UI BAR --- */
         .top-ui-row {
             display: flex; justify-content: space-between; align-items: flex-start;
             width: 95%; max-width: 1600px; margin: 30px auto 30px auto;
@@ -30,13 +30,13 @@
             text-align: left;
         }
         .profile-header { display: flex; justify-content: space-between; align-items: flex-start; }
-        #user-name { color: #fff; font-size: 1.3rem; font-weight: bold; text-shadow: 0 0 8px #fff; word-break: break-all; }
-        #user-avatar { width: 65px; height: 65px; border-radius: 50%; border: 2px solid #ff0055; object-fit: cover; flex-shrink: 0; }
-        #user-roles-container { display: flex; flex-direction: column; gap: 6px; margin-bottom: 5px; }
+        #user-name { color: #fff; font-size: 1.3rem; font-weight: bold; text-shadow: 0 0 8px #fff; }
+        #user-avatar { width: 65px; height: 65px; border-radius: 50%; border: 2px solid #ff0055; object-fit: cover; }
+        #user-roles-container { display: flex; flex-direction: column; gap: 6px; }
         .role-badge {
             font-size: 0.85rem; font-weight: bold; background: rgba(0, 0, 0, 0.6);
             padding: 5px 10px; border-radius: 4px; border-left: 4px solid #00ffcc; 
-            color: #ddd; text-shadow: 0 0 5px rgba(255,255,255,0.3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            color: #ddd; text-shadow: 0 0 5px rgba(255,255,255,0.3);
         }
 
         /* Hub Nav Dropdown */
@@ -45,22 +45,20 @@
             background: rgba(15, 5, 10, 0.9); border: 2px solid #ff0055; color: #ff0055;
             padding: 15px 30px; font-size: 1.2rem; font-weight: bold; letter-spacing: 2px;
             border-radius: 8px; cursor: pointer; text-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
-            box-shadow: 0 0 15px rgba(255, 0, 85, 0.2); transition: all 0.3s ease;
-            font-family: 'Courier New', monospace;
+            transition: all 0.3s ease;
         }
         .nav-trigger-btn:hover { background: #ff0055; color: #000; box-shadow: 0 0 25px #ff0055; }
         .dropdown-content {
             display: none; position: absolute; right: 0; top: 110%;
             background: rgba(5, 5, 8, 0.98); border: 2px solid #00ffcc; border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.9), 0 0 20px rgba(0, 255, 204, 0.3);
-            min-width: 280px; z-index: 1000; text-align: left; overflow: hidden;
+            min-width: 280px; z-index: 1000; text-align: left; flex-direction: column;
         }
-        .hub-nav-wrapper:hover .dropdown-content { display: flex; flex-direction: column; }
+        .hub-nav-wrapper:hover .dropdown-content { display: flex; }
         .drop-header { background: #00ffcc; color: #000; padding: 8px 20px; font-size: 0.8rem; font-weight: bold; letter-spacing: 2px; }
-        .drop-link { color: #fff; padding: 12px 20px; text-decoration: none; border-bottom: 1px dashed #333; transition: all 0.2s ease; font-size: 0.95rem; font-weight: bold; }
-        .drop-link:hover { background: rgba(0, 255, 204, 0.15); color: #00ffcc; padding-left: 25px; }
+        .drop-link { color: #fff; padding: 12px 20px; text-decoration: none; border-bottom: 1px dashed #333; }
+        .drop-link:hover { background: rgba(0, 255, 204, 0.15); color: #00ffcc; }
 
-        /* Vault Header */
+        /* Vault Header Stack */
         .vault-header { display: flex; flex-direction: column; align-items: center; margin-bottom: 60px; }
         .header-main { width: 550px; z-index: 2; filter: drop-shadow(0 0 15px #ff0055); }
         .header-sub { width: 480px; margin-top: -35px; z-index: 1; filter: drop-shadow(0 0 10px #00ffcc); }
@@ -71,10 +69,8 @@
             width: 90%; max-width: 1550px; margin: 0 auto 80px auto;
         }
         .column { 
-            background: rgba(15, 5, 10, 0.85); /* TINTED BACKDROP */
-            border: 2px solid #ff0055; /* Changed to Red-Pink to match Theme Boxes */
-            padding: 30px; display: flex; flex-direction: column; gap: 45px; 
-            border-radius: 12px; box-shadow: 0 0 20px rgba(255, 0, 85, 0.15);
+            background: rgba(15, 5, 10, 0.85); border: 2px solid #ff0055;
+            padding: 30px; display: flex; flex-direction: column; gap: 45px; border-radius: 12px;
         }
 
         /* Slot Styling */
@@ -90,28 +86,23 @@
                 document.body.style.backgroundPositionY = -(window.pageYOffset * 0.3) + 'px';
             });
 
-            // Security & Auth Engine
-            fetch('[link removed]
-```auth/me', { credentials: 'include' })
+            // Security & Auth Check
+            fetch('[link removed]', { credentials: 'include' })
                 .then(res => res.json())
                 .then(data => {
                     if (!data.loggedIn) {
-                        window.location.href = 'index.html'; // BOOT TO INDEX
+                        window.location.href = 'index.html';
                     } else {
                         document.body.style.opacity = '1';
                         document.getElementById('user-name').innerText = data.displayUsername;
                         document.getElementById('user-avatar').src = data.displayAvatar || 'default-avatar.png';
-                        
                         const container = document.getElementById('user-roles-container');
-                        container.innerHTML = '';
-                        
-                        // TOP 5 ROLES LIMIT
-                        if (data.roles && data.roles.length > 0) {
-                            const topRoles = data.roles.slice(0, 5); 
-                            topRoles.forEach(role => {
+                        if (data.roles) {
+                            // TOP 5 ROLES ONLY
+                            data.roles.slice(0, 5).forEach(role => {
                                 const b = document.createElement('div');
                                 b.className = 'role-badge';
-                                b.style.borderLeftColor = (role.color && role.color !== '#000000') ? role.color : '#00ffcc';
+                                b.style.borderLeftColor = role.color || '#00ffcc';
                                 b.innerText = role.name;
                                 container.appendChild(b);
                             });
@@ -124,30 +115,25 @@
 <body>
 
     <div class="top-ui-row">
-        <!-- Secure Profile Box -->
         <div id="user-profile-box">
             <div class="profile-header">
                 <div id="user-name">LOADING...</div>
                 <img src="default-avatar.png" id="user-avatar">
             </div>
             <div id="user-roles-container"></div>
-            <a href="profile.html"><img src="playerprofile.png" style="width:140px; margin-top:10px;" class="system-slot"></a>
         </div>
 
-        <!-- Standardized Hub Nav -->
         <div class="hub-nav-wrapper">
             <button class="nav-trigger-btn">HUB_MENU ▼</button>
             <div class="dropdown-content">
-                <div class="drop-header">MAIN TERMINALS</div>
+                <div class="drop-header">TERMINALS</div>
                 <a href="index.html" class="drop-link">Main Dashboard</a>
                 <a href="games.html" class="drop-link">Games & Servers</a>
                 <a href="modhub.html" class="drop-link">Mod Hub</a>
-                <a href="tkb.html" class="drop-link">Knowledge Base</a>
-                <div class="drop-header">USER LOUNGES</div>
+                <div class="drop-header">LOUNGES</div>
                 <a href="players.html" class="drop-link">Players Lounge</a>
                 <a href="mod.html" class="drop-link">Modders Lounge</a>
                 <a href="create.html" class="drop-link">Creators Lounge</a>
-                <a href="owners.html" class="drop-link">Owners Lounge</a>
             </div>
         </div>
     </div>
@@ -160,7 +146,7 @@
     <div class="vault-grid">
         <div class="column">
             <a href="vault1.html" class="system-slot"><img src="3dslogo.png" class="system-logo"><img src="3ds.png" class="system-console"></a>
-            <a href="vault2.html" class="system-slot"><img src="atari800logo.png" class="system-logo"><img src="atari800.png" class="system-console"></a>
+            <a href="vault2.html" class="system-slot"><img src="Atari800logo.png" class="system-logo"><img src="atari800.png" class="system-console"></a>
             <a href="vault3.html" class="system-slot"><img src="dreamcastlogo.png" class="system-logo"><img src="dreamcast.png" class="system-console"></a>
             <a href="vault4.html" class="system-slot"><img src="gameboylogo.png" class="system-logo"><img src="gameboy.png" class="system-console"></a>
             <a href="vault5.html" class="system-slot"><img src="gameboyadvancelogo.png" class="system-logo"><img src="gameboyadvance.png" class="system-console"></a>
