@@ -13,11 +13,11 @@
             background-size: cover; color: #fff;
             font-family: 'Courier New', Courier, monospace;
             text-align: center; overflow-x: hidden;
-            opacity: 0; /* SECURE START */
+            opacity: 0; /* SECURE START: HIDDEN UNTIL AUTH IS VERIFIED */
             transition: opacity 0.4s ease-in;
         }
 
-        /* --- TOP UI BAR --- */
+        /* --- TOP UI BAR (Profile & Nav) --- */
         .top-ui-row {
             display: flex; justify-content: space-between; align-items: flex-start;
             width: 95%; max-width: 1600px; margin: 30px auto 30px auto;
@@ -69,7 +69,8 @@
             width: 90%; max-width: 1550px; margin: 0 auto 80px auto;
         }
         .column { 
-            background: rgba(15, 5, 10, 0.85); border: 2px solid #ff0055;
+            background: rgba(15, 5, 10, 0.85); /* TINTED BACKDROP */
+            border: 2px solid #ff0055;
             padding: 30px; display: flex; flex-direction: column; gap: 45px; border-radius: 12px;
         }
 
@@ -86,23 +87,27 @@
                 document.body.style.backgroundPositionY = -(window.pageYOffset * 0.3) + 'px';
             });
 
-            // Security & Auth Check
-            fetch('[link removed]', { credentials: 'include' })
+            // Security & Auth Engine - Refactored for Credentials
+            fetch('https://api.radioanarchy.gg:8202/auth/me', { credentials: 'include' })
                 .then(res => res.json())
                 .then(data => {
                     if (!data.loggedIn) {
-                        window.location.href = 'index.html';
+                        window.location.href = 'index.html'; // KICKS TO INDEX IF NOT SIGNED IN
                     } else {
                         document.body.style.opacity = '1';
                         document.getElementById('user-name').innerText = data.displayUsername;
                         document.getElementById('user-avatar').src = data.displayAvatar || 'default-avatar.png';
+                        
                         const container = document.getElementById('user-roles-container');
-                        if (data.roles) {
-                            // TOP 5 ROLES ONLY
-                            data.roles.slice(0, 5).forEach(role => {
+                        container.innerHTML = '';
+                        
+                        // TOP 5 ROLES LIMIT
+                        if (data.roles && data.roles.length > 0) {
+                            const topRoles = data.roles.slice(0, 5); 
+                            topRoles.forEach(role => {
                                 const b = document.createElement('div');
                                 b.className = 'role-badge';
-                                b.style.borderLeftColor = role.color || '#00ffcc';
+                                b.style.borderLeftColor = (role.color && role.color !== '#000000') ? role.color : '#00ffcc';
                                 b.innerText = role.name;
                                 container.appendChild(b);
                             });
@@ -115,14 +120,17 @@
 <body>
 
     <div class="top-ui-row">
+        <!-- Secure Profile Box -->
         <div id="user-profile-box">
             <div class="profile-header">
                 <div id="user-name">LOADING...</div>
                 <img src="default-avatar.png" id="user-avatar">
             </div>
             <div id="user-roles-container"></div>
+            <a href="profile.html"><img src="playerprofile.png" style="width:140px; margin-top:10px;" class="system-slot"></a>
         </div>
 
+        <!-- Standardized Hub Nav -->
         <div class="hub-nav-wrapper">
             <button class="nav-trigger-btn">HUB_MENU ▼</button>
             <div class="dropdown-content">
@@ -130,6 +138,7 @@
                 <a href="index.html" class="drop-link">Main Dashboard</a>
                 <a href="games.html" class="drop-link">Games & Servers</a>
                 <a href="modhub.html" class="drop-link">Mod Hub</a>
+                <a href="tkb.html" class="drop-link">Knowledge Base</a>
                 <div class="drop-header">LOUNGES</div>
                 <a href="players.html" class="drop-link">Players Lounge</a>
                 <a href="mod.html" class="drop-link">Modders Lounge</a>
@@ -177,5 +186,6 @@
             <a href="vault26.html" class="system-slot"><img src="xboxxlogo.png" class="system-logo"><img src="xboxxs.png" class="system-console"></a>
         </div>
     </div>
+
 </body>
 </html>
