@@ -13,7 +13,7 @@
             background-size: cover; color: #fff;
             font-family: 'Courier New', Courier, monospace;
             text-align: center; overflow-x: hidden;
-            opacity: 0; /* SECURE START */
+            opacity: 0; /* SECURE START: HIDDEN UNTIL AUTH VERIFIED */
             transition: opacity 0.4s ease-in;
         }
 
@@ -39,7 +39,7 @@
             color: #ddd; text-shadow: 0 0 5px rgba(255,255,255,0.3);
         }
 
-        /* Hub Nav Dropdown (Full parity with TKB) */
+        /* Full Hub Nav Dropdown */
         .hub-nav-wrapper { position: relative; display: inline-block; text-align: right; }
         .nav-trigger-btn {
             background: rgba(15, 5, 10, 0.9); border: 2px solid #ff0055; color: #ff0055;
@@ -59,12 +59,12 @@
         .drop-link { color: #fff; padding: 12px 20px; text-decoration: none; border-bottom: 1px dashed #333; transition: all 0.2s ease; }
         .drop-link:hover { background: rgba(0, 255, 204, 0.15); color: #00ffcc; padding-left: 25px; }
 
-        /* Vault Header Stack */
+        /* Vault Header */
         .vault-header { display: flex; flex-direction: column; align-items: center; margin-bottom: 60px; }
         .header-main { width: 550px; z-index: 2; filter: drop-shadow(0 0 15px #ff0055); }
         .header-sub { width: 480px; margin-top: -35px; z-index: 1; filter: drop-shadow(0 0 10px #00ffcc); }
 
-        /* --- THE GRID --- */
+        /* --- THE TINTED GRID --- */
         .vault-grid {
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px;
             width: 90%; max-width: 1550px; margin: 0 auto 80px auto;
@@ -74,36 +74,38 @@
             padding: 30px; display: flex; flex-direction: column; gap: 45px; border-radius: 12px;
         }
 
-        /* Slot Styling & Feedback */
+        /* Slot Styling & Click Animation */
         .system-slot { display: flex; flex-direction: column; align-items: center; text-decoration: none; transition: transform 0.2s ease; }
         .system-slot:hover { transform: scale(1.08); filter: drop-shadow(0 0 15px #00ffcc); }
-        .system-slot:active { transform: scale(0.95); }
+        .system-slot:active { transform: scale(0.95); transition: 0.1s; }
         .system-logo { width: 190px; z-index: 2; }
         .system-console { width: 170px; z-index: 1; }
 
-        /* Specific Asset Offsets */
-        .offset-large { margin-top: -15px !important; } /* For Gameboy, Master System, etc */
-        .offset-medium { margin-top: -20px !important; } /* For PS5, 3DS, etc */
-        .offset-standard { margin-top: -28px; } /* Default */
+        /* Corrected Negative Margins */
+        .offset-large { margin-top: -10px !important; } /* GBC, Gameboy, MasterSystem */
+        .offset-medium { margin-top: -18px !important; } /* PS5, PS2, NeoGeo, Atari800, 3DS */
+        .offset-standard { margin-top: -28px; } /* Everything Else */
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+            // Parallax Engine
             window.addEventListener('scroll', () => {
                 document.body.style.backgroundPositionY = -(window.pageYOffset * 0.3) + 'px';
             });
 
-            fetch('[link removed]
-```anarchy.gg:8202/auth/me', { credentials: 'include' })
+            // Security & Auth Engine - Verifying Credentials
+            fetch('[link removed]', { credentials: 'include' })
                 .then(res => res.json())
                 .then(data => {
                     if (!data.loggedIn) {
-                        window.location.href = 'index.html';
+                        window.location.href = 'index.html'; 
                     } else {
                         document.body.style.opacity = '1';
                         document.getElementById('user-name').innerText = data.displayUsername;
                         document.getElementById('user-avatar').src = data.displayAvatar || 'default-avatar.png';
                         const container = document.getElementById('user-roles-container');
                         if (data.roles) {
+                            // TOP 5 ROLES LIMIT
                             data.roles.slice(0, 5).forEach(role => {
                                 const b = document.createElement('div');
                                 b.className = 'role-badge';
@@ -122,7 +124,7 @@
     <div class="top-ui-row">
         <div id="user-profile-box">
             <div class="profile-header">
-                <div id="user-name">LOADING...</div>
+                <div id="user-name">CONNECTING...</div>
                 <img src="default-avatar.png" id="user-avatar">
             </div>
             <div id="user-roles-container"></div>
@@ -130,7 +132,7 @@
         </div>
 
         <div class="hub-nav-wrapper">
-            <button class="nav-trigger-btn">HUB NAV ▼</button>
+            <button class="nav-trigger-btn">HUB_MENU ▼</button>
             <div class="dropdown-content">
                 <div class="drop-header">HOME</div>
                 <a href="index.html" class="drop-link">Home Terminal</a>
@@ -165,7 +167,7 @@
             <a href="vault3.html" class="system-slot"><img src="dreamcastlogo.png" class="system-logo"><img src="dreamcast.png" class="system-console offset-standard"></a>
             <a href="vault4.html" class="system-slot"><img src="gameboylogo.png" class="system-logo"><img src="gameboy.png" class="system-console offset-large"></a>
             <a href="vault5.html" class="system-slot"><img src="gameboyadvancelogo.png" class="system-logo"><img src="gameboyadvance.png" class="system-console offset-standard"></a>
-            <a href="vault6.html" class="system-slot"><img src="gameboycolorlogo.png" class="system-logo"><img src="gameboycolor.png" class="system-console offset-medium"></a>
+            <a href="vault6.html" class="system-slot"><img src="gameboycolorlogo.png" class="system-logo"><img src="gameboycolor.png" class="system-console offset-large"></a>
             <a href="vault7.html" class="system-slot"><img src="gamecubelogo.png" class="system-logo"><img src="gamecube.png" class="system-console offset-standard"></a>
             <a href="vault8.html" class="system-slot"><img src="mamelogo.png" class="system-logo"><img src="mame.png" class="system-console offset-standard"></a>
             <a href="vault9.html" class="system-slot"><img src="mastersystemlogo.png" class="system-logo"><img src="mastersystem.png" class="system-console offset-large"></a>
@@ -193,4 +195,4 @@
         </div>
     </div>
 </body>
-</html> 
+</html>
