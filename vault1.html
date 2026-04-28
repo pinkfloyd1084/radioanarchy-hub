@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radio Anarchy | 3DS Vault</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <style>
+        /* Base and Parallax Background */
+        body {
+            margin: 0; padding: 0;
+            background: #050505 url('RadioAnarchyBackground.png') no-repeat center top fixed;
+            background-size: cover; color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center; overflow-x: hidden;
+            opacity: 0; /* SECURE START: HIDDEN UNTIL AUTH VERIFIED */
+            transition: opacity 0.4s ease-in;
+        }
+
+        /* --- TOP UI BAR --- */
+        .top-ui-row {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            width: 95%; max-width: 1600px; margin: 30px auto 30px auto;
+        }
+
+        #user-profile-box {
+            background: rgba(15, 5, 10, 0.85); border: 2px solid #00ffcc; border-radius: 12px;
+            padding: 20px; box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
+            display: flex; flex-direction: column; gap: 15px; width: 320px; box-sizing: border-box;
+            text-align: left;
+        }
+        .profile-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        #user-name { color: #fff; font-size: 1.3rem; font-weight: bold; text-shadow: 0 0 8px #fff; }
+        #user-avatar { width: 65px; height: 65px; border-radius: 50%; border: 2px solid #ff0055; object-fit: cover; }
+        #user-roles-container { display: flex; flex-direction: column; gap: 6px; }
+        .role-badge {
+            font-size: 0.85rem; font-weight: bold; background: rgba(0, 0, 0, 0.6);
+            padding: 5px 10px; border-radius: 4px; border-left: 4px solid #00ffcc; 
+            color: #ddd; text-shadow: 0 0 5px rgba(255,255,255,0.3);
+        }
+
+        /* Full Hub Nav Dropdown */
+        .hub-nav-wrapper { position: relative; display: inline-block; text-align: right; }
+        .nav-trigger-btn {
+            background: rgba(15, 5, 10, 0.9); border: 2px solid #ff0055; color: #ff0055;
+            padding: 15px 30px; font-size: 1.2rem; font-weight: bold; letter-spacing: 2px;
+            border-radius: 8px; cursor: pointer; text-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
+            transition: all 0.3s ease;
+        }
+        .nav-trigger-btn:hover { background: #ff0055; color: #000; box-shadow: 0 0 25px #ff0055; }
+        .dropdown-content {
+            display: none; position: absolute; right: 0; top: 110%;
+            background: rgba(5, 5, 8, 0.98); border: 2px solid #00ffcc; border-radius: 8px;
+            min-width: 280px; z-index: 1000; text-align: left; flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.9), 0 0 20px rgba(0, 255, 204, 0.3);
+        }
+        .hub-nav-wrapper:hover .dropdown-content { display: flex; }
+        .drop-header { background: #00ffcc; color: #000; padding: 8px 20px; font-size: 0.8rem; font-weight: bold; letter-spacing: 2px; }
+        .drop-link { color: #fff; padding: 12px 20px; text-decoration: none; border-bottom: 1px dashed #333; transition: all 0.2s ease; }
+        .drop-link:hover { background: rgba(0, 255, 204, 0.15); color: #00ffcc; padding-left: 25px; }
+
+        /* Vault Header */
+        .vault-header { display: flex; flex-direction: column; align-items: center; margin-bottom: 60px; }
+        .header-main { width: 450px; z-index: 2; filter: drop-shadow(0 0 15px #ff0055); }
+        .header-sub { width: 380px; margin-top: -25px; z-index: 1; filter: drop-shadow(0 0 10px #00ffcc); }
+
+        /* --- 3DS REPOSITORY BOX --- */
+        .repo-container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 30px;
+            width: 90%; max-width: 1200px; margin: 0 auto 80px auto;
+            background: rgba(15, 5, 10, 0.85); 
+            border: 2px solid #ff0000; /* Red outline */
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.2);
+        }
+        
+        .repo-column {
+            background: rgba(5, 5, 8, 0.95);
+            border: 1px dashed #555;
+            padding: 30px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .repo-column:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 255, 204, 0.15);
+            border-color: #00ffcc;
+        }
+
+        .repo-title {
+            color: #ff0055;
+            font-size: 1.8rem;
+            margin-top: 0;
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px rgba(255, 0, 85, 0.4);
+            letter-spacing: 2px;
+            border-bottom: 2px solid #00ffcc;
+            padding-bottom: 10px;
+            width: 100%;
+        }
+
+        .repo-link-btn {
+            background: #000;
+            border: 2px solid #00ffcc;
+            color: #00ffcc;
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+            word-break: break-all;
+            text-align: center;
+        }
+
+        .repo-link-btn:hover {
+            background: #00ffcc;
+            color: #000;
+            box-shadow: 0 0 25px #00ffcc;
+        }
+
+        /* Nedry Pop-up */
+        #nedry-security-box {
+            position: fixed; bottom: -800px; left: 50%; transform: translateX(-50%);
+            background: rgba(15, 5, 10, 0.98); border: 3px solid #ff0055; border-radius: 12px;
+            padding: 30px; box-shadow: 0 0 50px rgba(255, 0, 85, 0.8); z-index: 30000;
+            text-align: center; transition: bottom 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 90%; max-width: 550px;
+        }
+        #nedry-security-box.nedry-show { bottom: 40px; }
+
+        @media (max-width: 900px) {
+            .repo-container { grid-template-columns: 1fr; }
+        }
+    </style>
+    <script>
+        let activeClearances = [];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Parallax Engine
+            window.addEventListener('scroll', () => {
+                document.body.style.backgroundPositionY = -(window.pageYOffset * 0.3) + 'px';
+            });
+
+            // Security & Auth Engine - Verifying Credentials
+            fetch('https://api.radioanarchy.gg:8202/auth/me', { method: 'GET', credentials: 'include' })
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.loggedIn) {
+                        window.location.href = 'index.html'; 
+                        return;
+                    } 
+                    
+                    // IF APPROVED, TURN THE LIGHTS ON
+                    document.body.style.opacity = '1';
+                    
+                    // Display Profile and Nav
+                    document.getElementById('user-profile-box').style.display = 'flex';
+                    document.getElementById('auth-nav').style.display = 'block';
+
+                    document.getElementById('user-name').innerText = data.displayUsername;
+                    document.getElementById('user-avatar').src = data.displayAvatar || 'default-avatar.png';
+                    
+                    if (data.roles) {
+                        activeClearances = data.roles.map(r => r.name);
+                    }
+
+                    const container = document.getElementById('user-roles-container');
+                    if (data.roles && data.roles.length > 0) {
+                        // TOP 5 ROLES LIMIT
+                        data.roles.slice(0, 5).forEach(role => {
+                            const b = document.createElement('div');
+                            b.className = 'role-badge';
+                            b.style.borderLeftColor = (role.color && role.color !== '#000000') ? role.color : '#00ffcc';
+                            b.innerText = role.name;
+                            container.appendChild(b);
+                        });
+                    } else {
+                        container.innerHTML = '<span style="color:#aaa; font-size:0.8rem;">No Clearances</span>';
+                    }
+                }).catch(err => { 
+                    console.error("Auth check failed:", err);
+                    window.location.href = 'index.html'; 
+                });
+
+            // Security Modals & Restricted Links Check
+            const nedrySound = new Audio('dennis_nedry_ahahah.mp3'); 
+            nedrySound.preload = 'auto';
+
+            function triggerNedry() {
+                const nedryBox = document.getElementById('nedry-security-box');
+                const nedryGif = document.getElementById('nedry-gif');
+                nedryGif.src = 'silentsaysno.gif'; 
+                nedryBox.classList.add('nedry-show');
+                
+                nedrySound.currentTime = 0;
+                let p1 = nedrySound.play();
+                if (p1 !== undefined) p1.catch(e => console.log(e));
+
+                setTimeout(() => {
+                    nedrySound.currentTime = 0;
+                    let p2 = nedrySound.play();
+                    if (p2 !== undefined) p2.catch(e => console.log(e));
+                }, 5000);
+
+                setTimeout(() => nedryBox.classList.remove('nedry-show'), 10000);
+            }
+
+            document.querySelectorAll('.restricted-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const requiredRole = this.getAttribute('data-role');
+                    
+                    // 1. Give Master Keys to top staff so they never get locked out
+                    let isAuthorized = activeClearances.includes("Admin") ||
+                                       activeClearances.includes("Head Admin") || 
+                                       activeClearances.includes("Owner");
+
+                    // 2. If not a Master Admin, check specific room clearances
+                    if (!isAuthorized) {
+                        if (requiredRole === "Server Owner") {
+                            // Server Owners Lounge allows "Server Owner" OR "Cert. Game Admin"
+                            isAuthorized = activeClearances.includes("Server Owner") || activeClearances.includes("Cert. Game Admin");
+                        } else {
+                            // Modders and Creators require their exact badge
+                            isAuthorized = activeClearances.includes(requiredRole);
+                        }
+                    }
+
+                    // 3. Trigger Nedry if they failed the checks
+                    if (!isAuthorized) {
+                        e.preventDefault(); 
+                        triggerNedry();
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+
+    <div class="top-ui-row">
+        <div id="user-profile-box" style="display: none;">
+            <div class="profile-header">
+                <div id="user-name">CONNECTING...</div>
+                <img src="default-avatar.png" id="user-avatar">
+            </div>
+            <div id="user-roles-container"></div>
+            <a href="profile.html"><img src="playerprofile.png" style="width:140px; margin-top:10px;" class="system-slot"></a>
+        </div>
+
+        <div class="hub-nav-wrapper">
+            <div id="auth-nav" style="display: none;">
+                <button class="nav-trigger-btn">HUB_MENU ▼</button>
+                <div class="dropdown-content">
+                    <div class="drop-header">HOME</div>
+                    <a href="index.html" class="drop-link">Home Terminal</a>
+                    <div class="drop-header" style="margin-top: 5px;">INFORMATION STATION</div>
+                    <a href="news.html" class="drop-link">News Station</a>
+                    <a href="games.html" class="drop-link">Games & Servers</a>
+                    <a href="store.html" class="drop-link">The Shoppe</a>
+                    <a href="discordroles.html" class="drop-link">Discord Roles</a>
+                    <div class="drop-header" style="margin-top: 5px;">COMMUNITY COLLEGE</div>
+                    <a href="tkb.html" class="drop-link">The Knowledge Base</a>
+                    <a href="modhub.html" class="drop-link">Mod Hub</a>
+                    <a href="video.html" class="drop-link">Video Tutorials</a>
+                    <a href="vault.html" class="drop-link">Retro Vault</a>
+                    <div class="drop-header" style="margin-top: 5px;">COMMUNITY HUB</div>
+                    <a href="comnet.html" class="drop-link">Community Network</a>
+                    <a href="combil.html" class="drop-link">Community Billboard</a>
+                    <a href="watch.html" class="drop-link">Stream Schedule</a>
+                    <div class="drop-header" style="margin-top: 5px;">THE LOUNGES</div>
+                    <a href="players.html" class="drop-link">Players Lounge</a>
+                    <a href="owners.html" class="drop-link restricted-link" data-role="Server Owner">Server Owners Lounge</a>
+                    <a href="create.html" class="drop-link restricted-link" data-role="Creator">Creators Lounge</a>
+                    <a href="mod.html" class="drop-link restricted-link" data-role="Modder">Modders Lounge</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="vault-header">
+        <img src="3dslogo.png" class="header-main" alt="3DS Logo">
+        <img src="3ds.png" class="header-sub" alt="3DS Console">
+    </div>
+
+    <div class="repo-container">
+        <div class="repo-column">
+            <h2 class="repo-title">3DS Repository 1</h2>
+            <a href="https://archive.org/download/3ds-decrypted-roms321com/all/" target="_blank" class="repo-link-btn">Launch Archive.org Repository</a>
+        </div>
+        
+        <div class="repo-column">
+            <h2 class="repo-title">3DS Repository 2</h2>
+            <a href="https://r-roms.gitlab.io/megathread/nintendo/#nintendo-3ds" target="_blank" class="repo-link-btn">Launch Gitlab Megathread</a>
+        </div>
+    </div>
+
+    <div id="nedry-security-box">
+        <h2 style="color: #ff0055; margin-top: 0; font-size: 1.8rem; text-shadow: 0 0 10px #ff0055;">Ah ah ah! You didn't say the magic word...</h2>
+        <img id="nedry-gif" src="silentsaysno.gif" alt="Access Denied" style="width: 100%; max-width: 400px; border: 2px solid #00ffcc; border-radius: 8px; box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);">
+    </div>
+
+</body>
+</html>
