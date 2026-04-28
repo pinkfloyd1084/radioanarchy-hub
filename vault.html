@@ -81,7 +81,7 @@
         .system-logo { width: 190px; z-index: 2; }
         .system-console { width: 170px; z-index: 1; }
 
-        /* Corrected Negative Margins */
+        /* Specific Negative Margins */
         .offset-large { margin-top: -10px !important; } /* GBC, Gameboy, MasterSystem */
         .offset-medium { margin-top: -18px !important; } /* PS5, PS2, NeoGeo, Atari800, 3DS */
         .offset-standard { margin-top: -28px; } /* Everything Else */
@@ -94,7 +94,8 @@
             });
 
             // Security & Auth Engine - Verifying Credentials
-            fetch('[link removed]', { credentials: 'include' })
+            fetch('[link removed]
+```auth/me', { credentials: 'include' })
                 .then(res => res.json())
                 .then(data => {
                     if (!data.loggedIn) {
@@ -195,4 +196,4 @@
         </div>
     </div>
 </body>
-</html>
+</html> 
